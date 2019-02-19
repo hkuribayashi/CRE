@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.GammaDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 
+import br.unifesspa.cre.hetnet.BSType;
 import br.unifesspa.cre.hetnet.Point;
 
 public class Util {
@@ -20,10 +22,21 @@ public class Util {
 		
 		if (shape <= 0.0)
 			shape = 1.0;
-		
+
 		return new GammaDistribution(shape, scale).sample();
-		
 	}
+	
+	/**
+	 * Returns a sample from a Normal Distribuition (mean, variance)
+	 * @param mean
+	 * @param variance
+	 * @return
+	 */
+	public static Double getNormalDistribution(Double mean, Double variance) {
+		
+		return new NormalDistribution(mean, Math.sqrt(variance)).sample();
+	}
+	
 
 	/**
 	 * Returns euclidian distance between Points A and B
@@ -77,17 +90,21 @@ public class Util {
 		Double nPoints = lambda * area;
 
 		Double[] x = new Double[nPoints.intValue()];	
-		Double[] y = new Double[nPoints.intValue()];	
+		Double[] y = new Double[nPoints.intValue()];
+		Double[] z = new Double[nPoints.intValue()];
 
 		for (int i=0; i<=nPoints-1; i++)
 			x[i] = new UniformRealDistribution(lower, upper).sample();
 
 		for (int i=0; i<=nPoints-1; i++)
 			y[i] = new UniformRealDistribution(lower, upper).sample();
+		
+		for (int i=0; i<=nPoints-1; i++)
+			z[i] = new UniformRealDistribution(lower, height).sample();
 
 		List<Point> points = new ArrayList<Point>();
 		for (int i=0; i<=nPoints-1; i++) {
-			Point p = new Point(x[i], y[i], height);
+			Point p = new Point(x[i], y[i], z[i]);
 			points.add(p);
 		}
 
@@ -97,28 +114,34 @@ public class Util {
 
 	/**
 	 * 
-	 * @param distance distance between a user and a BS
-	 * @param d0 reference distance
-	 * @param alpha path-loss exponent
-	 * @param c constant
-	 * @return path-loss
+	 * @param type
+	 * @param distance
+	 * @param variance
+	 * @return
 	 */
-	public static Double getPathLoss(Double distance, Double d0, Double alpha, Double c) {
+	public static Double getChannelGain(BSType type, Double distance, Double variance) {
 		
-		 Double aux = c * Math.pow(Math.max(d0, distance), alpha) ;
-		 
-		 return Math.pow(aux, -1);
+		Double channelGain = 0.0;
 		
+		if (type.equals(BSType.Macro))		
+			channelGain = 27.3 + 3.91 * 10 * Math.log10(distance) + Util.getNormalDistribution(0.0, variance);
+		else channelGain = 36.8 + 3.67 * 10 * Math.log10(distance) + Util.getNormalDistribution(0.0, variance);
+		
+		return channelGain;
 	}
 	
-	public static void initMatrix(Double[][] matrix) {
-		
+	/**
+	 * 
+	 * @param matrix
+	 */
+	public static void init(Double[][] matrix) {
 		for (int i=0; i<matrix.length; i++)
 			for (int j=0; j<matrix[0].length; j++)
 				matrix[i][j] = 0.0;
-		
 	}
 	
-	
-
+	public static void init(Double[] array) {
+		for (int i=0; i<array.length; i++)			
+			array[i] = 0.0;
+	}
 }

@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException {
 		
 		Scenario s;
-		String path = "/Users/hugo/Desktop/CRE/cre1.data";
+		String path = "C:/Users/hugo/Desktop/CRE/cre1.data";
 		
 		DAO<Scenario> dao = new DAO<Scenario>();
 		Boolean flag = dao.verifyPath(path);

@@ -1,6 +1,7 @@
 package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unifesspa.cre.config.CREEnv;
@@ -24,8 +25,6 @@ public class Scenario implements Serializable{
 
 	private Double[][] sinr;
 	
-	private Double[] maxSinr;
-	
 	private Double[] numberUEsPerBS;
 	
 	private Double[][] coverageMatrix;
@@ -38,19 +37,24 @@ public class Scenario implements Serializable{
 		/* Parameters for scenario */
 		this.env = env;
 
-		/* Generates Macro, User and Femto locations from a Homogeneus Poisson Point Process */
-		this.macroPoints = Util.getHPPP(this.env.getLambdaMacro(), this.env.getArea(), this.env.getHeightMacro());
+		/* Generate Macro, User and Femto locations from a Homogeneus Poisson Point Process */
+		this.macroPoints = new ArrayList<Point>();
+		this.macroPoints.add(new Point(200.0, 200.0, this.env.getHeightMacro()));
+		this.macroPoints.add(new Point(800.0, 800.0, this.env.getHeightMacro()));
+		
 		this.femtoPoints = Util.getHPPP(this.env.getLambdaFemto(), this.env.getArea(), this.env.getHeightFemto());
 		this.userPoints = Util.getHPPP(this.env.getLambdaUser(), this.env.getArea(), this.env.getHeightUser());
 
-		/* Calculates the distance between Users and Femto BS's and Between Users and Macro BS's  */
-		this.getDistance();
+		/* Calculate the distance between Users and Femto BS's and Between Users and Macro BS's  */
+		this.getDistance(); 
 		
-		/* Calculates the SINR Metric */
+		/* Calculate the SINR Metric */
 		this.getInitialSINR();
 		
-		/* Calculates the Coverage Matrix */
+		/* Calculate the Coverage Matrix */
 		this.getCoverageMatrix();
+		
+		this.getBSLoad();
 
 	}
 
@@ -79,34 +83,42 @@ public class Scenario implements Serializable{
 	 * Calculate the SINR for All BS
 	 */
 	public void getInitialSINR() {
-
-		double UkFemto = Math.floor(this.env.getSpatialLoadFactorFemto() * this.env.getAntennasFemto() * this.femtoPoints.size());		
-		
-		double UkMacro = Math.floor(this.env.getSpatialLoadFactorMacro() * this.env.getAntennasMacro() * this.macroPoints.size());
-		
-		double deltaKFemto = (this.env.getAntennasFemto() - UkFemto + 1.0);
-		double deltaKMacro = (this.env.getAntennasMacro() - UkMacro + 1.0);
-		
-		double d0 = this.env.getReferenceDistance();
-		
-		double c = this.env.getConstant();
-		
-		double alpha = this.env.getAlpha();
 		
 		this.sinr = new Double [this.distanceMatrix.length][this.distanceMatrix[0].length];
 		
 		for (int i=0; i<sinr.length; i++) {
 			
 			for (int j=0; j<(sinr[0].length - this.macroPoints.size()); j++) {				
-				double distance = distanceMatrix[i][j]; 		
-				this.sinr[i][j] = (this.env.getPowerFemto() / UkFemto)* Util.getGammaDistribution(deltaKFemto, 1.0) * Util.getPathLoss(distance, d0, alpha, c);				
-				this.sinr[i][j] = this.sinr[i][j] / (this.env.getNoisePower());
+				double distance = distanceMatrix[i][j]; 						
+				this.sinr[i][j] = (this.env.getPowerFemto() * Util.getChannelGain(BSType.Femto, distance, 16.0));
+				
+				Double aux = 0.0;
+				
+				for (int k=0; k<(sinr[0].length - this.macroPoints.size()); k++) {	
+					if (k != j) {
+						double distanceK = distanceMatrix[i][k]; 		
+						aux += (this.env.getPowerFemto() * Util.getChannelGain(BSType.Femto, distanceK, 16.0));
+					}
+				}
+				
+				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
 			}
 			
 			for (int j=(sinr[0].length - this.macroPoints.size()); j<this.sinr[0].length; j++) {
-				double distance = distanceMatrix[i][j];
-				this.sinr[i][j] = (this.env.getPowerMacro() / UkMacro)* Util.getGammaDistribution(deltaKMacro, 1.0) * Util.getPathLoss(distance, d0, alpha, c);
-				this.sinr[i][j] = this.sinr[i][j] / (this.env.getNoisePower());
+				double distance = distanceMatrix[i][j]; 						
+				this.sinr[i][j] = (this.env.getPowerMacro() * Util.getChannelGain(BSType.Macro, distance, 36.0));
+				
+				Double aux = 0.0;
+			
+				for (int k=(sinr[0].length - this.macroPoints.size()); k<this.sinr[0].length; k++) {					
+					if (k != j) {
+						double distanceK = distanceMatrix[i][k]; 
+						aux += (this.env.getPowerMacro() * Util.getChannelGain(BSType.Macro, distanceK, 36.0));
+					}
+				}
+				
+				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
+
 			}
 		}	
 	}
@@ -114,33 +126,35 @@ public class Scenario implements Serializable{
 	public void getCoverageMatrix() {
 		
 		this.coverageMatrix = new Double[this.sinr.length][this.sinr[0].length];
-		Util.initMatrix(this.coverageMatrix);
-		
-		this.maxSinr = new Double[this.sinr.length];
+		Util.init(this.coverageMatrix);
 		
 		for (int i=0; i<this.sinr.length; i++) {
 			
-			double max = (Double.MIN_VALUE * (-1.0));
-			int max_i = -1, max_j= -1;
-			
-			for (int j=0; j<this.sinr[0].length; j++) {
-		
+			Double max = Double.MAX_VALUE * (-1);
+			Integer index_max = -1;
+						
+			for (int j=0; j<this.sinr[0].length; j++) {		
+				
 				if (this.sinr[i][j] > max) {
 					max = this.sinr[i][j];
-					max_i = i;
-					max_j = j;
-				}else {
-					System.out.println(this.sinr[i][j]);
-					System.out.println("T");
+					index_max = j;
 				}
 			}
 			
-			this.maxSinr[i] = max;
-			this.coverageMatrix[max_i][max_j] = 1.0;
+			this.coverageMatrix[i][index_max] = 1.0;
 		}
+	}
+	
+	public void getBSLoad() {
 		
-		Util.print(this.coverageMatrix);
+		Double[] bsLoad = new Double[coverageMatrix[0].length];
+		Util.init(bsLoad);
 		
+		for (int j=0; j<this.coverageMatrix[0].length; j++) {
+			for (int i=0; i<this.coverageMatrix.length; i++) {				
+				bsLoad[j] += this.coverageMatrix[i][j];				
+			}
+		}		
 	}
 
 	public Integer getId() {
