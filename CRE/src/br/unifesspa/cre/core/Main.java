@@ -31,7 +31,7 @@ public class Main {
 			env.set(Param.area, 1000000.0); 	// 1 km^2
 			env.set(Param.lambdaFemto, 0.00002); // 0.00002 Femto/m^2 = 20 Femtos  
 			env.set(Param.lambdaUser, 0.0001); // 0.0001 Users/m^2 = 100 Users 
-			env.set(Param.lambdaMacro, 0.000002); // 0.000002 Macros/m^2 = 2 Macros 
+			env.set(Param.lambdaMacro, 0.000002); // 0.000002 Macros/m^2 = 2 Macros
 			
 			s = new Scenario(env);
 			dao.save(s, path);

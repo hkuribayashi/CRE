@@ -120,7 +120,7 @@ public class Scenario implements Serializable{
 				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
 
 			}
-		}	
+		}
 	}
 	
 	public void getCoverageMatrix() {
@@ -154,7 +154,9 @@ public class Scenario implements Serializable{
 			for (int i=0; i<this.coverageMatrix.length; i++) {				
 				bsLoad[j] += this.coverageMatrix[i][j];				
 			}
-		}		
+		}
+		
+		Util.print(bsLoad);
 	}
 
 	public Integer getId() {
