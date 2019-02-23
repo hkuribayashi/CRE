@@ -28,6 +28,14 @@ public class Scenario implements Serializable{
 	private Double[] numberUEsPerBS;
 	
 	private Double[][] coverageMatrix;
+	
+	private Double[] bsLoadMatrix;
+	
+	private Double[][] bitrateMatrix;
+	
+	private Double[] individualBitrateMatrix;
+	
+	private Double sumRate;
 
 	public Scenario(CREEnv env) {
 
@@ -44,17 +52,6 @@ public class Scenario implements Serializable{
 		
 		this.femtoPoints = Util.getHPPP(this.env.getLambdaFemto(), this.env.getArea(), this.env.getHeightFemto());
 		this.userPoints = Util.getHPPP(this.env.getLambdaUser(), this.env.getArea(), this.env.getHeightUser());
-
-		/* Calculate the distance between Users and Femto BS's and Between Users and Macro BS's  */
-		this.getDistance(); 
-		
-		/* Calculate the SINR Metric */
-		this.getInitialSINR();
-		
-		/* Calculate the Coverage Matrix */
-		this.getCoverageMatrix();
-		
-		this.getBSLoad();
 
 	}
 
@@ -101,7 +98,7 @@ public class Scenario implements Serializable{
 					}
 				}
 				
-				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
+				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower()) + this.env.getBias();
 			}
 			
 			for (int j=(sinr[0].length - this.macroPoints.size()); j<this.sinr[0].length; j++) {
@@ -117,7 +114,7 @@ public class Scenario implements Serializable{
 					}
 				}
 				
-				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
+				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower()) + this.env.getBias();
 
 			}
 		}
@@ -147,16 +144,40 @@ public class Scenario implements Serializable{
 	
 	public void getBSLoad() {
 		
-		Double[] bsLoad = new Double[coverageMatrix[0].length];
-		Util.init(bsLoad);
+		this.bsLoadMatrix = new Double[coverageMatrix[0].length];
+		Util.init(bsLoadMatrix);
 		
 		for (int j=0; j<this.coverageMatrix[0].length; j++) {
 			for (int i=0; i<this.coverageMatrix.length; i++) {				
-				bsLoad[j] += this.coverageMatrix[i][j];				
+				bsLoadMatrix[j] += this.coverageMatrix[i][j];				
+			}
+		}
+	}
+	
+	public void getInitialBitRate() {
+	
+		this.bitrateMatrix = new Double[this.sinr.length][this.sinr[0].length];
+		for (int i=0; i<this.bitrateMatrix.length; i++) {
+			for (int j=0; j<this.bitrateMatrix[0].length; j++) {
+				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + this.sinr[i][j])/Math.log10(2.0)))/1000000.0;
+			}
+		}
+	}
+	
+	public void getFinalBitRate() {
+		this.individualBitrateMatrix = new Double[this.bitrateMatrix.length];
+		for (int i=0; i<this.coverageMatrix.length; i++) {
+			for (int j=0; j<this.coverageMatrix[0].length; j++) {
+				if (this.coverageMatrix[i][j] == 1.0) {
+					this.individualBitrateMatrix[i] = (this.bitrateMatrix[i][j]/this.bsLoadMatrix[j]);
+				}
 			}
 		}
 		
-		Util.print(bsLoad);
+		this.sumRate = 0.0;
+		for (int i=0; i<this.individualBitrateMatrix.length; i++) {
+			this.sumRate += this.individualBitrateMatrix[i];
+		}
 	}
 
 	public Integer getId() {
@@ -175,12 +196,12 @@ public class Scenario implements Serializable{
 		this.env = env;
 	}
 
-	public List<Point> getUserPoints() {
-		return userPoints;
+	public List<Point> getMacroPoints() {
+		return macroPoints;
 	}
 
-	public void setUserPoints(List<Point> userPoints) {
-		this.userPoints = userPoints;
+	public void setMacroPoints(List<Point> macroPoints) {
+		this.macroPoints = macroPoints;
 	}
 
 	public List<Point> getFemtoPoints() {
@@ -191,12 +212,12 @@ public class Scenario implements Serializable{
 		this.femtoPoints = femtoPoints;
 	}
 
-	public List<Point> getMacroPoints() {
-		return macroPoints;
+	public List<Point> getUserPoints() {
+		return userPoints;
 	}
 
-	public void setMacroPoints(List<Point> macroPoints) {
-		this.macroPoints = macroPoints;
+	public void setUserPoints(List<Point> userPoints) {
+		this.userPoints = userPoints;
 	}
 
 	public Double[][] getDistanceMatrix() {
@@ -207,8 +228,12 @@ public class Scenario implements Serializable{
 		this.distanceMatrix = distanceMatrix;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Double[][] getSinr() {
+		return sinr;
+	}
+
+	public void setSinr(Double[][] sinr) {
+		this.sinr = sinr;
 	}
 
 	public Double[] getNumberUEsPerBS() {
@@ -217,5 +242,45 @@ public class Scenario implements Serializable{
 
 	public void setNumberUEsPerBS(Double[] numberUEsPerBS) {
 		this.numberUEsPerBS = numberUEsPerBS;
+	}
+
+	public Double[] getBsLoadMatrix() {
+		return bsLoadMatrix;
+	}
+
+	public void setBsLoadMatrix(Double[] bsLoadMatrix) {
+		this.bsLoadMatrix = bsLoadMatrix;
+	}
+
+	public Double[][] getBitrateMatrix() {
+		return bitrateMatrix;
+	}
+
+	public void setBitrateMatrix(Double[][] bitrateMatrix) {
+		this.bitrateMatrix = bitrateMatrix;
+	}
+
+	public Double[] getIndividualBitrateMatrix() {
+		return individualBitrateMatrix;
+	}
+
+	public void setIndividualBitrateMatrix(Double[] individualBitrateMatrix) {
+		this.individualBitrateMatrix = individualBitrateMatrix;
+	}
+
+	public Double getSumRate() {
+		return sumRate;
+	}
+
+	public void setSumRate(Double sumRate) {
+		this.sumRate = sumRate;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setCoverageMatrix(Double[][] coverageMatrix) {
+		this.coverageMatrix = coverageMatrix;
 	}
 }

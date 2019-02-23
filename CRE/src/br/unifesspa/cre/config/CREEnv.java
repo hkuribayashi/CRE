@@ -16,7 +16,7 @@ public class CREEnv implements Serializable{
 
 	private Double powerFemto = 23.0;
 
-	private Double bandwidth = 20.0;
+	private Double bandwidth = 20000000.0;
 
 	private Double area = 100.0;
 
@@ -27,6 +27,8 @@ public class CREEnv implements Serializable{
 	private Double heightFemto = 25.0;
 	
 	private Double heightUser = 25.0;
+	
+	private Double bias = 0.0;
 	
 
 	public void set(Param param, Double value) {
@@ -152,11 +154,19 @@ public class CREEnv implements Serializable{
 		this.heightUser = heightUser;
 	}
 
+	public Double getBias() {
+		return bias;
+	}
+
+	public void setBias(Double bias) {
+		this.bias = bias;
+	}
+
 	@Override
 	public String toString() {
 		return "CREEnv [lambdaUser=" + lambdaUser + ", lambdaMacro=" + lambdaMacro + ", lambdaFemto=" + lambdaFemto
 				+ ", powerMacro=" + powerMacro + ", powerFemto=" + powerFemto + ", bandwidth=" + bandwidth + ", area="
 				+ area + ", noisePower=" + noisePower + ", heightMacro=" + heightMacro + ", heightFemto=" + heightFemto
-				+ ", heightUser=" + heightUser + "]";
+				+ ", heightUser=" + heightUser + ", bias=" + bias + "]";
 	}
 }

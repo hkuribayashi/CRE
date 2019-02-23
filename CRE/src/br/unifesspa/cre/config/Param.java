@@ -8,7 +8,7 @@ public enum Param {
 	
 	area, alpha, noisePower, antennasMacro, antennasFemto, antennasUser,
 	
-	heightMacro, heightFemto, heightUser;
+	heightMacro, heightFemto, heightUser, bias;
 	
 	
 }
