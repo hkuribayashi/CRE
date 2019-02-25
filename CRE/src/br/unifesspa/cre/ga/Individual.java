@@ -1,4 +1,4 @@
-package br.unifesspa.cre.model;
+package br.unifesspa.cre.ga;
 
 import java.util.ArrayList;
 import java.util.List;
