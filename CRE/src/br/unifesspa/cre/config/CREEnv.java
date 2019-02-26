@@ -56,6 +56,8 @@ public class CREEnv implements Serializable{
 		case heightFemto: this.heightFemto = value; break;
 		
 		case heightUser: this.heightUser = value; break;
+		
+		case bias: this.bias = value; break;
 
 		default: break;
 

@@ -114,7 +114,7 @@ public class Scenario implements Serializable{
 					}
 				}
 				
-				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower()) + this.env.getBias();
+				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
 
 			}
 		}
@@ -149,16 +149,22 @@ public class Scenario implements Serializable{
 		
 		for (int j=0; j<this.coverageMatrix[0].length; j++) {
 			for (int i=0; i<this.coverageMatrix.length; i++) {				
-				bsLoadMatrix[j] += this.coverageMatrix[i][j];				
+				this.bsLoadMatrix[j] += this.coverageMatrix[i][j];				
 			}
 		}
+		
+		//Util.print(this.bsLoadMatrix);
 	}
 	
 	public void getInitialBitRate() {
 	
 		this.bitrateMatrix = new Double[this.sinr.length][this.sinr[0].length];
 		for (int i=0; i<this.bitrateMatrix.length; i++) {
-			for (int j=0; j<this.bitrateMatrix[0].length; j++) {
+			for (int j=0; j<(sinr[0].length - this.macroPoints.size()); j++) {
+				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + this.sinr[i][j] - this.env.getBias())/Math.log10(2.0)))/1000000.0;
+			}
+			
+			for (int j=(sinr[0].length - this.macroPoints.size()); j<this.sinr[0].length; j++) {
 				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + this.sinr[i][j])/Math.log10(2.0)))/1000000.0;
 			}
 		}

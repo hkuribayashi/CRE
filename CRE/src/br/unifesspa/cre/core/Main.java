@@ -3,7 +3,7 @@ package br.unifesspa.cre.core;
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.hetnet.Scenario;
-import br.unifesspa.cre.util.Util;
+import br.unifesspa.cre.model.Result;
 
 /**
  * 
@@ -14,14 +14,15 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		Double[] biasOffset = {-1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};
+		Double[] biasOffset = {-1.0, -0.5, 0.0, 0.25, 0.5, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0};
 		Double simulations = 1000.0;
 		CREEnv env;
 		Scenario s;
-		Double[] results = new Double[biasOffset.length];
 		Double sum = 0.0; 
 
 		for (int i=0; i<biasOffset.length; i++) {
+			
+			long startTime = System.nanoTime();
 
 			for (int j=0; j<simulations; j++) {
 
@@ -42,11 +43,19 @@ public class Main {
 				sum += s.getSumRate();
 			}
 			
-			results[i] = (sum/simulations);
-
+			long endTime = System.nanoTime();
+			long timeElapsed = startTime - endTime;
+			
+			Result r = new Result();
+			r.setExecutionTime((timeElapsed/1000000000.0)/simulations);
+			r.setLabel("Bias "+biasOffset[i]);
+			r.setSumRate((sum/simulations));
+			r.setMedianRate(0.0);
+			
+			System.out.println(r);
+			
+			sum = 0.0;
 		}
-		
-		Util.print(results);
 
 		//JFrame window = new JFrame();
 		//window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
