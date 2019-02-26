@@ -47,7 +47,7 @@ public class Main {
 			long timeElapsed = endTime - startTime;
 			
 			Result r = new Result();
-			r.setExecutionTime(TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.MILLISECONDS));
+			r.setExecutionTime(TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.SECONDS));
 			r.setLabel("Bias "+biasOffset[i]);
 			r.setSumRate((sum/simulations));
 			r.setMedianRate(0.0);
