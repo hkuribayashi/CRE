@@ -1,5 +1,7 @@
 package br.unifesspa.cre.core;
 
+import java.util.concurrent.TimeUnit;
+
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.hetnet.Scenario;
@@ -16,8 +18,6 @@ public class Main {
 
 		Double[] biasOffset = {-1.0, -0.5, 0.0, 0.25, 0.5, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0};
 		Double simulations = 1000.0;
-		CREEnv env;
-		Scenario s;
 		Double sum = 0.0; 
 
 		for (int i=0; i<biasOffset.length; i++) {
@@ -26,14 +26,14 @@ public class Main {
 
 			for (int j=0; j<simulations; j++) {
 
-				env = new CREEnv();
+				CREEnv env = new CREEnv();
 				env.set(Param.area, 1000000.0); 	// 1 km^2
 				env.set(Param.lambdaFemto, 0.00002); // 0.00002 Femto/m^2 = 20 Femtos  
 				env.set(Param.lambdaUser, 0.0001); // 0.0001 Users/m^2 = 100 Users 
 				env.set(Param.lambdaMacro, 0.000002); // 0.000002 Macros/m^2 = 2 Macros
 				env.set(Param.bias, biasOffset[i]); //CRE Bias
 
-				s = new Scenario(env);
+				Scenario s = new Scenario(env);
 				s.getDistance(); 
 				s.getInitialSINR();
 				s.getCoverageMatrix();
@@ -44,10 +44,10 @@ public class Main {
 			}
 			
 			long endTime = System.nanoTime();
-			long timeElapsed = startTime - endTime;
+			long timeElapsed = endTime - startTime;
 			
 			Result r = new Result();
-			r.setExecutionTime((timeElapsed/1000000000.0)/simulations);
+			r.setExecutionTime(TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.MILLISECONDS));
 			r.setLabel("Bias "+biasOffset[i]);
 			r.setSumRate((sum/simulations));
 			r.setMedianRate(0.0);

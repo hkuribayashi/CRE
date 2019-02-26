@@ -8,7 +8,7 @@ public class Result extends Entity {
 	
 	private Double medianRate;
 	
-	private Double executionTime;
+	private Long executionTime;
 
 	public Result() {
 		super();
@@ -18,7 +18,7 @@ public class Result extends Entity {
 		super(id);
 	}
 
-	public Result(Integer id, String label, Double sumRate, Double medianRate, Double executionTime) {
+	public Result(Integer id, String label, Double sumRate, Double medianRate, Long executionTime) {
 		super(id);
 		this.label = label;
 		this.sumRate = sumRate;
@@ -42,11 +42,11 @@ public class Result extends Entity {
 		this.medianRate = medianRate;
 	}
 
-	public Double getExecutionTime() {
+	public Long getExecutionTime() {
 		return executionTime;
 	}
 
-	public void setExecutionTime(Double executionTime) {
+	public void setExecutionTime(Long executionTime) {
 		this.executionTime = executionTime;
 	}
 
