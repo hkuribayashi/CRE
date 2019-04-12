@@ -1,92 +1,113 @@
 package br.unifesspa.cre.ga;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Individual {
+import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.util.Util;
 
-	private Integer id;
+public class Individual implements Comparable<Individual>, Cloneable {
 
-	private List<Double> chromosome;
+	private Double[] chromosome;
 
 	private Double evaluation;
 
-	private Double generation;
+	private Scenario scenario;
 
-	public Individual() {
+	public Individual(Scenario scenario) {
 
-		int numberOfGens = 100;
+		this.scenario = scenario;
+		int numberOfGens = this.scenario.getFemtoPoints().size();
+		double lower = this.scenario.getEnv().getInitialGeneRange();
+		double upper = this.scenario.getEnv().getFinalGeneRange();
+		this.chromosome = new Double[numberOfGens];
 
-		this.chromosome = new ArrayList<Double>();
-
-		for (int i = 0; i < numberOfGens; i++) {
-			if (Math.random() < 0.5) {
-				this.chromosome.add(0.0);    
-			} else {
-				this.chromosome.add(1.0);
-			}
-		}
+		for (int i = 0; i < numberOfGens; i++)
+			this.chromosome[i] = Util.getUniformRealDistribution(lower, upper);
 	}
 
-	public void execEvaluation() {
+	public void evaluate() {
 
+		this.scenario.setBias(this.chromosome);
+		this.scenario.getInitialSINR();
+		this.scenario.getCoverageMatrix();
+		this.scenario.getBSLoad();
+		this.scenario.getInitialBitRate();
+		this.scenario.getFinalBitRate();
+
+		this.setEvaluation(this.scenario.getSumRate());
 	}
 
-	public List<Individual> crossover(Individual otherIndividual){
+	public Individual crossover(Individual otherIndividual){
 
-		int cut = (int) Math.round(Math.random() * this.chromosome.size());
+		int index = Util.getUniformIntegerDistribution(0, 2);
+		CrossoverStrategy strategy = CrossoverStrategy.values()[index];
+		Individual i = null;
 
-		List<Double> firstChromosome = new ArrayList<Double>();
-		firstChromosome.addAll(otherIndividual.getChromosome().subList(0, cut));
-		firstChromosome.addAll(this.chromosome.subList(cut, this.chromosome.size()));
-
-		List<Double> secondChromosome = new ArrayList<Double>();
-		secondChromosome.addAll(this.chromosome.subList(0, cut));
-		secondChromosome.addAll(otherIndividual.getChromosome().subList(cut, this.chromosome.size()));
-
-		List<Individual> sons = new ArrayList<Individual>();
-
-		sons.add(new Individual());
-		sons.add(new Individual());
-
-		sons.get(0).setChromosome(firstChromosome);
-		sons.get(0).setGeneration(this.generation++);
-
-		sons.get(1).setChromosome(secondChromosome);
-		sons.get(1).setGeneration(this.generation++);
-
-		return sons;
-	}
-
-	public Individual execMutation(Double mutationRate) {
-		
-		for (int i = 0; i < this.chromosome.size(); i++) {
-			if (Math.random() < mutationRate) {
-				
-				if (this.chromosome.get(i).equals((1.0)))
-					
-					this.chromosome.set(i, 0.0);
-					
-				 else this.chromosome.set(i, 1.0);
-			}
+		switch(strategy) {
+			case OnePoint: i = this.onePointCrossover(otherIndividual); break;
+			case TwoPoint: i = this.twoPointCrossover(otherIndividual); break;
+			case Uniform:  i = this.uniformCrossover(otherIndividual);	break;
+			default: break;
 		}
 		
+		return i;
+	}
+	
+	private Individual uniformCrossover(Individual otherIndividual) {
+		return onePointCrossover(otherIndividual);
+	}
+	
+	private Individual twoPointCrossover(Individual otherIndividual) {
 		return this;
 	}
 
-	public Integer getId() {
-		return id;
+	private Individual onePointCrossover(Individual otherIndividual){
+
+		int cut = (int) Math.round(Math.random() * this.chromosome.length);
+
+		List<Double> son = null;
+		List<Double> pai1 = new ArrayList<Double>(Arrays.asList(this.getChromosome()));
+		List<Double> pai2 = new ArrayList<Double>(Arrays.asList(otherIndividual.getChromosome()));
+		
+		if (Math.random() < 0.5) {
+			son = pai1.subList(0, cut);
+			son.addAll(pai2.subList(cut, pai1.size()));	
+		}else {
+			son = pai2.subList(0, cut);
+			son.addAll(pai1.subList(cut, pai2.size()));
+		}
+
+		Double[] c = new Double[this.chromosome.length];
+		c = son.toArray(c);
+
+		Individual i = null;
+		
+		try {
+			i = (Individual) this.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		i.setChromosome(c);
+		
+		return i;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Individual mutation() {
+		return this.getNotUniformMutation();
 	}
 
-	public List<Double> getChromosome() {
+	private Individual getNotUniformMutation() {
+		return this;
+	}
+
+	public Double[] getChromosome() {
 		return chromosome;
 	}
 
-	public void setChromosome(List<Double> chromosome) {
+	public void setChromosome(Double[] chromosome) {
 		this.chromosome = chromosome;
 	}
 
@@ -98,11 +119,20 @@ public class Individual {
 		this.evaluation = evaluation;
 	}
 
-	public Double getGeneration() {
-		return generation;
+	public Scenario getScenario() {
+		return scenario;
 	}
 
-	public void setGeneration(Double generation) {
-		this.generation = generation;
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
+	}
+
+	@Override
+	public int compareTo(Individual o) {
+		if (this.getEvaluation() > o.getEvaluation())
+			return -1;
+		else if (this.getEvaluation() == o.getEvaluation()) {
+			return 0;
+		} else return -1;
 	}
 }

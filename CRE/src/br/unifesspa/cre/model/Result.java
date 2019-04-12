@@ -1,8 +1,8 @@
 package br.unifesspa.cre.model;
 
-public class Result extends Entity {
+public class Result extends Entity implements Comparable<Result>{
 	
-	private String label;
+	private Double bias;
 
 	private Double sumRate;
 	
@@ -18,9 +18,9 @@ public class Result extends Entity {
 		super(id);
 	}
 
-	public Result(Integer id, String label, Double sumRate, Double medianRate, Long executionTime) {
+	public Result(Integer id, Double bias, Double sumRate, Double medianRate, Long executionTime) {
 		super(id);
-		this.label = label;
+		this.bias = bias;
 		this.sumRate = sumRate;
 		this.medianRate = medianRate;
 		this.executionTime = executionTime;
@@ -50,17 +50,26 @@ public class Result extends Entity {
 		this.executionTime = executionTime;
 	}
 
-	public String getLabel() {
-		return label;
+	public Double getBias() {
+		return bias;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public void setBias(Double bias) {
+		this.bias = bias;
 	}
 
 	@Override
 	public String toString() {
-		return "Result [label=" + label + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", executionTime="
+		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", executionTime="
 				+ executionTime + "]";
+	}
+
+	@Override
+	public int compareTo(Result o) {
+		if (this.sumRate > o.getSumRate()) 
+			return -1;
+		else if (this.sumRate == o.getSumRate())
+				return 0;
+		else return 1;
 	}
 }

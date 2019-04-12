@@ -8,7 +8,16 @@ public enum Param {
 	
 	area, alpha, noisePower, antennasMacro, antennasFemto, antennasUser,
 	
-	heightMacro, heightFemto, heightUser, bias;
+	heightMacro, heightFemto, heightUser, 
 	
+	initialCrossoverProbability, finalCrossoverProbability,
+	
+	initialMutationProbability, finalMutationProbability,
+	
+	initialGeneRange, finalGeneRange,
+	
+	initialSugestedIndividual, finalSugestedInvidual,
+	
+	populationSize, generationSize, kElitism;
 	
 }

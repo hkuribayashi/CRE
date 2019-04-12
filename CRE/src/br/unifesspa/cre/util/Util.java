@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.math3.distribution.GammaDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 
 import br.unifesspa.cre.hetnet.BSType;
@@ -12,6 +13,17 @@ import br.unifesspa.cre.hetnet.Point;
 
 public class Util {
 
+	/**
+	 * 
+	 * @param lower
+	 * @param upper
+	 * @return
+	 */
+	public static Integer getUniformIntegerDistribution(Integer lower, Integer upper) {
+		return new UniformIntegerDistribution(lower, upper).sample();
+	}
+	
+	
 	/**
 	 * Returns a sample from a Gamma Distribuition (shape, scale)
 	 * @param shape
@@ -24,6 +36,16 @@ public class Util {
 			shape = 1.0;
 
 		return new GammaDistribution(shape, scale).sample();
+	}
+	
+	/**
+	 * Returns a sample froam a Real Uniform Distribution (lower, upper)
+	 * @param lower
+	 * @param upper
+	 * @return
+	 */
+	public static Double getUniformRealDistribution(Double lower, Double upper) {
+		return new UniformRealDistribution(lower, upper).sample();
 	}
 	
 	/**

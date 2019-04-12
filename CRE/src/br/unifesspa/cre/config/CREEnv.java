@@ -2,6 +2,10 @@ package br.unifesspa.cre.config;
 
 import java.io.Serializable;
 
+/**
+ * @author hugo
+ *
+ */
 public class CREEnv implements Serializable{
 
 	private static final long serialVersionUID = 6824819508443271546L;
@@ -28,8 +32,43 @@ public class CREEnv implements Serializable{
 	
 	private Double heightUser = 25.0;
 	
-	private Double bias = 0.0;
+	private Double initialCrossoverProbability = 0.9;
 	
+	private Double finalCrossoverProbability = 0.6;
+	
+	private Double initialMutationProbability = 0.2;
+	
+	private Double finalMutationProbability = 0.8;
+	
+	private Double initialGeneRange = -3.0;
+	
+	private Double finalGeneRange = 3.0;
+	
+	private Double initialSugestedIndividual = -3.0;
+	
+	private Double finalSugestedIndividual = -3.0;
+	
+	private Integer populationSize = 20;
+	
+	private Integer kElitism = 2;
+	
+	private Integer generationSize = 1000;
+	
+	
+	public void set(Param param, Integer value) {
+
+		switch (param) {
+			
+		case populationSize: this.populationSize = value; break;
+		
+		case kElitism: this.kElitism = value; break;
+		
+		case generationSize: this.generationSize = value; break;
+		
+		default: break;
+		
+		}
+	}
 
 	public void set(Param param, Double value) {
 
@@ -57,7 +96,21 @@ public class CREEnv implements Serializable{
 		
 		case heightUser: this.heightUser = value; break;
 		
-		case bias: this.bias = value; break;
+		case initialCrossoverProbability: this.initialCrossoverProbability = value; break;
+		
+		case finalCrossoverProbability: this.finalCrossoverProbability = value; break;
+		
+		case initialGeneRange: this.initialGeneRange = value; break;
+		
+		case finalGeneRange: this.finalGeneRange = value; break;
+		
+		case initialSugestedIndividual: this.initialSugestedIndividual = value; break;
+		
+		case finalSugestedInvidual: this.finalSugestedIndividual = value; break;
+		
+		case initialMutationProbability: this.initialMutationProbability = value; break;
+		
+		case finalMutationProbability: this.finalMutationProbability = value; break;
 
 		default: break;
 
@@ -128,10 +181,6 @@ public class CREEnv implements Serializable{
 		this.noisePower = noisePower;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public Double getHeightMacro() {
 		return heightMacro;
 	}
@@ -156,12 +205,96 @@ public class CREEnv implements Serializable{
 		this.heightUser = heightUser;
 	}
 
-	public Double getBias() {
-		return bias;
+	public Double getInitialCrossoverProbability() {
+		return initialCrossoverProbability;
 	}
 
-	public void setBias(Double bias) {
-		this.bias = bias;
+	public void setInitialCrossoverProbability(Double initialCrossoverProbability) {
+		this.initialCrossoverProbability = initialCrossoverProbability;
+	}
+
+	public Double getFinalCrossoverProbability() {
+		return finalCrossoverProbability;
+	}
+
+	public void setFinalCrossoverProbability(Double finalCrossoverProbability) {
+		this.finalCrossoverProbability = finalCrossoverProbability;
+	}
+
+	public Double getInitialGeneRange() {
+		return initialGeneRange;
+	}
+
+	public void setInitialGeneRange(Double initialGeneRange) {
+		this.initialGeneRange = initialGeneRange;
+	}
+
+	public Double getFinalGeneRange() {
+		return finalGeneRange;
+	}
+
+	public void setFinalGeneRange(Double finalGeneRange) {
+		this.finalGeneRange = finalGeneRange;
+	}
+
+	public Double getInitialSugestedIndividual() {
+		return initialSugestedIndividual;
+	}
+
+	public void setInitialSugestedIndividual(Double initialSugestedIndividual) {
+		this.initialSugestedIndividual = initialSugestedIndividual;
+	}
+
+	public Double getFinalSugestedIndividual() {
+		return finalSugestedIndividual;
+	}
+
+	public void setFinalSugestedIndividual(Double finalSugestedIndividual) {
+		this.finalSugestedIndividual = finalSugestedIndividual;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public Integer getPopulationSize() {
+		return populationSize;
+	}
+
+	public void setPopulationSize(Integer populationSize) {
+		this.populationSize = populationSize;
+	}
+
+	public Integer getkElitism() {
+		return kElitism;
+	}
+
+	public void setkElitism(Integer kElitism) {
+		this.kElitism = kElitism;
+	}
+
+	public Integer getGenerationSize() {
+		return generationSize;
+	}
+
+	public void setGenerationSize(Integer generationSize) {
+		this.generationSize = generationSize;
+	}
+
+	public Double getInitialMutationProbability() {
+		return initialMutationProbability;
+	}
+
+	public void setInitialMutationProbability(Double initialMutationProbability) {
+		this.initialMutationProbability = initialMutationProbability;
+	}
+
+	public Double getFinalMutationProbability() {
+		return finalMutationProbability;
+	}
+
+	public void setFinalMutationProbability(Double finalMutationProbability) {
+		this.finalMutationProbability = finalMutationProbability;
 	}
 
 	@Override
@@ -169,6 +302,12 @@ public class CREEnv implements Serializable{
 		return "CREEnv [lambdaUser=" + lambdaUser + ", lambdaMacro=" + lambdaMacro + ", lambdaFemto=" + lambdaFemto
 				+ ", powerMacro=" + powerMacro + ", powerFemto=" + powerFemto + ", bandwidth=" + bandwidth + ", area="
 				+ area + ", noisePower=" + noisePower + ", heightMacro=" + heightMacro + ", heightFemto=" + heightFemto
-				+ ", heightUser=" + heightUser + ", bias=" + bias + "]";
+				+ ", heightUser=" + heightUser + ", initialCrossoverProbability=" + initialCrossoverProbability
+				+ ", finalCrossoverProbability=" + finalCrossoverProbability + ", initialMutationProbability="
+				+ initialMutationProbability + ", finalMutationProbability=" + finalMutationProbability
+				+ ", initialGeneRange=" + initialGeneRange + ", finalGeneRange=" + finalGeneRange
+				+ ", initialSugestedIndividual=" + initialSugestedIndividual + ", finalSugestedIndividual="
+				+ finalSugestedIndividual + ", populationSize=" + populationSize + ", kElitism=" + kElitism
+				+ ", generationSize=" + generationSize + "]";
 	}
 }

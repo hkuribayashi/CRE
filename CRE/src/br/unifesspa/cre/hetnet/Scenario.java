@@ -35,6 +35,8 @@ public class Scenario implements Serializable{
 	
 	private Double[] individualBitrateMatrix;
 	
+	private Double[] bias;
+	
 	private Double sumRate;
 
 	public Scenario(CREEnv env) {
@@ -52,7 +54,13 @@ public class Scenario implements Serializable{
 		
 		this.femtoPoints = Util.getHPPP(this.env.getLambdaFemto(), this.env.getArea(), this.env.getHeightFemto());
 		this.userPoints = Util.getHPPP(this.env.getLambdaUser(), this.env.getArea(), this.env.getHeightUser());
-
+		
+		this.bias = new Double[this.femtoPoints.size()];
+	}
+	
+	public void initBias(Double bias) {
+		for (int i=0; i<this.bias.length; i++)
+			this.bias[i] = bias;
 	}
 
 	/**
@@ -98,7 +106,7 @@ public class Scenario implements Serializable{
 					}
 				}
 				
-				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower()) + this.env.getBias();
+				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower()) + this.bias[j];
 			}
 			
 			for (int j=(sinr[0].length - this.macroPoints.size()); j<this.sinr[0].length; j++) {
@@ -152,8 +160,6 @@ public class Scenario implements Serializable{
 				this.bsLoadMatrix[j] += this.coverageMatrix[i][j];				
 			}
 		}
-		
-		//Util.print(this.bsLoadMatrix);
 	}
 	
 	public void getInitialBitRate() {
@@ -161,7 +167,7 @@ public class Scenario implements Serializable{
 		this.bitrateMatrix = new Double[this.sinr.length][this.sinr[0].length];
 		for (int i=0; i<this.bitrateMatrix.length; i++) {
 			for (int j=0; j<(sinr[0].length - this.macroPoints.size()); j++) {
-				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + this.sinr[i][j] - this.env.getBias())/Math.log10(2.0)))/1000000.0;
+				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + this.sinr[i][j] - this.bias[j])/Math.log10(2.0)))/1000000.0;
 			}
 			
 			for (int j=(sinr[0].length - this.macroPoints.size()); j<this.sinr[0].length; j++) {
@@ -288,5 +294,13 @@ public class Scenario implements Serializable{
 
 	public void setCoverageMatrix(Double[][] coverageMatrix) {
 		this.coverageMatrix = coverageMatrix;
+	}
+
+	public Double[] getBias() {
+		return bias;
+	}
+
+	public void setBias(Double[] bias) {
+		this.bias = bias;
 	}
 }
