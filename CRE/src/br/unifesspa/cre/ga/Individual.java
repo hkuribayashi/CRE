@@ -92,7 +92,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	
 	public Individual mutation() {
 		Individual individual = null;
-		int index = Util.getUniformIntegerDistribution(0, MutationStrategy.values().length);
+		int index = Util.getUniformIntegerDistribution(0, MutationStrategy.values().length-1);
 		MutationStrategy strategy = MutationStrategy.values()[index];
 		switch(strategy) {
 			case Flat: individual = flatMutation(); break;
