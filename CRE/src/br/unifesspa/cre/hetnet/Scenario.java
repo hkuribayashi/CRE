@@ -2,6 +2,7 @@ package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.unifesspa.cre.config.CREEnv;
@@ -302,5 +303,16 @@ public class Scenario implements Serializable{
 
 	public void setBias(Double[] bias) {
 		this.bias = bias;
+	}
+
+	@Override
+	public String toString() {
+		return "Scenario [id=" + id + ", env=" + env + ", macroPoints=" + macroPoints + ", femtoPoints=" + femtoPoints
+				+ ", userPoints=" + userPoints + ", distanceMatrix=" + Arrays.toString(distanceMatrix) + ", sinr="
+				+ Arrays.toString(sinr) + ", numberUEsPerBS=" + Arrays.toString(numberUEsPerBS) + ", coverageMatrix="
+				+ Arrays.toString(coverageMatrix) + ", bsLoadMatrix=" + Arrays.toString(bsLoadMatrix)
+				+ ", bitrateMatrix=" + Arrays.toString(bitrateMatrix) + ", individualBitrateMatrix="
+				+ Arrays.toString(individualBitrateMatrix) + ", bias=" + Arrays.toString(bias) + ", sumRate=" + sumRate
+				+ "]";
 	}
 }

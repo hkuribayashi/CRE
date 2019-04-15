@@ -6,8 +6,9 @@ import java.util.List;
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.data.DAO;
-import br.unifesspa.cre.ga.GA;
+import br.unifesspa.cre.ga.Individual;
 import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.util.Util;
 
 public class Main2 {
 
@@ -31,20 +32,33 @@ public class Main2 {
 			env.set(Param.initialMutationProbability, 0.2);
 			env.set(Param.finalMutationProbability, 0.8);
 
-			env.set(Param.initialGeneRange, -3.0);
-			env.set(Param.finalGeneRange, 3.0);
+			env.set(Param.initialGeneRange, -2.0);
+			env.set(Param.finalGeneRange, 2.0);
 
 			env.set(Param.initialSugestedIndividual, Collections.min(biasSelected));
 			env.set(Param.finalSugestedInvidual, Collections.max(biasSelected));
 			
 			env.set(Param.populationSize, 20);
 			env.set(Param.generationSize, 60);
+			env.set(Param.kElitism, 2);
 
 			Scenario s = new Scenario(env);
 			s.getDistance();
 
-			GA ga = new GA(s);
-			ga.evolve();
+			Individual i1 = new Individual(s, true);
+			i1.evaluate();
+			System.out.println(i1.getEvaluation());
+			
+			Individual i2 = new Individual(s, false);
+			i2.evaluate();
+			System.out.println(i2.getEvaluation());
+			
+			Individual i3 = i1.crossover(i2);
+			i3.evaluate();
+			System.out.println(i3.getEvaluation());
+			
+			
+			
 
 		}else System.out.println("Error: "+path+" not found.");
 	}
