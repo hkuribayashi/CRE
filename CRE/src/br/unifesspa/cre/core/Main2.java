@@ -21,6 +21,7 @@ public class Main2 {
 			List<Double> biasSelected = dao.restore(path);
 
 			CREEnv env = new CREEnv();
+			
 			env.set(Param.area, 1000000.0); 	  		// 1 km^2
 			env.set(Param.lambdaFemto, 0.00002);  		// 0.00002 Femto/m^2 = 20 Femtos  
 			env.set(Param.lambdaUser, 0.0001);    		// 0.0001 Users/m^2 = 100 Users 
