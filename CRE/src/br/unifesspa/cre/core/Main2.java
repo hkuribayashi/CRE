@@ -14,6 +14,7 @@ public class Main2 {
 	public static void main(String[] args) {
 
 		String path = "/Users/hugo/Desktop/data.cre";
+		
 		DAO<List<Double>> dao = new DAO<List<Double>>();
 		
 		if (dao.verifyPath(path)) {
