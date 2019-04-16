@@ -89,6 +89,9 @@ public class GA{
 				int f1 = this.roulette(sum);
 				int f2 = this.roulette(sum);// f1 pode ser igual a f2
 				
+				while (f1 == f2) 
+					f2 = this.roulette(sum);
+				
 				Individual individual = null;
 				
 				if (Math.random() < crossoverProbability ) {
