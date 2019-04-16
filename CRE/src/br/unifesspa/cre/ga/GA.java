@@ -33,7 +33,7 @@ public class GA{
 		for (int i=0; i<kElitism; i++)
 			this.population.add(new Individual(this.scenario, true));
 		for (int i=kElitism; i<populationSize; i++)
-			this.population.add(new Individual(this.scenario, true));
+			this.population.add(new Individual(this.scenario, false));
 
 		this.bestSolution = 0.0;
 		

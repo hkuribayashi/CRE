@@ -10,7 +10,6 @@ import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.data.DAO;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.util.Util;
 
 /**
  * 
