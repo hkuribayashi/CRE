@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import br.unifesspa.cre.config.CREEnv;
+import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.util.Util;
 
@@ -99,13 +101,13 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		double probability = this.scenario.getEnv().getInitialMutationProbability();
 
 		switch(strategy) {
-		case Random: randomMutation(probability); break;
-		case NotUniform: notUniformMutation(currentGereneration, probability); break;
+			case Random: randomMutation(probability); break;
+			case NotUniform: notUniformMutation(currentGereneration, probability); break;
 		default: break;
 		}
 	}
 
-	public void randomMutation(double probability) {
+	private void randomMutation(double probability) {
 
 		double lower = Collections.min(Arrays.asList(this.chromossome));
 		double upper = Collections.max(Arrays.asList(this.chromossome));
@@ -115,7 +117,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 				this.chromossome[i] = Util.getUniformRealDistribution(lower, upper);
 	}
 
-	public void notUniformMutation(int currentGeneration, double probability) {
+	private void notUniformMutation(int currentGeneration, double probability) {
 
 		double aux = 0.0;
 		int i=0;
@@ -194,4 +196,57 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		}
 		return 0;
 	}
+
+	
+	//Metodo main apenas como exemplo
+	
+	public static void main(String[] args) {
+
+
+		CREEnv env = new CREEnv();
+
+		env.set(Param.area, 1000000.0); 	  		// 1 km^2
+		env.set(Param.lambdaFemto, 0.00002);  		// 0.00002 Femto/m^2 = 20 Femtos  
+		env.set(Param.lambdaUser, 0.0001);    		// 0.0001 Users/m^2 = 100 Users 
+		env.set(Param.lambdaMacro, 0.000002); 		// 0.000002 Macros/m^2 = 2 Macros
+
+		env.set(Param.initialCrossoverProbability, 0.9);
+		env.set(Param.finalCrossoverProbability, 0.5);
+		env.set(Param.initialMutationProbability, 0.2);
+		env.set(Param.finalMutationProbability, 0.8);
+
+		env.set(Param.initialGeneRange, -3.0);
+		env.set(Param.finalGeneRange, 3.0);
+
+		env.set(Param.initialSugestedIndividual, 0.9);
+		env.set(Param.finalSugestedInvidual, 1.85);
+
+		env.set(Param.populationSize, 20);
+		env.set(Param.generationSize, 50);
+		env.set(Param.kElitism, 2);
+
+		Scenario s = new Scenario(env);
+		s.getDistance();
+
+		Individual i1 = new Individual(s, true);
+		i1.evaluate();
+		System.out.println(i1.getEvaluation());
+
+		System.out.println();
+
+		Individual i2 = new Individual(s, true);
+		i2.evaluate();
+		System.out.println(i2.getEvaluation());
+
+		Individual i3 = i1.crossover(i2);
+		i3.mutation(0);
+		i3.evaluate();
+		System.out.println(i3.getEvaluation());
+
+
+
+
+
+	}
+
 }

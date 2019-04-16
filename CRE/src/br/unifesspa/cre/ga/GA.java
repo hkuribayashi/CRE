@@ -18,9 +18,9 @@ public class GA{
 
 	private double bestSolution;
 	
-	private double[] crossoverProbability;
+	private double[] crossoverProbability; // 0.90[0]   .[51]..   0.5[49]
 	
-	private double[] mutationProbability;
+	private double[] mutationProbability; // 0.2 0.25 0.3 0.35 ...0.8
 
 	public GA(Scenario scenario) {
 
@@ -30,9 +30,9 @@ public class GA{
 		int kElitism = this.scenario.getEnv().getkElitism();
 
 		this.population = new ArrayList<Individual>();
-		for (int i=0; i<kElitism; i++)
+		for (int i=0; i<kElitism; i++) 									// Cria k individuos = k=2
 			this.population.add(new Individual(this.scenario, true));
-		for (int i=kElitism; i<populationSize; i++)
+		for (int i=kElitism; i<populationSize; i++)						// (Tamanho Populacao - k) = 20 -2 = 18
 			this.population.add(new Individual(this.scenario, false));
 
 		this.bestSolution = 0.0;
@@ -85,8 +85,9 @@ public class GA{
 			double mutationProbability = this.mutationProbability[currentGeneration];
 			
 			for (int i = 0; i < this.populationSize; i++) {
+				
 				int f1 = this.roulette(sum);
-				int f2 = this.roulette(sum);
+				int f2 = this.roulette(sum);// f1 pode ser igual a f2
 				
 				Individual individual = null;
 				

@@ -10,6 +10,7 @@ import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.data.DAO;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
+import br.unifesspa.cre.util.Util;
 
 /**
  * 
@@ -26,8 +27,10 @@ public class Main {
 		for (int i=0; i<biasOffset.length; i++)
 			biasOffset[i] = initialBias + (0.05 * i);
 		
+		Util.print(biasOffset);
+		
 		int kBestResult = 6;		
-		Long simulations = 20L;
+		Long simulations = 2L;
 		Double sum = 0.0;
 		Scenario s= null;
 		List<Result> results = new ArrayList<Result>();
