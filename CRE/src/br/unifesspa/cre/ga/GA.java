@@ -17,6 +17,10 @@ public class GA{
 	private Integer generationsSize;
 
 	private double bestSolution;
+	
+	private double[] crossoverProbability;
+	
+	private double[] mutationProbability;
 
 	public GA(Scenario scenario) {
 
@@ -29,10 +33,23 @@ public class GA{
 		for (int i=0; i<kElitism; i++)
 			this.population.add(new Individual(this.scenario, true));
 		for (int i=kElitism; i<populationSize; i++)
-			this.population.add(new Individual(this.scenario, false));
+			this.population.add(new Individual(this.scenario, true));
 
 		this.bestSolution = 0.0;
-
+		
+		double bC = this.scenario.getEnv().getInitialCrossoverProbability();
+		double aC = (this.scenario.getEnv().getFinalCrossoverProbability() - bC)/this.generationsSize;
+		
+		double bM = this.scenario.getEnv().getInitialMutationProbability();
+		double aM = (this.scenario.getEnv().getFinalMutationProbability() - bM)/this.generationsSize;
+		
+		this.crossoverProbability = new double[this.generationsSize];
+		this.mutationProbability = new double[this.generationsSize];
+		
+		for (int i=0; i<crossoverProbability.length; i++) {
+			this.crossoverProbability[i] = (aC*i)+bC;
+			this.mutationProbability[i] = (aM*i)+bM;
+		}
 	}
 
 	public Double evaluate() {
@@ -48,29 +65,52 @@ public class GA{
 	}
 
 	public void evolve() {
-		int aux = 0;
-		double bestEvaluation = this.bestSolution; 
+		int currentGeneration = 0;
+		double bestEvaluation = this.bestSolution;
+		int kElitismSize = this.scenario.getEnv().getkElitism();
+		List<Individual> kElitism = new ArrayList<Individual>();
 				
-		while (aux < this.scenario.getEnv().getGenerationSize()) {
+		while (currentGeneration < this.scenario.getEnv().getGenerationSize()) {
 			Double sum = this.evaluate();
+	
 			List<Individual> newPopulation = new ArrayList<Individual>();
+			for (int k=0; k<kElitismSize; k++) {
+				kElitism.add(this.population.get(k));
+				this.population.remove(k);
+			}
+			
+			sum = this.evaluate();
+			
+			double crossoverProbability = this.crossoverProbability[currentGeneration]; 
+			double mutationProbability = this.mutationProbability[currentGeneration];
+			
 			for (int i = 0; i < this.populationSize; i++) {
 				int f1 = this.roulette(sum);
 				int f2 = this.roulette(sum);
-
-				Individual individual = this.population.get(f1).crossover(this.population.get(f2));
-				individual.mutation();
+				
+				Individual individual = null;
+				
+				if (Math.random() < crossoverProbability ) {
+					individual = this.population.get(f1).crossover(this.population.get(f2));
+					if (Math.random() < mutationProbability)
+						individual.mutation(currentGeneration);
+				} else if (Math.random() < mutationProbability ) {
+					individual = this.population.get(f1);
+					individual.mutation(currentGeneration);
+				}else individual = this.population.get(f1);
+				
 				newPopulation.add(individual);
 			}
+			newPopulation.addAll(kElitism);
 			this.setPopulation(newPopulation);
 			this.evaluate();
 			if (bestEvaluation < this.getPopulation().get(0).getEvaluation()) {
 				this.setBestSolution(this.getPopulation().get(0).getEvaluation());
 				bestEvaluation = this.getBestSolution();
-				System.out.println("Genaration: "+aux);
+				System.out.println("Genaration: "+currentGeneration);
 				System.out.println(this.getBestSolution());
 			}
-			aux++;
+			currentGeneration++;
 		}
 
 	}

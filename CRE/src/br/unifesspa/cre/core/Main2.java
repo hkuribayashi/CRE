@@ -33,15 +33,15 @@ public class Main2 {
 			env.set(Param.initialMutationProbability, 0.2);
 			env.set(Param.finalMutationProbability, 0.8);
 
-			env.set(Param.initialGeneRange, -2.0);
+			env.set(Param.initialGeneRange, 0.0);
 			env.set(Param.finalGeneRange, 2.0);
 
 			env.set(Param.initialSugestedIndividual, Collections.min(biasSelected));
 			env.set(Param.finalSugestedInvidual, Collections.max(biasSelected));
 			
 			env.set(Param.populationSize, 20);
-			env.set(Param.generationSize, 100);
-			env.set(Param.kElitism, 3);
+			env.set(Param.generationSize, 50);
+			env.set(Param.kElitism, 2);
 
 			Scenario s = new Scenario(env);
 			s.getDistance();
