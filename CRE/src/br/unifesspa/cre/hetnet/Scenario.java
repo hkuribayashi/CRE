@@ -22,22 +22,24 @@ public class Scenario implements Serializable{
 
 	private List<Point> userPoints;
 
+	private ApplicationProfile[] applicationProfile;
+
 	private Double[][] distanceMatrix;
 
 	private Double[][] sinr;
-	
+
 	private Double[] numberUEsPerBS;
-	
+
 	private Double[][] coverageMatrix;
-	
+
 	private Double[] bsLoadMatrix;
-	
+
 	private Double[][] bitrateMatrix;
-	
+
 	private Double[] individualBitrateMatrix;
-	
+
 	private Double[] bias;
-	
+
 	private Double sumRate;
 
 	public Scenario(CREEnv env) {
@@ -52,13 +54,20 @@ public class Scenario implements Serializable{
 		this.macroPoints = new ArrayList<Point>();
 		this.macroPoints.add(new Point(200.0, 200.0, this.env.getHeightMacro()));
 		this.macroPoints.add(new Point(800.0, 800.0, this.env.getHeightMacro()));
-		
+
 		this.femtoPoints = Util.getHPPP(this.env.getLambdaFemto(), this.env.getArea(), this.env.getHeightFemto());
 		this.userPoints = Util.getHPPP(this.env.getLambdaUser(), this.env.getArea(), this.env.getHeightUser());
-		
+
+		this.applicationProfile = new ApplicationProfile[this.userPoints.size()];
+		for (int i=0; i<this.userPoints.size(); i++) {
+			int index = Util.getUniformIntegerDistribution(0, ApplicationProfile.values().length-1);
+			ApplicationProfile profile = ApplicationProfile.values()[index];
+			this.applicationProfile[i] = profile;
+		}
+
 		this.bias = new Double[this.femtoPoints.size()];
 	}
-	
+
 	public void initBias(Double bias) {
 		for (int i=0; i<this.bias.length; i++)
 			this.bias[i] = bias;
@@ -70,14 +79,14 @@ public class Scenario implements Serializable{
 	public void getDistance() {
 
 		this.distanceMatrix = new Double [userPoints.size()][femtoPoints.size() + macroPoints.size()];
-		
+
 		for (int i=0; i<userPoints.size(); i++) {
 			Point uePoint = userPoints.get(i);
 			for (int j=0; j<femtoPoints.size(); j++) {
 				Point femtoPoint = femtoPoints.get(j);	
 				this.distanceMatrix[i][j] = Util.getDistance(uePoint, femtoPoint);
 			}
-			
+
 			for (int j=0; j<macroPoints.size(); j++) {
 				Point macroPoint = macroPoints.get(j);
 				this.distanceMatrix[i][j+femtoPoints.size()] = Util.getDistance(uePoint, macroPoint);
@@ -89,94 +98,94 @@ public class Scenario implements Serializable{
 	 * Calculate the SINR for All BS
 	 */
 	public void getInitialSINR() {
-		
+
 		this.sinr = new Double [this.distanceMatrix.length][this.distanceMatrix[0].length];
-		
+
 		for (int i=0; i<sinr.length; i++) {
-			
+
 			for (int j=0; j<(sinr[0].length - this.macroPoints.size()); j++) {				
 				double distance = distanceMatrix[i][j]; 						
 				this.sinr[i][j] = (this.env.getPowerFemto() * Util.getChannelGain(BSType.Femto, distance, 16.0));
-				
+
 				Double aux = 0.0;
-				
+
 				for (int k=0; k<(sinr[0].length - this.macroPoints.size()); k++) {	
 					if (k != j) {
 						double distanceK = distanceMatrix[i][k]; 		
 						aux += (this.env.getPowerFemto() * Util.getChannelGain(BSType.Femto, distanceK, 16.0));
 					}
 				}
-				
-				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower()) + this.bias[j];
+
+				this.sinr[i][j] = (this.sinr[i][j]/(aux + this.env.getNoisePower())) + this.bias[j];
 			}
-			
+
 			for (int j=(sinr[0].length - this.macroPoints.size()); j<this.sinr[0].length; j++) {
 				double distance = distanceMatrix[i][j]; 						
 				this.sinr[i][j] = (this.env.getPowerMacro() * Util.getChannelGain(BSType.Macro, distance, 36.0));
-				
+
 				Double aux = 0.0;
-			
+
 				for (int k=(sinr[0].length - this.macroPoints.size()); k<this.sinr[0].length; k++) {					
 					if (k != j) {
 						double distanceK = distanceMatrix[i][k]; 
 						aux += (this.env.getPowerMacro() * Util.getChannelGain(BSType.Macro, distanceK, 36.0));
 					}
 				}
-				
+
 				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
 
 			}
 		}
 	}
-	
+
 	public void getCoverageMatrix() {
-		
+
 		this.coverageMatrix = new Double[this.sinr.length][this.sinr[0].length];
 		Util.init(this.coverageMatrix);
-		
+
 		for (int i=0; i<this.sinr.length; i++) {
-			
+
 			Double max = Double.MAX_VALUE * (-1);
 			Integer index_max = -1;
-						
+
 			for (int j=0; j<this.sinr[0].length; j++) {		
-				
+
 				if (this.sinr[i][j] > max) {
 					max = this.sinr[i][j];
 					index_max = j;
 				}
 			}
-			
+
 			this.coverageMatrix[i][index_max] = 1.0;
 		}
 	}
-	
+
 	public void getBSLoad() {
-		
+
 		this.bsLoadMatrix = new Double[coverageMatrix[0].length];
 		Util.init(bsLoadMatrix);
-		
+
 		for (int j=0; j<this.coverageMatrix[0].length; j++) {
 			for (int i=0; i<this.coverageMatrix.length; i++) {				
 				this.bsLoadMatrix[j] += this.coverageMatrix[i][j];				
 			}
 		}
 	}
-	
+
 	public void getInitialBitRate() {
-	
+
 		this.bitrateMatrix = new Double[this.sinr.length][this.sinr[0].length];
 		for (int i=0; i<this.bitrateMatrix.length; i++) {
 			for (int j=0; j<(sinr[0].length - this.macroPoints.size()); j++) {
-				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + this.sinr[i][j] - this.bias[j])/Math.log10(2.0)))/1000000.0;
+				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + (this.sinr[i][j] - this.bias[j]))/Math.log10(2.0)))/1000000.0;
 			}
-			
+
 			for (int j=(sinr[0].length - this.macroPoints.size()); j<this.sinr[0].length; j++) {
 				this.bitrateMatrix[i][j] = (this.env.getBandwidth() * (Math.log10(1 + this.sinr[i][j])/Math.log10(2.0)))/1000000.0;
 			}
 		}
 	}
-	
+
 	public void getFinalBitRate() {
 		this.individualBitrateMatrix = new Double[this.bitrateMatrix.length];
 		for (int i=0; i<this.coverageMatrix.length; i++) {
@@ -186,7 +195,7 @@ public class Scenario implements Serializable{
 				}
 			}
 		}
-		
+
 		this.sumRate = 0.0;
 		for (int i=0; i<this.individualBitrateMatrix.length; i++) {
 			this.sumRate += this.individualBitrateMatrix[i];

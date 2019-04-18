@@ -21,16 +21,16 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		int totalBias = 121;
-		Double initialBias = -3.0;
+		int totalBias = 200;
+		Double initialBias = 0.9;
 		Double[] biasOffset = new Double[totalBias];
 		for (int i=0; i<biasOffset.length; i++)
-			biasOffset[i] = initialBias + (0.05 * i);
+			biasOffset[i] = initialBias + (0.005 * i);
 		
 		Util.print(biasOffset);
 		
-		int kBestResult = 6;		
-		Long simulations = 2L;
+		int kBestResult = 10;		
+		Long simulations = 100L;
 		Double sum = 0.0;
 		Scenario s= null;
 		List<Result> results = new ArrayList<Result>();
