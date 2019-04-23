@@ -122,8 +122,39 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 
 	private Individual uniformCrossover(Individual otherIndividual) {
-		return onePointCrossover(otherIndividual);
+		
+		List<Double> f1 = Arrays.asList(this.getChromossome());
+		List<Double> f2 = Arrays.asList(otherIndividual.getChromossome());
+        List<Double> s = new ArrayList<Double>();
+		
+		int i;
+
+		for (i = 0; i < f1.size(); i++) {
+
+			if (Math.random() < 0.5) {
+
+				s.addAll(f1.subList(i, i + 1));
+			} else {
+
+				s.addAll(f2.subList(i, i + 1));
+			}
+		}
+		Double[] son = new Double[s.size()];
+	son = s.toArray(son);
+	Individual individual = null;
+		try {
+			individual = (Individual) this.clone();
+			individual.setChromossome(son);
+		} catch (CloneNotSupportedException e) {
+			individual = this;
+		}
+		individual.setChromossome(son);
+
+		return individual;
 	}
+	
+	
+	
 
 	public void mutation(int currentGereneration) {
 
