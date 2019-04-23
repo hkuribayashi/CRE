@@ -154,8 +154,6 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 	
 	
-	
-
 	public void mutation(int currentGereneration) {
 
 		int index = Util.getUniformIntegerDistribution(0, MutationStrategy.values().length-1);
