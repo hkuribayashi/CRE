@@ -4,7 +4,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math3-3.6.1.jar"/>
-	<classpathentry kind="lib" path="/ILP-RRUP/lib/gurobi-javadoc.jar"/>
-	<classpathentry kind="lib" path="/ILP-RRUP/lib/gurobi.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -86,7 +86,39 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 
 	private Individual twoPointCrossover(Individual otherIndividual) {
-		return onePointCrossover(otherIndividual);
+		int cut1 = (int) Math.round(Math.random() * this.chromossome.length);
+	    int cut2 = (int) Math.round(Math.random() * (this.chromossome.length - cut1) );
+		
+	    cut2 += cut1;
+	    
+		List<Double> f1 = Arrays.asList(this.getChromossome());
+		List<Double> f2 = Arrays.asList(otherIndividual.getChromossome());
+
+		List<Double> s = new ArrayList<Double>();
+
+		if (Math.random() < 0.5) {
+			s.addAll(f1.subList(0, cut1));
+			s.addAll(f1.subList(cut1, cut2));
+			s.addAll(f1.subList(cut2, f1.size()));	
+		}else {
+			s.addAll(f2.subList(0, cut1));
+			s.addAll(f1.subList(cut1, cut2));
+			s.addAll(f1.subList(cut2, f1.size()));
+		}
+
+		Double[] son = new Double[s.size()];
+		son = s.toArray(son);
+
+		Individual individual = null;
+		try {
+			individual = (Individual) this.clone();
+			individual.setChromossome(son);
+		} catch (CloneNotSupportedException e) {
+			individual = this;
+		}
+		individual.setChromossome(son);
+
+		return individual;
 	}
 
 	private Individual uniformCrossover(Individual otherIndividual) {
