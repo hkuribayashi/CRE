@@ -9,6 +9,8 @@ import java.io.Serializable;
 public class CREEnv implements Serializable{
 
 	private static final long serialVersionUID = 6824819508443271546L;
+	
+	private String workingDirectory = "/Users/hugo/Desktop/CRE/";
 
 	private Double lambdaUser = 10.0;
 
@@ -18,19 +20,19 @@ public class CREEnv implements Serializable{
 
 	private Double powerMacro = 46.0;
 
-	private Double powerFemto = 23.0;
+	private Double powerFemto = 30.0;
 
 	private Double bandwidth = 20000000.0;
 
 	private Double area = 100.0;
 
-	private Double noisePower = -101.0;
+	private Double noisePower = -176.0;
 	
-	private Double heightMacro = 35.0;
+	private Double heightMacro = 25.0;
 	
-	private Double heightFemto = 25.0;
+	private Double heightFemto = 10.0;
 	
-	private Double heightUser = 25.0;
+	private Double heightUser = 2.0;
 	
 	private Double initialCrossoverProbability = 0.9;
 	
@@ -44,16 +46,29 @@ public class CREEnv implements Serializable{
 	
 	private Double finalGeneRange = 3.0;
 	
-	private Double initialSugestedIndividual = -3.0;
-	
-	private Double finalSugestedIndividual = -3.0;
-	
 	private Integer populationSize = 20;
 	
 	private Integer kElitism = 2;
 	
 	private Integer generationSize = 1000;
 	
+	private Integer totalBias = 200;
+	
+	private Double biasStep = 0.05;
+	
+	private Double numberOfSimulations = 1000.0;
+	
+	
+	public void set(Param param, String value) {
+		
+		switch(param) {
+		
+		case workingDirectory: this.workingDirectory = value; break;
+		
+		default: break;
+		
+		}
+	}
 	
 	public void set(Param param, Integer value) {
 
@@ -64,6 +79,8 @@ public class CREEnv implements Serializable{
 		case kElitism: this.kElitism = value; break;
 		
 		case generationSize: this.generationSize = value; break;
+		
+		case totalBias: this.totalBias = value; break;
 		
 		default: break;
 		
@@ -104,13 +121,13 @@ public class CREEnv implements Serializable{
 		
 		case finalGeneRange: this.finalGeneRange = value; break;
 		
-		case initialSugestedIndividual: this.initialSugestedIndividual = value; break;
-		
-		case finalSugestedInvidual: this.finalSugestedIndividual = value; break;
-		
 		case initialMutationProbability: this.initialMutationProbability = value; break;
 		
 		case finalMutationProbability: this.finalMutationProbability = value; break;
+		
+		case biasStep: this.biasStep = value; break;
+		
+		case numberOfSimulations: this.numberOfSimulations = value; break;
 
 		default: break;
 
@@ -237,22 +254,6 @@ public class CREEnv implements Serializable{
 		this.finalGeneRange = finalGeneRange;
 	}
 
-	public Double getInitialSugestedIndividual() {
-		return initialSugestedIndividual;
-	}
-
-	public void setInitialSugestedIndividual(Double initialSugestedIndividual) {
-		this.initialSugestedIndividual = initialSugestedIndividual;
-	}
-
-	public Double getFinalSugestedIndividual() {
-		return finalSugestedIndividual;
-	}
-
-	public void setFinalSugestedIndividual(Double finalSugestedIndividual) {
-		this.finalSugestedIndividual = finalSugestedIndividual;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -297,17 +298,49 @@ public class CREEnv implements Serializable{
 		this.finalMutationProbability = finalMutationProbability;
 	}
 
+	public Integer getTotalBias() {
+		return totalBias;
+	}
+
+	public void setTotalBias(Integer totalBias) {
+		this.totalBias = totalBias;
+	}
+
+	public Double getBiasStep() {
+		return biasStep;
+	}
+
+	public void setBiasStep(Double biasStep) {
+		this.biasStep = biasStep;
+	}
+
+	public String getWorkingDirectory() {
+		return workingDirectory;
+	}
+
+	public void setWorkingDirectory(String workingDirectory) {
+		this.workingDirectory = workingDirectory;
+	}
+	
+	public Double getNumberOfSimulations() {
+		return numberOfSimulations;
+	}
+
+	public void setNumberOfSimulations(Double numberOfSimulations) {
+		this.numberOfSimulations = numberOfSimulations;
+	}
+
 	@Override
 	public String toString() {
-		return "CREEnv [lambdaUser=" + lambdaUser + ", lambdaMacro=" + lambdaMacro + ", lambdaFemto=" + lambdaFemto
-				+ ", powerMacro=" + powerMacro + ", powerFemto=" + powerFemto + ", bandwidth=" + bandwidth + ", area="
-				+ area + ", noisePower=" + noisePower + ", heightMacro=" + heightMacro + ", heightFemto=" + heightFemto
-				+ ", heightUser=" + heightUser + ", initialCrossoverProbability=" + initialCrossoverProbability
-				+ ", finalCrossoverProbability=" + finalCrossoverProbability + ", initialMutationProbability="
-				+ initialMutationProbability + ", finalMutationProbability=" + finalMutationProbability
-				+ ", initialGeneRange=" + initialGeneRange + ", finalGeneRange=" + finalGeneRange
-				+ ", initialSugestedIndividual=" + initialSugestedIndividual + ", finalSugestedIndividual="
-				+ finalSugestedIndividual + ", populationSize=" + populationSize + ", kElitism=" + kElitism
-				+ ", generationSize=" + generationSize + "]";
+		return "CREEnv [workingDirectory=" + workingDirectory + ", lambdaUser=" + lambdaUser + ", lambdaMacro="
+				+ lambdaMacro + ", lambdaFemto=" + lambdaFemto + ", powerMacro=" + powerMacro + ", powerFemto="
+				+ powerFemto + ", bandwidth=" + bandwidth + ", area=" + area + ", noisePower=" + noisePower
+				+ ", heightMacro=" + heightMacro + ", heightFemto=" + heightFemto + ", heightUser=" + heightUser
+				+ ", initialCrossoverProbability=" + initialCrossoverProbability + ", finalCrossoverProbability="
+				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
+				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
+				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
+				+ ", generationSize=" + generationSize + ", totalBias=" + totalBias + ", biasStep=" + biasStep
+				+ ", numberOfSimulations=" + numberOfSimulations + "]";
 	}
 }

@@ -1,22 +1,24 @@
 package br.unifesspa.cre.config;
 
 public enum Param {
-
-	lambdaUser, lambdaMacro, lambdaFemto, powerMacro, powerFemto, bandwith,
 	
-	spatialLoadFactorMacro, spatialLoadFactorFemto, referenceDistance, constant, 
+	/* General Parameters */
+	alpha, beta,workingDirectory, lambdaUser, lambdaMacro, lambdaFemto, 
 	
-	area, alpha, noisePower, antennasMacro, antennasFemto, antennasUser,
+	powerMacro, powerFemto, bandwith, area, noisePower, antennasMacro, 
 	
-	heightMacro, heightFemto, heightUser, 
+	antennasFemto, antennasUser, heightMacro, heightFemto, heightUser,
 	
+	/* Phase 1 Parameters */
+	totalBias, biasStep, numberOfSimulations,
+	
+	
+	/* Phase 2 Parameters */
 	initialCrossoverProbability, finalCrossoverProbability,
 	
 	initialMutationProbability, finalMutationProbability,
 	
 	initialGeneRange, finalGeneRange,
-	
-	initialSugestedIndividual, finalSugestedInvidual,
 	
 	populationSize, generationSize, kElitism;
 	

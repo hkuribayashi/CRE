@@ -2,9 +2,14 @@ package br.unifesspa.cre.hetnet;
 
 public enum ApplicationProfile {
 	
-	VirtualReality(10.0,100.0,0.6), FactoryAutomation(20.0,1.0,0.8), DataBackup(1000.0,1.0,0.0), 
-	SmartGrid(50.0,0.4,0.03), SmartHome(60.0,0.001,0.0), Medical(40.0,2.0,0.2), 
-	EnvironmentalMonitoring(1000.0,1.0,0.1), TactileInternet(1.0,200.0,0.8);
+	VirtualReality(10.0,100.0,0.6), 
+	FactoryAutomation(20.0,1.0,0.8), 
+	DataBackup(1000.0,1.0,0.0), 
+	SmartGrid(50.0,0.4,0.03), 
+	SmartHome(60.0,0.001,0.0), 
+	Medical(40.0,2.0,0.2), 
+	EnvironmentalMonitoring(1000.0,1.0,0.1), 
+	TactileInternet(1.0,200.0,0.8);
 
 	private Double latency;
 	

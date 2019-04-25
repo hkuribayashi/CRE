@@ -18,24 +18,30 @@ public class GA{
 
 	private double bestSolution;
 	
-	private double[] crossoverProbability; // 0.90[0]   .[51]..   0.5[49]
+	private Individual bestIndividual;
 	
-	private double[] mutationProbability; // 0.2 0.25 0.3 0.35 ...0.8
+	private double[] crossoverProbability;
+	
+	private double[] mutationProbability;
+	
+	private Double alpha;
+	
+	private Double beta;
 
-	public GA(Scenario scenario) {
+	public GA(Double alpha, Double beta, Scenario scenario) {
 
 		this.scenario = scenario;
 		this.populationSize = this.scenario.getEnv().getPopulationSize();
 		this.generationsSize = this.scenario.getEnv().getGenerationSize();
-		int kElitism = this.scenario.getEnv().getkElitism();
+		this.alpha = alpha;
+		this.beta = beta;
 
 		this.population = new ArrayList<Individual>();
-		for (int i=0; i<kElitism; i++) 									// Cria k individuos = k=2
-			this.population.add(new Individual(this.scenario, true));
-		for (int i=kElitism; i<populationSize; i++)						// (Tamanho Populacao - k) = 20 -2 = 18
-			this.population.add(new Individual(this.scenario, false));
+		for (int i=0; i<populationSize; i++)
+			this.population.add(new Individual(this.alpha, this.beta, this.scenario));
 
 		this.bestSolution = 0.0;
+		this.bestIndividual = null;
 		
 		double bC = this.scenario.getEnv().getInitialCrossoverProbability();
 		double aC = (this.scenario.getEnv().getFinalCrossoverProbability() - bC)/this.generationsSize;
@@ -170,5 +176,49 @@ public class GA{
 
 	public void setBestSolution(Double bestSolution) {
 		this.bestSolution = bestSolution;
+	}
+
+	public Individual getBestIndividual() {
+		return bestIndividual;
+	}
+
+	public void setBestIndividual(Individual bestIndividual) {
+		this.bestIndividual = bestIndividual;
+	}
+
+	public double[] getCrossoverProbability() {
+		return crossoverProbability;
+	}
+
+	public void setCrossoverProbability(double[] crossoverProbability) {
+		this.crossoverProbability = crossoverProbability;
+	}
+
+	public double[] getMutationProbability() {
+		return mutationProbability;
+	}
+
+	public void setMutationProbability(double[] mutationProbability) {
+		this.mutationProbability = mutationProbability;
+	}
+
+	public void setBestSolution(double bestSolution) {
+		this.bestSolution = bestSolution;
+	}
+
+	public Double getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(Double alpha) {
+		this.alpha = alpha;
+	}
+
+	public Double getBeta() {
+		return beta;
+	}
+
+	public void setBeta(Double beta) {
+		this.beta = beta;
 	}
 }

@@ -1,14 +1,22 @@
 package br.unifesspa.cre.model;
 
-public class Result extends Entity implements Comparable<Result>{
-	
+import java.io.Serializable;
+
+public class Result extends Entity implements Serializable, Comparable<Result>{
+
+	private static final long serialVersionUID = -8876078984426952757L;
+
 	private Double bias;
 
 	private Double sumRate;
 	
 	private Double medianRate;
 	
-	private Long executionTime;
+	private Double alpha;
+	
+	private Double beta;
+	
+	private Double meanExecutionTime;
 
 	public Result() {
 		super();
@@ -18,12 +26,14 @@ public class Result extends Entity implements Comparable<Result>{
 		super(id);
 	}
 
-	public Result(Integer id, Double bias, Double sumRate, Double medianRate, Long executionTime) {
+	public Result(Integer id, Double bias, Double sumRate, Double medianRate, Double meanExecutionTime, Double alpha, Double beta) {
 		super(id);
 		this.bias = bias;
 		this.sumRate = sumRate;
 		this.medianRate = medianRate;
-		this.executionTime = executionTime;
+		this.meanExecutionTime = meanExecutionTime;
+		this.alpha = alpha;
+		this.beta = beta;
 	}
 
 	public Double getSumRate() {
@@ -42,12 +52,12 @@ public class Result extends Entity implements Comparable<Result>{
 		this.medianRate = medianRate;
 	}
 
-	public Long getExecutionTime() {
-		return executionTime;
+	public Double getMeanExecutionTime() {
+		return meanExecutionTime;
 	}
 
-	public void setExecutionTime(Long executionTime) {
-		this.executionTime = executionTime;
+	public void setMeanExecutionTime(Double meanExecutionTime) {
+		this.meanExecutionTime = meanExecutionTime;
 	}
 
 	public Double getBias() {
@@ -58,17 +68,36 @@ public class Result extends Entity implements Comparable<Result>{
 		this.bias = bias;
 	}
 
+	public Double getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(Double alpha) {
+		this.alpha = alpha;
+	}
+
+	public Double getBeta() {
+		return beta;
+	}
+
+	public void setBeta(Double beta) {
+		this.beta = beta;
+	}
+
 	@Override
 	public String toString() {
-		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", executionTime="
-				+ executionTime + "]";
+		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", alpha=" + alpha
+				+ ", beta=" + beta + ", meanExecutionTime=" + meanExecutionTime + "]";
 	}
 
 	@Override
 	public int compareTo(Result o) {
-		if (this.sumRate > o.getSumRate()) 
+		Double a,b;
+		a = (this.sumRate*this.alpha + this.medianRate*this.beta);
+		b = (o.sumRate*this.alpha + o.medianRate*this.beta);
+		if (a > b) 
 			return -1;
-		else if (this.sumRate == o.getSumRate())
+		else if (a == b)
 				return 0;
 		else return 1;
 	}

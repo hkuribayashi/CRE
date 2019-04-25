@@ -3,6 +3,7 @@ package br.unifesspa.cre.hetnet;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import br.unifesspa.cre.config.CREEnv;
@@ -41,6 +42,8 @@ public class Scenario implements Serializable{
 	private Double[] bias;
 
 	private Double sumRate;
+	
+	private Double medianRate;
 
 	public Scenario(CREEnv env) {
 
@@ -66,6 +69,9 @@ public class Scenario implements Serializable{
 		}
 
 		this.bias = new Double[this.femtoPoints.size()];
+		
+		this.sumRate = 0.0;
+		this.medianRate = 0.0;
 	}
 
 	public void initBias(Double bias) {
@@ -135,6 +141,8 @@ public class Scenario implements Serializable{
 				this.sinr[i][j] = this.sinr[i][j]/(aux + this.env.getNoisePower());
 
 			}
+			
+			
 		}
 	}
 
@@ -192,14 +200,27 @@ public class Scenario implements Serializable{
 			for (int j=0; j<this.coverageMatrix[0].length; j++) {
 				if (this.coverageMatrix[i][j] == 1.0) {
 					this.individualBitrateMatrix[i] = (this.bitrateMatrix[i][j]/this.bsLoadMatrix[j]);
+					this.sumRate += this.individualBitrateMatrix[i];
 				}
 			}
 		}
-
-		this.sumRate = 0.0;
-		for (int i=0; i<this.individualBitrateMatrix.length; i++) {
-			this.sumRate += this.individualBitrateMatrix[i];
+	}
+	
+	public void getFinalMedianRate() {
+		double size = this.individualBitrateMatrix.length;
+		List<Double> bitrate = Arrays.asList(this.individualBitrateMatrix);
+		Collections.sort(bitrate);
+		
+		int index1, index2;
+		if (size % 2 == 0) {
+			index1 = (int) size/2;
+			index2 = index1 - 1;
+			this.medianRate = (bitrate.get(index1) + bitrate.get(index2))/2.0;
+		}else {
+			index1 = (int) Math.ceil(size/2.0);
+			this.medianRate = bitrate.get(index1);
 		}
+		
 	}
 
 	public Integer getId() {
@@ -314,14 +335,31 @@ public class Scenario implements Serializable{
 		this.bias = bias;
 	}
 
+	public ApplicationProfile[] getApplicationProfile() {
+		return applicationProfile;
+	}
+
+	public void setApplicationProfile(ApplicationProfile[] applicationProfile) {
+		this.applicationProfile = applicationProfile;
+	}
+
+	public void setMedianRate(Double medianRate) {
+		this.medianRate = medianRate;
+	}
+	
+	public Double getMedianRate() {
+		return this.medianRate;
+	}
+
 	@Override
 	public String toString() {
 		return "Scenario [id=" + id + ", env=" + env + ", macroPoints=" + macroPoints + ", femtoPoints=" + femtoPoints
-				+ ", userPoints=" + userPoints + ", distanceMatrix=" + Arrays.toString(distanceMatrix) + ", sinr="
-				+ Arrays.toString(sinr) + ", numberUEsPerBS=" + Arrays.toString(numberUEsPerBS) + ", coverageMatrix="
+				+ ", userPoints=" + userPoints + ", applicationProfile=" + Arrays.toString(applicationProfile)
+				+ ", distanceMatrix=" + Arrays.toString(distanceMatrix) + ", sinr=" + Arrays.toString(sinr)
+				+ ", numberUEsPerBS=" + Arrays.toString(numberUEsPerBS) + ", coverageMatrix="
 				+ Arrays.toString(coverageMatrix) + ", bsLoadMatrix=" + Arrays.toString(bsLoadMatrix)
 				+ ", bitrateMatrix=" + Arrays.toString(bitrateMatrix) + ", individualBitrateMatrix="
 				+ Arrays.toString(individualBitrateMatrix) + ", bias=" + Arrays.toString(bias) + ", sumRate=" + sumRate
-				+ "]";
+				+ ", medianRate=" + medianRate + "]";
 	}
 }

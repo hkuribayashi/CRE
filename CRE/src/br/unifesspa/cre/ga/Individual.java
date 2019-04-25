@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import br.unifesspa.cre.config.CREEnv;
-import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.model.Result;
 import br.unifesspa.cre.util.Util;
 
 public class Individual implements Comparable<Individual>, Cloneable{
@@ -18,22 +17,25 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 	private Scenario scenario;
 
+	private Result result;
+	
+	private Double alpha;
+	
+	private Double beta;
 
-	public Individual(Scenario scenario, Boolean flag) {
+	public Individual(Double alpha, Double beta, Scenario scenario) {
 
 		this.scenario = scenario;
 		this.evaluation = 0.0;
+		this.result = null;
+		this.alpha = alpha;
+		this.beta = beta;
 
 		int chromossomeSize = this.scenario.getFemtoPoints().size();
 		double lowerBound, upperBound;
 
-		if (!flag) {
-			lowerBound = this.scenario.getEnv().getInitialGeneRange();
-			upperBound = this.scenario.getEnv().getFinalGeneRange();	
-		}else {
-			lowerBound = this.scenario.getEnv().getInitialSugestedIndividual();
-			upperBound = this.scenario.getEnv().getFinalSugestedIndividual();	
-		}
+		lowerBound = this.scenario.getEnv().getInitialGeneRange();
+		upperBound = this.scenario.getEnv().getFinalGeneRange();	
 
 		this.chromossome = new Double[chromossomeSize];
 
@@ -87,10 +89,10 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 	private Individual twoPointCrossover(Individual otherIndividual) {
 		int cut1 = (int) Math.round(Math.random() * this.chromossome.length);
-	    int cut2 = (int) Math.round(Math.random() * (this.chromossome.length - cut1) );
-		
-	    cut2 += cut1;
-	    
+		int cut2 = (int) Math.round(Math.random() * (this.chromossome.length - cut1) );
+
+		cut2 += cut1;
+
 		List<Double> f1 = Arrays.asList(this.getChromossome());
 		List<Double> f2 = Arrays.asList(otherIndividual.getChromossome());
 
@@ -122,38 +124,34 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 
 	private Individual uniformCrossover(Individual otherIndividual) {
-		
+
 		List<Double> f1 = Arrays.asList(this.getChromossome());
 		List<Double> f2 = Arrays.asList(otherIndividual.getChromossome());
-        List<Double> s = new ArrayList<Double>();
-		
-		int i;
+		List<Double> s = new ArrayList<Double>();
 
-		for (i = 0; i < f1.size(); i++) {
-
-			if (Math.random() < 0.5) {
-
+		for (int i=0; i < f1.size(); i++) {
+			if (Math.random() < 0.5)
 				s.addAll(f1.subList(i, i + 1));
-			} else {
-
-				s.addAll(f2.subList(i, i + 1));
-			}
+			else s.addAll(f2.subList(i, i + 1));
 		}
+
 		Double[] son = new Double[s.size()];
-	son = s.toArray(son);
-	Individual individual = null;
+		son = s.toArray(son);
+		Individual individual = null;
+
 		try {
 			individual = (Individual) this.clone();
 			individual.setChromossome(son);
 		} catch (CloneNotSupportedException e) {
 			individual = this;
 		}
+
 		individual.setChromossome(son);
 
 		return individual;
 	}
-	
-	
+
+
 	public void mutation(int currentGereneration) {
 
 		int index = Util.getUniformIntegerDistribution(0, MutationStrategy.values().length-1);
@@ -162,8 +160,8 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		double probability = this.scenario.getEnv().getInitialMutationProbability();
 
 		switch(strategy) {
-			case Random: randomMutation(probability); break;
-			case NotUniform: notUniformMutation(currentGereneration, probability); break;
+		case Random: randomMutation(probability); break;
+		case NotUniform: notUniformMutation(currentGereneration, probability); break;
 		default: break;
 		}
 	}
@@ -215,7 +213,15 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.scenario.getBSLoad();
 		this.scenario.getInitialBitRate();
 		this.scenario.getFinalBitRate();
-		this.evaluation = this.scenario.getSumRate();
+		this.scenario.getFinalMedianRate();
+		
+		this.result = new Result();
+		this.result.setAlpha(this.alpha);
+		this.result.setBeta(this.beta);
+		this.result.setSumRate(this.scenario.getSumRate());
+		this.result.setMedianRate(this.scenario.getMedianRate());
+		
+		this.evaluation = (this.alpha*this.scenario.getSumRate()) + (this.beta*this.scenario.getMedianRate());
 	}
 
 	public Double getEvaluation() {
@@ -247,6 +253,14 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.scenario = scenario;
 	}
 
+	public Result getResult() {
+		return result;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
+	}
+
 	@Override
 	public int compareTo(Individual o) {
 		if (this.evaluation > o.getEvaluation()) {
@@ -257,57 +271,4 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		}
 		return 0;
 	}
-
-	
-	//Metodo main apenas como exemplo
-	
-	public static void main(String[] args) {
-
-
-		CREEnv env = new CREEnv();
-
-		env.set(Param.area, 1000000.0); 	  		// 1 km^2
-		env.set(Param.lambdaFemto, 0.00002);  		// 0.00002 Femto/m^2 = 20 Femtos  
-		env.set(Param.lambdaUser, 0.0001);    		// 0.0001 Users/m^2 = 100 Users 
-		env.set(Param.lambdaMacro, 0.000002); 		// 0.000002 Macros/m^2 = 2 Macros
-
-		env.set(Param.initialCrossoverProbability, 0.9);
-		env.set(Param.finalCrossoverProbability, 0.5);
-		env.set(Param.initialMutationProbability, 0.2);
-		env.set(Param.finalMutationProbability, 0.8);
-
-		env.set(Param.initialGeneRange, -3.0);
-		env.set(Param.finalGeneRange, 3.0);
-
-		env.set(Param.initialSugestedIndividual, 0.9);
-		env.set(Param.finalSugestedInvidual, 1.85);
-
-		env.set(Param.populationSize, 20);
-		env.set(Param.generationSize, 50);
-		env.set(Param.kElitism, 2);
-
-		Scenario s = new Scenario(env);
-		s.getDistance();
-
-		Individual i1 = new Individual(s, true);
-		i1.evaluate();
-		System.out.println(i1.getEvaluation());
-
-		System.out.println();
-
-		Individual i2 = new Individual(s, true);
-		i2.evaluate();
-		System.out.println(i2.getEvaluation());
-
-		Individual i3 = i1.crossover(i2);
-		i3.mutation(0);
-		i3.evaluate();
-		System.out.println(i3.getEvaluation());
-
-
-
-
-
-	}
-
 }
