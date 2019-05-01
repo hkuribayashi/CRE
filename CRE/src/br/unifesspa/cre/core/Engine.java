@@ -29,8 +29,6 @@ public class Engine {
 	
 	private Double[] biasOffset;
 	
-	//private HashMap<String, Result> results;
-	
 	private CREEnv env;
 	
 	public Engine(Double alpha, Double beta, CREEnv env) {
@@ -45,8 +43,6 @@ public class Engine {
 		this.biasOffset = new Double[totalBias];
 		for (int i=0; i<this.biasOffset.length; i++)
 			biasOffset[i] = initialBias + (biasStep * i);
-		
-		//this.results = new HashMap<String, Result>();
 	}
 
 	public void run() {
@@ -92,13 +88,8 @@ public class Engine {
 				for (int j=0; j<simulations; j++) {
 					s = new Scenario(env);
 					s.initBias(biasOffset[i]);
-					s.getDistance(); 
-					s.getInitialSINR();
-					s.getCoverageMatrix();
-					s.getBSLoad();
-					s.getInitialBitRate();
-					s.getFinalBitRate();
-					s.getFinalMedianRate();
+					s.evaluation();
+					
 					sRate[j] = s.getSumRate();
 					mRate[j] = s.getMedianRate();
 				}
@@ -153,7 +144,6 @@ public class Engine {
 		env.set(Param.finalGeneRange, map.get("maxBias"));
 		
 		Scenario s = new Scenario(env);
-		s.getDistance();
 
 		GA ga = new GA(this.alpha, this.beta, s);
 		ga.evolve();

@@ -14,9 +14,11 @@ public enum Param {
 	
 	gainMacro, gainSmall,
 	
+	nSubcarriers, nOFDMSymbols, subframeDuration,
+	
 	/* Phase 1 Parameters */
 	
-	totalBias, biasStep, numberOfSimulations,
+	totalBias, biasStep, numberOfSimulations, initialBias,
 	
 	
 	/* Phase 2 Parameters */

@@ -18,8 +18,8 @@ public class Main {
 		CREEnv env = new CREEnv();
 		
 		//Setting general simulations parameters
-		env.set(Param.area, 10000.0); 	  // 1 km^2
-		env.set(Param.lambdaFemto, 0.0001);  // 0.00002 Femto/m^2 = 20 Femtos  
+		env.set(Param.area, 10000.0); 	      // 1 km^2
+		env.set(Param.lambdaFemto, 0.0001);   // 0.00002 Femto/m^2 = 20 Femtos  
 		env.set(Param.lambdaUser, 0.0005);    // 0.0001 Users/m^2 = 100 Users 
 		env.set(Param.lambdaMacro, 0.000002); // 0.000002 Macros/m^2 = 2 Macros
 		env.set(Param.powerMacro, 46.0);	  // dBm
@@ -27,10 +27,14 @@ public class Main {
 		env.set(Param.noisePower, -174.0);	  // dBm/Hz
 		env.set(Param.gainMacro, 15.0);		  // dBi
 		env.set(Param.gainSmall, 5.0);		  // dBi
+		env.set(Param.nSubcarriers, 12);	  // 12 Sub-carriers per Resource Block
+		env.set(Param.nOFDMSymbols, 14);	  // 14 OFDM Symbols per subframe
+		env.set(Param.subframeDuration, 1.0); // 1 ms
 		
 		//Setting Parameters to Phase 1: Static Bias		
-		env.set(Param.totalBias, 8);
-		env.set(Param.biasStep, 10.0);
+		env.set(Param.totalBias, 15);
+		env.set(Param.biasStep, 5.0);
+		env.set(Param.initialBias, 10.0);
 		env.set(Param.numberOfSimulations, 2.0);
 		
 		//Setting parameters to Pahse 2: GA
@@ -45,14 +49,12 @@ public class Main {
 		
 	
 		for (int i=0; i<alphas.length; i++) {
-			
 			double alpha = alphas[i];
 			double beta = betas[i];
 			Engine e = new Engine(alpha, beta, env);
-			e.run();
-			
-		}
+			e.run();	
+		}		
 		
-		
+		//Results
 	}
 }

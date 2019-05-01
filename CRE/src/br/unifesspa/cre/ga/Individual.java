@@ -209,12 +209,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 	public void evaluate() {
 		this.scenario.setBias(this.chromossome);
-		this.scenario.getInitialSINR();
-		this.scenario.getCoverageMatrix();
-		this.scenario.getBSLoad();
-		this.scenario.getInitialBitRate();
-		this.scenario.getFinalBitRate();
-		this.scenario.getFinalMedianRate();
+		this.scenario.evaluation();
 		
 		this.result = new Result();
 		this.result.setAlpha(this.alpha);

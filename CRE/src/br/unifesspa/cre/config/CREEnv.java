@@ -34,6 +34,24 @@ public class CREEnv implements Serializable{
 	
 	private Double heightUser = 2.0;
 	
+	private Integer totalBias = 200;
+	
+	private Double initialBias = 10.0;
+	
+	private Double biasStep = 5.0;
+	
+	private Double numberOfSimulations = 1000.0;
+	
+	private Double gainMacro = 15.0;
+	
+	private Double gainSmall = 5.0;
+	
+	private Integer nSubcarriers = 12;
+	
+	private Integer nOFDMSymbols = 14;
+	
+	private Double subframeDuration = 1.0;
+	
 	private Double initialCrossoverProbability = 0.9;
 	
 	private Double finalCrossoverProbability = 0.6;
@@ -51,16 +69,6 @@ public class CREEnv implements Serializable{
 	private Integer kElitism = 2;
 	
 	private Integer generationSize = 1000;
-	
-	private Integer totalBias = 200;
-	
-	private Double biasStep = 0.05;
-	
-	private Double numberOfSimulations = 1000.0;
-	
-	private Double gainMacro = 15.0;
-	
-	private Double gainSmall = 5.0;
 	
 	
 	public void set(Param param, String value) {
@@ -85,6 +93,10 @@ public class CREEnv implements Serializable{
 		case generationSize: this.generationSize = value; break;
 		
 		case totalBias: this.totalBias = value; break;
+		
+		case nSubcarriers: this.nSubcarriers = value;  break;
+		
+		case nOFDMSymbols: this.nOFDMSymbols = value; break;
 		
 		default: break;
 		
@@ -136,6 +148,10 @@ public class CREEnv implements Serializable{
 		case gainMacro: this.gainMacro = value; break;
 		
 		case gainSmall: this.gainSmall = value; break;
+		
+		case subframeDuration: this.subframeDuration = value; break;
+		
+		case initialBias: this.initialBias = value; break;
 
 		default: break;
 
@@ -358,18 +374,52 @@ public class CREEnv implements Serializable{
 		this.gainSmall = gainSmall;
 	}
 
+	public Double getInitialBias() {
+		return initialBias;
+	}
+
+	public void setInitialBias(Double initialBias) {
+		this.initialBias = initialBias;
+	}
+
+	public Integer getnSubcarriers() {
+		return nSubcarriers;
+	}
+
+	public void setnSubcarriers(Integer nSubcarriers) {
+		this.nSubcarriers = nSubcarriers;
+	}
+
+	public Integer getnOFDMSymbols() {
+		return nOFDMSymbols;
+	}
+
+	public void setnOFDMSymbols(Integer nOFDMSymbols) {
+		this.nOFDMSymbols = nOFDMSymbols;
+	}
+
+	public Double getSubframeDuration() {
+		return subframeDuration;
+	}
+
+	public void setSubframeDuration(Double subframeDuration) {
+		this.subframeDuration = subframeDuration;
+	}
+
 	@Override
 	public String toString() {
 		return "CREEnv [workingDirectory=" + workingDirectory + ", lambdaUser=" + lambdaUser + ", lambdaMacro="
 				+ lambdaMacro + ", lambdaSmall=" + lambdaSmall + ", powerMacro=" + powerMacro + ", powerSmall="
 				+ powerSmall + ", bandwidth=" + bandwidth + ", area=" + area + ", noisePower=" + noisePower
 				+ ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall + ", heightUser=" + heightUser
-				+ ", initialCrossoverProbability=" + initialCrossoverProbability + ", finalCrossoverProbability="
-				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
-				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
-				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
-				+ ", generationSize=" + generationSize + ", totalBias=" + totalBias + ", biasStep=" + biasStep
+				+ ", totalBias=" + totalBias + ", initialBias=" + initialBias + ", biasStep=" + biasStep
 				+ ", numberOfSimulations=" + numberOfSimulations + ", gainMacro=" + gainMacro + ", gainSmall="
-				+ gainSmall + "]";
+				+ gainSmall + ", nSubcarriers=" + nSubcarriers + ", nOFDMSymbols=" + nOFDMSymbols
+				+ ", subframeDuration=" + subframeDuration + ", initialCrossoverProbability="
+				+ initialCrossoverProbability + ", finalCrossoverProbability=" + finalCrossoverProbability
+				+ ", initialMutationProbability=" + initialMutationProbability + ", finalMutationProbability="
+				+ finalMutationProbability + ", initialGeneRange=" + initialGeneRange + ", finalGeneRange="
+				+ finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism + ", generationSize="
+				+ generationSize + "]";
 	}
 }

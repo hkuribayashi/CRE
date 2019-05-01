@@ -28,6 +28,10 @@ public class Scenario implements Serializable{
 
 	private Double medianRate;
 
+	/**
+	 * Default Constructor
+	 * @param env
+	 */
 	public Scenario(CREEnv env) {
 
 		/* Parameters for scenario */
@@ -50,7 +54,7 @@ public class Scenario implements Serializable{
 			UE ue = new UE(point, ApplicationProfile.DataBackup);
 			this.ue.add(ue);
 		}
-		
+
 		Point a = new Point(20.0, 20.0, this.env.getHeightMacro());
 		Point b = new Point(80.0, 80.0, this.env.getHeightMacro());
 
@@ -60,8 +64,6 @@ public class Scenario implements Serializable{
 		this.sumRate = 0.0;
 		this.medianRate = 0.0;
 		this.network = new NetworkElement[this.ue.size()][this.allBS.size()];
-		
-		
 	}
 
 	/**
@@ -72,11 +74,21 @@ public class Scenario implements Serializable{
 		for (int i=0; i<this.bias.length; i++)
 			this.bias[i] = bias;
 	}
+	
+	public void evaluation() {
+		this.getDistance();
+		this.getInitialSINR();
+		this.getCoverageMatrix();
+		this.getBSLoad();
+		this.getResourceBlockAllocation();
+		this.getBitRate();
+		this.getEvaluationMetrics();
+	}
 
 	/**
 	 * Calculate the distance between Users and Femto BS's and Between Users and Macro BS's
 	 */
-	public void getDistance() {
+	private void getDistance() {
 		for (int i=0; i<this.ue.size(); i++) {
 			UE u = this.ue.get(i);
 			for (int j=0; j<this.allBS.size(); j++) {
@@ -87,22 +99,22 @@ public class Scenario implements Serializable{
 				this.network[i][j] = n; 
 			}
 		}
-		
+
 		System.out.println("UES: "+this.ue.size());
 		System.out.println("BSs: "+this.allBS.size());
 		System.out.println("NE: ["+this.network.length+"]["+this.network[0].length+"]");
-		
+
 		System.out.println("Distance");
 		Util.printD(this.network);
 		System.out.println();
-		
+
 	}
 
 	/**
-	 * Calculate the SINR for All BS
+	 * Calculates the downlink SINR from all BSs to all users
 	 */
-	public void getInitialSINR() {
-		
+	private void getInitialSINR() {
+
 		double bw = this.env.getBandwidth() * Math.pow(10.0, 6.0); 		
 		double sigma2 = Math.pow(10.0,-3.0) * Math.pow(10.0, this.env.getNoisePower()/10.0);
 		double totalThermalNoise = bw * sigma2;
@@ -110,13 +122,13 @@ public class Scenario implements Serializable{
 		double sum = 0.0;
 
 		for (int i=0; i<this.ue.size(); i++) {
-			
+
 			for (int j=0; j<this.allBS.size(); j++) {
 				sum = 0.0;
 				BS bs = this.allBS.get(j);
 				double pr = bs.getPower() - Util.getPathLoss(bs.getType(), this.network[i][j].getDistance(), bs.getTxGain());
 				double prLin =  Math.pow(10.0, -3.0) * Math.pow(10.0,(pr/10.0));
-				
+
 				for (int k=0; k<this.allBS.size(); k++) {
 					BS b = this.allBS.get(k);
 					if (!b.equals(bs)) {
@@ -125,29 +137,26 @@ public class Scenario implements Serializable{
 						sum += prLinK;
 					}
 				}
-				
+
 				sum += totalThermalNoise;
 				double bias = 0.0;
-				if (bs.getType().equals(BSType.Small)) {
+				if (bs.getType().equals(BSType.Small))
 					bias = this.bias[j];
-					System.out.println("========="+bias);
-				}
-					
+				
 				double sinr = 10.0 * Math.log10(prLin/sum) + bias;
-
 				this.network[i][j].setSinr(sinr);
 			}			
 		}
-		
+
 		System.out.println("SINR");
 		Util.printS(this.network);
 		System.out.println();
 	}
 
 	/**
-	 * 
+	 * Calculates the coverege matrix
 	 */
-	public void getCoverageMatrix() {
+	private void getCoverageMatrix() {
 
 		for (int i=0; i<this.network.length; i++) {
 			NetworkElement[] nea = this.network[i];
@@ -155,17 +164,19 @@ public class Scenario implements Serializable{
 			NetworkElement max = Collections.max(nel);
 			int indexMax = nel.indexOf(max);
 			this.network[i][indexMax].setCoverageStatus(true);
+			double sinr = this.network[i][indexMax].getSinr();
+			this.ue.get(i).setBitsPerOFDMSymbol( MCS.getEfficiency(sinr) );
 		}
-		
+
 		System.out.println("Coverage");
 		Util.printC(this.network);
 		System.out.println();
 	}
 
 	/**
-	 * 
+	 * Calculates de BS Load
 	 */
-	public void getBSLoad() {
+	private void getBSLoad() {
 		for (int j=0; j<this.network[0].length; j++) {
 			double counter = 0.0;
 			for (int i=0; i<this.network.length; i++) {				
@@ -174,46 +185,83 @@ public class Scenario implements Serializable{
 			}
 			this.allBS.get(j).setLoad(counter);
 		}
-		
+
 		System.out.println("LOAD");
 		for (BS bs : allBS) {
 			System.out.print(bs.getLoad()+" ");
 			System.out.println();
 		}
 		System.out.println();
-		System.exit(0);
 	}
 
-	public void getInitialBitRate() {
+	/**
+	 * Performs the Resource Block Allocation Process for all BSs
+	 */
+	private void getResourceBlockAllocation() {
 
-		for (int i=0; i<this.network.length; i++) {
-			for (int j=0; j<(this.network[0].length); j++) {
-				double bias = 0.0;
-				if (this.allBS.get(j).getType().equals(BSType.Small))
-					bias = this.bias[j];
-				this.network[i][j].setBandwith( (this.env.getBandwidth()* 1000000.0 * (Math.log10(1 + (this.network[i][j].getSinr() - bias))/Math.log10(2.0)))/1000000.0);
-			}
-		}
-	}
+		double nRBsPerUE = 0.0;
 
-	public void getFinalBitRate() {
-		for (int i=0; i<this.network.length; i++) {
-			for (int j=0; j<(this.network[0].length); j++) {
-				if (this.network[i][j].getCoverageStatus().equals(true)) {
-					this.ue.get(i).setBitrate( (this.network[i][j].getBandwith()/this.allBS.get(j).getLoad()) );
-					this.sumRate += this.ue.get(i).getBitrate();
+		for (int j=0; j<this.network[0].length; j++) {
+			BS bs = this.allBS.get(j);
+			if (bs.getLoad() != 0 ) {
+				nRBsPerUE = Math.floor(bs.getnRBs()/bs.getLoad());
+				for (int i=0; i<this.network.length; i++) {
+					if (this.network[i][j].getCoverageStatus().equals(true))
+						this.ue.get(i).setnRB(nRBsPerUE);
 				}
 			}
 		}
+		
+		System.out.println("RB Allocation");
+		for (UE u: this.ue) {
+			System.out.println( u.getnRB() );
+		}
+		System.out.println();
+		
 	}
 
-	public void getFinalMedianRate() {
+	/**
+	 * Calculates the UE birate in Mbps
+	 */
+	private void getBitRate() {
+		
+		double bitrate = (this.env.getnSubcarriers() * this.env.getnOFDMSymbols() * this.env.getSubframeDuration() * 1000.0);
+		
+		for (int i=0; i<this.ue.size(); i++) {
+			double nRB = this.ue.get(i).getnRB();
+			double bitsPerOFDMSymbol = this.ue.get(i).getBitsPerOFDMSymbol();
+			this.ue.get(i).setBitrate((nRB * bitrate * bitsPerOFDMSymbol)/1000000.0);
+		}
+		
+		System.out.println("bits per OFDM Symbol");
+		for (UE u: this.ue) {
+			System.out.println( u.getBitsPerOFDMSymbol() );
+		}
+		System.out.println();
+		
+		
+		System.out.println("Bitrate");
+		for (UE u: this.ue) {
+			System.out.println( u.getBitrate() );
+		}
+		System.out.println();
+		System.exit(0);
+	}
+
+	/**
+	 * Calculates performance evaluation final metrics
+	 */
+	private void getEvaluationMetrics() {
+		double sumRate = 0.0;
 		double size = (double) this.ue.size();
 		List<Double> bitrate = new ArrayList<Double>();
-		for (UE u : this.ue)
+		for (UE u : this.ue) {
 			bitrate.add(u.getBitrate());
+			sumRate += u.getBitrate();
+		}
+		this.sumRate = sumRate;
 		Collections.sort(bitrate);
-
+		
 		int index1, index2;
 		if (size % 2 == 0) {
 			index1 = (int) size/2;
@@ -222,7 +270,7 @@ public class Scenario implements Serializable{
 		}else {
 			index1 = (int) Math.ceil(size/2.0);
 			this.medianRate = bitrate.get(index1);
-		}		
+		}
 	}
 
 	public CREEnv getEnv() {

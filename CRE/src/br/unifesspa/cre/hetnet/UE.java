@@ -7,6 +7,10 @@ public class UE {
 	private ApplicationProfile profile;
 	
 	private Double bitrate;
+	
+	private Double nRB;
+	
+	private Double bitsPerOFDMSymbol;
 
 	public UE() {
 		super();
@@ -17,6 +21,8 @@ public class UE {
 		this.point = point;
 		this.profile = profile;
 		this.bitrate = 0.0;
+		this.nRB = 0.0;
+		this.bitsPerOFDMSymbol = 2.0;
 	}
 
 	public Point getPoint() {
@@ -41,5 +47,21 @@ public class UE {
 
 	public void setBitrate(Double bitrate) {
 		this.bitrate = bitrate;
+	}
+
+	public Double getnRB() {
+		return nRB;
+	}
+
+	public void setnRB(Double nRB) {
+		this.nRB = nRB;
+	}
+
+	public Double getBitsPerOFDMSymbol() {
+		return bitsPerOFDMSymbol;
+	}
+
+	public void setBitsPerOFDMSymbol(Double bitsPerOFDMSymbol) {
+		this.bitsPerOFDMSymbol = bitsPerOFDMSymbol;
 	}
 }

@@ -20,6 +20,8 @@ public class BS implements Serializable{
 	
 	private BSType type;
 	
+	private Double nRBs;
+	
 	private List<UE> servedUsers;
 
 	public BS(BSType type, Point point, Double power, Double txGain, Double rxGain) {
@@ -30,6 +32,7 @@ public class BS implements Serializable{
 		this.txGain = txGain;
 		this.rxGain = rxGain;
 		this.servedUsers = new ArrayList<UE>();
+		this.nRBs = 100.0;
 	}
 
 	public Point getPoint() {
@@ -88,7 +91,16 @@ public class BS implements Serializable{
 		this.type = type;
 	}
 
+	public Double getnRBs() {
+		return nRBs;
+	}
+
+	public void setnRBs(Double nRBs) {
+		this.nRBs = nRBs;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
 }

@@ -36,8 +36,4 @@ public class MCS {
 		
 		return efficiency;
 	}
-	
-	public static void main(String[] args) {
-		System.out.println( MCS.getEfficiency(3.48) );
-	}
 }
