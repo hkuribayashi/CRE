@@ -15,8 +15,6 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	private Double alpha;
 	
 	private Double beta;
-	
-	private Double meanExecutionTime;
 
 	public Result() {
 		super();
@@ -26,12 +24,11 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		super(id);
 	}
 
-	public Result(Integer id, Double bias, Double sumRate, Double medianRate, Double meanExecutionTime, Double alpha, Double beta) {
+	public Result(Integer id, Double bias, Double sumRate, Double medianRate, Double alpha, Double beta) {
 		super(id);
 		this.bias = bias;
 		this.sumRate = sumRate;
 		this.medianRate = medianRate;
-		this.meanExecutionTime = meanExecutionTime;
 		this.alpha = alpha;
 		this.beta = beta;
 	}
@@ -50,14 +47,6 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 
 	public void setMedianRate(Double medianRate) {
 		this.medianRate = medianRate;
-	}
-
-	public Double getMeanExecutionTime() {
-		return meanExecutionTime;
-	}
-
-	public void setMeanExecutionTime(Double meanExecutionTime) {
-		this.meanExecutionTime = meanExecutionTime;
 	}
 
 	public Double getBias() {
@@ -87,7 +76,7 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	@Override
 	public String toString() {
 		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", alpha=" + alpha
-				+ ", beta=" + beta + ", meanExecutionTime=" + meanExecutionTime + "]";
+				+ ", beta=" + beta + "]";
 	}
 
 	@Override

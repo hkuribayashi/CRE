@@ -5,9 +5,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 
+import br.unifesspa.cre.hetnet.BS;
 import br.unifesspa.cre.hetnet.Point;
 import br.unifesspa.cre.hetnet.Scenario;
 
@@ -46,24 +49,29 @@ public class Topology extends JComponent{
 	    
 	    g2.setColor(Color.BLACK);
 	    
-	    for (int i=0; i<=this.scenario.getFemtoPoints().size()-1; i++) {
-	    	Point p = this.scenario.getFemtoPoints().get(i);
+	    double aux = (this.scenario.getEnv().getArea()*this.scenario.getEnv().getLambdaMacro());
+	    List<Point> bsPoints = new ArrayList<Point>();
+	    for (BS bs : this.scenario.getAllBS())
+			bsPoints.add(bs.getPoint());
+	    
+	    for (int i=0; i<bsPoints.size()-aux; i++) {
+	    	Point p = bsPoints.get(i);
 	    	rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
 			g2.fill(rect);
 	    }
 	    
 	    g2.setColor(Color.RED);
 	    
-	    for (int i=0; i<=this.scenario.getUserPoints().size()-1; i++) {
-	    	Point p = this.scenario.getUserPoints().get(i);
+	    for (int i=(int)aux; i<bsPoints.size(); i++) {
+	    	Point p = bsPoints.get(i);
 	    	rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
 			g2.fill(rect);
 	    }
 	    
 	    g2.setColor(Color.BLUE);
 	    	    
-	    for (int i=0; i<=this.scenario.getMacroPoints().size()-1; i++) {
-	    	Point p = this.scenario.getMacroPoints().get(i);
+	    for (int i=0; i<=this.scenario.getUe().size(); i++) {
+	    	Point p = this.scenario.getUe().get(i).getPoint();
 	    	rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
 			g2.fill(rect);
 	    }

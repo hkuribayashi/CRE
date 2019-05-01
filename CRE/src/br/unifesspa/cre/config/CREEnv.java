@@ -16,13 +16,13 @@ public class CREEnv implements Serializable{
 
 	private Double lambdaMacro = 10.0;
 
-	private Double lambdaFemto = 10.0;
+	private Double lambdaSmall = 10.0;
 
 	private Double powerMacro = 46.0;
 
-	private Double powerFemto = 30.0;
+	private Double powerSmall = 30.0;
 
-	private Double bandwidth = 20000000.0;
+	private Double bandwidth = 20.0;
 
 	private Double area = 100.0;
 
@@ -30,7 +30,7 @@ public class CREEnv implements Serializable{
 	
 	private Double heightMacro = 25.0;
 	
-	private Double heightFemto = 10.0;
+	private Double heightSmall = 10.0;
 	
 	private Double heightUser = 2.0;
 	
@@ -57,6 +57,10 @@ public class CREEnv implements Serializable{
 	private Double biasStep = 0.05;
 	
 	private Double numberOfSimulations = 1000.0;
+	
+	private Double gainMacro = 15.0;
+	
+	private Double gainSmall = 5.0;
 	
 	
 	public void set(Param param, String value) {
@@ -93,13 +97,13 @@ public class CREEnv implements Serializable{
 
 		case lambdaMacro: this.lambdaMacro = value; break;
 
-		case lambdaFemto: this.lambdaFemto = value; break;
+		case lambdaFemto: this.lambdaSmall = value; break;
 
 		case lambdaUser: this.lambdaUser = value; break;
 		
 		case powerMacro: this.powerMacro = value; break;
 		
-		case powerFemto: this.powerFemto = value; break;
+		case powerSmall: this.powerSmall = value; break;
 		
 		case bandwith: this.bandwidth = value; break;
 		
@@ -109,7 +113,7 @@ public class CREEnv implements Serializable{
 		
 		case heightMacro: this.heightMacro = value; break;
 		
-		case heightFemto: this.heightFemto = value; break;
+		case heightSmall: this.heightSmall = value; break;
 		
 		case heightUser: this.heightUser = value; break;
 		
@@ -128,6 +132,10 @@ public class CREEnv implements Serializable{
 		case biasStep: this.biasStep = value; break;
 		
 		case numberOfSimulations: this.numberOfSimulations = value; break;
+		
+		case gainMacro: this.gainMacro = value; break;
+		
+		case gainSmall: this.gainSmall = value; break;
 
 		default: break;
 
@@ -150,28 +158,12 @@ public class CREEnv implements Serializable{
 		this.lambdaMacro = lambdaMacro;
 	}
 
-	public Double getLambdaFemto() {
-		return lambdaFemto;
-	}
-
-	public void setLambdaFemto(Double lambdaFemto) {
-		this.lambdaFemto = lambdaFemto;
-	}
-
 	public Double getPowerMacro() {
 		return powerMacro;
 	}
 
 	public void setPowerMacro(Double powerMacro) {
 		this.powerMacro = powerMacro;
-	}
-
-	public Double getPowerFemto() {
-		return powerFemto;
-	}
-
-	public void setPowerFemto(Double powerFemto) {
-		this.powerFemto = powerFemto;
 	}
 
 	public Double getBandwidth() {
@@ -204,14 +196,6 @@ public class CREEnv implements Serializable{
 
 	public void setHeightMacro(Double heightMacro) {
 		this.heightMacro = heightMacro;
-	}
-
-	public Double getHeightFemto() {
-		return heightFemto;
-	}
-
-	public void setHeightFemto(Double heightFemto) {
-		this.heightFemto = heightFemto;
 	}
 
 	public Double getHeightUser() {
@@ -330,17 +314,62 @@ public class CREEnv implements Serializable{
 		this.numberOfSimulations = numberOfSimulations;
 	}
 
+	public Double getGainMacro() {
+		return gainMacro;
+	}
+
+	public void setGainMacro(Double gainMacro) {
+		this.gainMacro = gainMacro;
+	}
+
+	public Double getGainSmall() {
+		return gainSmall;
+	}
+
+	public void setGainFemto(Double gainSmall) {
+		this.gainSmall = gainSmall;
+	}
+
+	public Double getLambdaSmall() {
+		return lambdaSmall;
+	}
+
+	public void setLambdaSmall(Double lambdaSmall) {
+		this.lambdaSmall = lambdaSmall;
+	}
+
+	public Double getPowerSmall() {
+		return powerSmall;
+	}
+
+	public void setPowerSmall(Double powerSmall) {
+		this.powerSmall = powerSmall;
+	}
+
+	public Double getHeightSmall() {
+		return heightSmall;
+	}
+
+	public void setHeightSmall(Double heightSmall) {
+		this.heightSmall = heightSmall;
+	}
+
+	public void setGainSmall(Double gainSmall) {
+		this.gainSmall = gainSmall;
+	}
+
 	@Override
 	public String toString() {
 		return "CREEnv [workingDirectory=" + workingDirectory + ", lambdaUser=" + lambdaUser + ", lambdaMacro="
-				+ lambdaMacro + ", lambdaFemto=" + lambdaFemto + ", powerMacro=" + powerMacro + ", powerFemto="
-				+ powerFemto + ", bandwidth=" + bandwidth + ", area=" + area + ", noisePower=" + noisePower
-				+ ", heightMacro=" + heightMacro + ", heightFemto=" + heightFemto + ", heightUser=" + heightUser
+				+ lambdaMacro + ", lambdaSmall=" + lambdaSmall + ", powerMacro=" + powerMacro + ", powerSmall="
+				+ powerSmall + ", bandwidth=" + bandwidth + ", area=" + area + ", noisePower=" + noisePower
+				+ ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall + ", heightUser=" + heightUser
 				+ ", initialCrossoverProbability=" + initialCrossoverProbability + ", finalCrossoverProbability="
 				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
 				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
 				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
 				+ ", generationSize=" + generationSize + ", totalBias=" + totalBias + ", biasStep=" + biasStep
-				+ ", numberOfSimulations=" + numberOfSimulations + "]";
+				+ ", numberOfSimulations=" + numberOfSimulations + ", gainMacro=" + gainMacro + ", gainSmall="
+				+ gainSmall + "]";
 	}
 }

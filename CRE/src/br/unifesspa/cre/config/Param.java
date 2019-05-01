@@ -3,17 +3,24 @@ package br.unifesspa.cre.config;
 public enum Param {
 	
 	/* General Parameters */
-	alpha, beta,workingDirectory, lambdaUser, lambdaMacro, lambdaFemto, 
 	
-	powerMacro, powerFemto, bandwith, area, noisePower, antennasMacro, 
+	workingDirectory, 
 	
-	antennasFemto, antennasUser, heightMacro, heightFemto, heightUser,
+	lambdaUser, lambdaMacro, lambdaFemto, 
+	
+	powerMacro, powerSmall, bandwith, area, noisePower, 
+	
+	heightMacro, heightSmall, heightUser, 
+	
+	gainMacro, gainSmall,
 	
 	/* Phase 1 Parameters */
+	
 	totalBias, biasStep, numberOfSimulations,
 	
 	
 	/* Phase 2 Parameters */
+	
 	initialCrossoverProbability, finalCrossoverProbability,
 	
 	initialMutationProbability, finalMutationProbability,

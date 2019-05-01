@@ -13,6 +13,7 @@ import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
+import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.hetnet.BSType;
 import br.unifesspa.cre.hetnet.Point;
 import br.unifesspa.cre.model.Result;
@@ -104,6 +105,36 @@ public class Util {
 		}
 	}
 
+	public static void printD(NetworkElement[][] network) {
+
+		for (int i=0; i<network.length; i++) {
+			for (int j=0; j<network[0].length; j++) {
+				System.out.print(network[i][j].getDistance()+" ");
+			}
+			System.out.print("\n");
+		}
+	}
+
+	public static void printS(NetworkElement[][] network) {
+
+		for (int i=0; i<network.length; i++) {
+			for (int j=0; j<network[0].length; j++) {
+				System.out.print(network[i][j].getSinr()+" ");
+			}
+			System.out.print("\n");
+		}
+	}
+
+	public static void printC(NetworkElement[][] network) {
+
+		for (int i=0; i<network.length; i++) {
+			for (int j=0; j<network[0].length; j++) {
+				System.out.print(network[i][j].getCoverageStatus()+" ");
+			}
+			System.out.print("\n");
+		}
+	}
+
 	/**
 	 * 
 	 * @param lambda
@@ -111,7 +142,7 @@ public class Util {
 	 * @param height
 	 * @return
 	 */
-	public static List<Point> getHPPP(Double lambda, Double area, Double height) {
+	public static <T> List<Point> getHPPP(Double lambda, Double area, Double height) {
 
 		Double lower = 0.0;
 		Double upper = Math.sqrt(area);
@@ -144,50 +175,17 @@ public class Util {
 	 * 
 	 * @param type
 	 * @param distance
-	 * @param variance
 	 * @return
 	 */
-	public static Double getChannelGain(BSType type, Double distance, Double variance) {
+	public static Double getPathLoss(BSType type, Double distance, Double txGain) {
 
-		Double channelGain = 0.0;
+		Double pathLoss;
 
 		if (type.equals(BSType.Macro)) {
-			//channelGain = 27.3 + 3.91 * 10 * Math.log10(distance) + Util.getNormalDistribution(0.0, variance);
-			channelGain = 128.0 + 37.6 * Math.log10( (Math.max(distance, 35.0)/1000.0) );
-		}else channelGain = 140.7 + 36.7 * Math.log10( (Math.max(distance, 10.0)/1000.0) );
-		//channelGain = 36.8 + 3.67 * 10 * Math.log10(distance) + Util.getNormalDistribution(0.0, variance);
+			pathLoss = 128.1 + 37.6 * Math.log10( (Math.max(distance, 35.0)/1000.0) ) - txGain;
+		}else pathLoss = 140.7 + 36.7 * Math.log10( (Math.max(distance,10.0)/1000.0) ) - txGain;
 
-		return channelGain;
-	}
-	
-	public static void main(String[] args) {
-		
-		double pMacro = 46.0; //dBM
-		double pSmall = 30.0; //dBM
-		double pNoise = -174.0; //dBM/Hertz
-		
-		double subChannelBandwidth = 180.0; //kHz
-		
-		double pMacroW = Util.conversion(pMacro);
-		double pSmallW = Util.conversion(pSmall);
-		double pNoiseW = Util.conversion( pNoise * subChannelBandwidth * 1000.0 );
-		
-		double gainSC1  = Util.conversion(Util.getChannelGain(BSType.Femto, 8.0, 0.0));
-		double gainSC2 = Util.conversion(Util.getChannelGain(BSType.Femto, 400.0, 0.0));
-		double gainM1 = Util.conversion(Util.getChannelGain(BSType.Macro, 500.0, 0.0));
-				
-		double SINRSC1 = (pSmallW * gainSC1 * 1.0 * 3.16)/((pSmall*gainSC2*1.0*3.16 + pSmall*gainM1*1.0*31.62) + pNoiseW);
-		
-		
-		
-		System.out.println(10*Math.log10(SINRSC1));
-				
-	}
-	
-	public static double conversion(double powerdBm) {
-		
-		return (Math.pow(10.0, (powerdBm/10.0)))/1000.0;
-		
+		return pathLoss;
 	}
 
 	/**
@@ -221,10 +219,10 @@ public class Util {
 	}
 
 	public static List<Double> getConfidenceInterval(Double[] values, Double level) {
-		
+
 		if (values.length == 0)
 			throw new RuntimeException("Aqui");
-		
+
 		SummaryStatistics s = new SummaryStatistics();
 		for (Double value : values)
 			s.addValue(value);
@@ -232,10 +230,10 @@ public class Util {
 		TDistribution tDist = new TDistribution(s.getN() - 1);
 		double critVal = tDist.inverseCumulativeProbability(1.0 - (1 - level) / 2);
 		Double ci = critVal * s.getStandardDeviation() / Math.sqrt(s.getN());
-		
+
 		double lower = s.getMean() - ci;
 		double upper = s.getMean() + ci;
-		
+
 		List<Double> finalValues = new ArrayList<Double>();
 		for (Double value : values) {
 			if (value >= lower && value <= upper)

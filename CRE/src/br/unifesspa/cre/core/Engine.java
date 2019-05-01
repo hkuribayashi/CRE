@@ -41,7 +41,7 @@ public class Engine {
 		double biasStep = this.env.getBiasStep();
 		int totalBias = this.env.getTotalBias();
 		
-		Double initialBias = 0.9;
+		Double initialBias = 10.0;
 		this.biasOffset = new Double[totalBias];
 		for (int i=0; i<this.biasOffset.length; i++)
 			biasOffset[i] = initialBias + (biasStep * i);

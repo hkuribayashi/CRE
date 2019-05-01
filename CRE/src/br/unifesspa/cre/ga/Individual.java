@@ -31,7 +31,8 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.alpha = alpha;
 		this.beta = beta;
 
-		int chromossomeSize = this.scenario.getFemtoPoints().size();
+		Double qtdMacro = this.scenario.getEnv().getArea() * this.scenario.getEnv().getLambdaMacro();
+		int chromossomeSize = this.scenario.getAllBS().size()-(qtdMacro.intValue());
 		double lowerBound, upperBound;
 
 		lowerBound = this.scenario.getEnv().getInitialGeneRange();
