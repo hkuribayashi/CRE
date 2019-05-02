@@ -202,7 +202,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 
 	private Double delta(int t, double y, double gmax, double b) {
-		double r = Util.getUniformRealDistribution(0.0, 1.0);
+		double r = Math.random();
 		double z = Math.pow(1-(t/gmax),b);
 		return y * (1 - Math.pow(r, z));
 	}
@@ -216,8 +216,11 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.result.setBeta(this.beta);
 		this.result.setSumRate(this.scenario.getSumRate());
 		this.result.setMedianRate(this.scenario.getMedianRate());
+	
+		double evaluation = (this.alpha*this.scenario.getSumRate()) + (this.beta*this.scenario.getMedianRate());
+		this.result.setEvaluation(evaluation);
 		
-		this.evaluation = (this.alpha*this.scenario.getSumRate()) + (this.beta*this.scenario.getMedianRate());
+		this.evaluation = evaluation;
 	}
 
 	public Double getEvaluation() {
@@ -259,12 +262,10 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 	@Override
 	public int compareTo(Individual o) {
-		if (this.evaluation > o.getEvaluation()) {
-			return -1;
-		}
-		if (this.evaluation < o.getEvaluation()) {
+		if (this.evaluation == o.getEvaluation()) {
+			return 0;
+		}else if (this.evaluation > o.getEvaluation()) {
 			return 1;
-		}
-		return 0;
+		}else return 0;
 	}
 }

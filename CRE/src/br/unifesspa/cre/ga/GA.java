@@ -2,6 +2,7 @@ package br.unifesspa.cre.ga;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import br.unifesspa.cre.hetnet.Scenario;
@@ -66,7 +67,8 @@ public class GA{
 			sum += this.population.get(i).getEvaluation();
 			i++;
 		}
-		Collections.sort(this.population);
+		Comparator<Individual> c = Collections.reverseOrder(); 
+		Collections.sort(this.population, c);
 		return sum;
 	}
 
@@ -87,43 +89,57 @@ public class GA{
 			
 			sum = this.evaluate();
 			
-			double crossoverProbability = this.crossoverProbability[currentGeneration]; 
-			double mutationProbability = this.mutationProbability[currentGeneration];
+			geneticOperators(currentGeneration, sum, newPopulation);
 			
-			for (int i = 0; i < this.populationSize; i++) {
-				
-				int f1 = this.roulette(sum);
-				int f2 = this.roulette(sum);// f1 pode ser igual a f2
-				
-				while (f1 == f2) 
-					f2 = this.roulette(sum);
-				
-				Individual individual = null;
-				
-				if (Math.random() < crossoverProbability ) {
-					individual = this.population.get(f1).crossover(this.population.get(f2));
-					if (Math.random() < mutationProbability)
-						individual.mutation(currentGeneration);
-				} else if (Math.random() < mutationProbability ) {
-					individual = this.population.get(f1);
-					individual.mutation(currentGeneration);
-				}else individual = this.population.get(f1);
-				
-				newPopulation.add(individual);
-			}
 			newPopulation.addAll(kElitism);
 			this.setPopulation(newPopulation);
 			this.evaluate();
+			
 			if (bestEvaluation < this.getPopulation().get(0).getEvaluation()) {
+				
 				this.setBestSolution(this.getPopulation().get(0).getEvaluation());
 				this.setBestIndividual(this.getPopulation().get(0));
 				bestEvaluation = this.getBestSolution();
-				System.out.println("Genaration: "+currentGeneration);
-				System.out.println(this.getBestSolution());
+				
+				System.out.println("Generation: "+currentGeneration);
+				System.out.println("Solution: "+this.getBestIndividual().getEvaluation());
+				System.out.println("Alpha: "+this.getBestIndividual().getResult().getAlpha());
+				System.out.println("Beta: "+this.getBestIndividual().getResult().getBeta());
+				System.out.println("Sum Rate: "+this.getBestIndividual().getResult().getSumRate());
+				System.out.println("Median Rate: "+this.getBestIndividual().getResult().getMedianRate());
+				System.out.println();
+				
 			}
 			currentGeneration++;
 		}
 
+	}
+
+	private void geneticOperators(int currentGeneration, Double sum, List<Individual> newPopulation) {
+		double crossoverProbability = this.crossoverProbability[currentGeneration]; 
+		double mutationProbability = this.mutationProbability[currentGeneration];
+		
+		for (int i = 0; i < this.populationSize; i++) {
+			
+			int f1 = this.roulette(sum);
+			int f2 = this.roulette(sum);
+			
+			while (f1 == f2) 
+				f2 = this.roulette(sum);
+			
+			Individual individual = null;
+			
+			if (Math.random() < crossoverProbability ) {
+				individual = this.population.get(f1).crossover(this.population.get(f2));
+				if (Math.random() < mutationProbability)
+					individual.mutation(currentGeneration);
+			} else if (Math.random() < mutationProbability ) {
+				individual = this.population.get(f1);
+				individual.mutation(currentGeneration);
+			}else individual = this.population.get(f1);
+			
+			newPopulation.add(individual);
+		}
 	}
 
 	private int roulette(Double evaluationSum) {

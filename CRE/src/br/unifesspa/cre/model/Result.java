@@ -15,6 +15,8 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	private Double alpha;
 	
 	private Double beta;
+	
+	private Double evaluation;
 
 	public Result() {
 		super();
@@ -73,21 +75,30 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		this.beta = beta;
 	}
 
+	public Double getEvaluation() {
+		return evaluation;
+	}
+
+	public void setEvaluation(Double evaluation) {
+		this.evaluation = evaluation;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	@Override
 	public String toString() {
 		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", alpha=" + alpha
-				+ ", beta=" + beta + "]";
+				+ ", beta=" + beta + ", evaluation=" + evaluation + "]";
 	}
 
 	@Override
 	public int compareTo(Result o) {
-		Double a,b;
-		a = (this.sumRate*this.alpha + this.medianRate*this.beta);
-		b = (o.sumRate*this.alpha + o.medianRate*this.beta);
-		if (a > b) 
-			return -1;
-		else if (a == b)
-				return 0;
-		else return 1;
+		if (this.evaluation == o.evaluation) 
+			return 0;
+		else if (this.evaluation > o.evaluation)
+				return 1;
+		else return -1;
 	}
 }

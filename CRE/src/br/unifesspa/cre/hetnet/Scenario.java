@@ -51,12 +51,12 @@ public class Scenario implements Serializable{
 		this.ue = new ArrayList<UE>();
 		List<Point> uePoints = Util.getHPPP(this.env.getLambdaUser(), this.env.getArea(), this.env.getHeightUser());
 		for (Point point : uePoints) {
-			UE ue = new UE(point, ApplicationProfile.DataBackup);
+			UE ue = new UE(point, Util.getApplicationProfile());
 			this.ue.add(ue);
 		}
 
-		Point a = new Point(20.0, 20.0, this.env.getHeightMacro());
-		Point b = new Point(80.0, 80.0, this.env.getHeightMacro());
+		Point a = new Point(200.0, 200.0, this.env.getHeightMacro());
+		Point b = new Point(800.0, 800.0, this.env.getHeightMacro());
 
 		this.allBS.add(new BS(BSType.Macro, a, this.env.getPowerMacro(), this.env.getGainMacro(), 0.0));
 		this.allBS.add(new BS(BSType.Macro, b, this.env.getPowerMacro(), this.env.getGainMacro(), 0.0));
@@ -218,7 +218,6 @@ public class Scenario implements Serializable{
 	 */
 	private void getEvaluationMetrics() {
 		double sumRate = 0.0;
-		double size = (double) this.ue.size();
 		List<Double> bitrate = new ArrayList<Double>();
 		for (UE u : this.ue) {
 			bitrate.add(u.getBitrate());
@@ -226,16 +225,7 @@ public class Scenario implements Serializable{
 		}
 		this.sumRate = sumRate;
 		Collections.sort(bitrate);
-		
-		int index1, index2;
-		if (size % 2 == 0) {
-			index1 = (int) size/2;
-			index2 = index1 - 1;
-			this.medianRate = (bitrate.get(index1) + bitrate.get(index2))/2.0;
-		}else {
-			index1 = (int) Math.ceil(size/2.0);
-			this.medianRate = bitrate.get(index1);
-		}
+		this.medianRate = Util.getMedian(bitrate);
 	}
 
 	public CREEnv getEnv() {

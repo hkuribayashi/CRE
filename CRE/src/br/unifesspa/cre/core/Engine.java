@@ -2,6 +2,7 @@ package br.unifesspa.cre.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -99,15 +100,9 @@ public class Engine {
 				r.setBias(biasOffset[i]);
 				r.setAlpha(this.alpha);
 				r.setBeta(this.beta);
-				
-				List<Double> sr = Util.getConfidenceInterval(sRate, 0.90);
-				double sumR = sr.stream().mapToDouble(Double::doubleValue).sum();
-				
-				List<Double> mr = Util.getConfidenceInterval(mRate, 0.90);
-				double medianR = mr.stream().mapToDouble(Double::doubleValue).sum();
-				
-				r.setSumRate( sumR/sr.size() );
-				r.setMedianRate( medianR/mr.size() );
+				r.setSumRate( Util.getMean(sRate) );
+				r.setMedianRate( Util.getMean(mRate) );
+				r.setEvaluation( (this.alpha*r.getSumRate()) + (this.beta*r.getMedianRate()) );
 						
 				results.add(r);
 		
@@ -122,7 +117,8 @@ public class Engine {
 			
 			System.out.println("Results saved in "+path);
 			System.out.println();
-			Collections.sort(results);
+			Comparator<Result> c = Collections.reverseOrder();
+			Collections.sort(results, c);
 			System.out.println("Best Static Bias: "+results.get(0));
 			System.out.println();
 		}else {
@@ -158,6 +154,8 @@ public class Engine {
 		Double[] chromossome = ga.getBestIndividual().getChromossome();
 		for (int i=0; i<chromossome.length; i++)
 			System.out.print(chromossome[i]+" ");
+		System.out.println();
+		System.out.println();
 		System.out.println();
 	}
 
