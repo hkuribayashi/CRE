@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 
@@ -46,8 +47,8 @@ public class Engine {
 	}
 
 	public void run() {
-		List<Result> results = this.getPhase1();
-		this.getPhase2(results);
+		List<Result> results1 = this.getPhase1();
+		this.getPhase2(results1);
 	}
 	
 	public void paitTopology(Scenario s) {
@@ -115,7 +116,7 @@ public class Engine {
 			
 			long endTime = System.nanoTime();
 			long elapsedTime = endTime - startTime;
-			System.out.println("Elapsed Time: "+elapsedTime);
+			System.out.println("Elapsed Time: "+TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS)+" ms");
 			
 			dao.save(results, path);
 			
@@ -151,11 +152,12 @@ public class Engine {
 		System.out.println();
 		System.out.println("Best Individual: ");
 		System.out.println("Evaluation: "+ga.getBestSolution());
-		//System.out.println(ga.getBestIndividual().getResult());
-		//System.out.println("Chromossome Configuration: ");
-		//Double[] chromossome = ga.getBestIndividual().getChromossome();
-		//for (int i=0; i<chromossome.length; i++)
-		//	System.out.print(chromossome[i]+" ");
+		System.out.println(ga.getBestIndividual().getResult());
+		System.out.println("Chromossome Configuration: ");
+		
+		Double[] chromossome = ga.getBestIndividual().getChromossome();
+		for (int i=0; i<chromossome.length; i++)
+			System.out.print(chromossome[i]+" ");
 		System.out.println();
 	}
 

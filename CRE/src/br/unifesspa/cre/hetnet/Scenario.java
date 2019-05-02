@@ -75,9 +75,12 @@ public class Scenario implements Serializable{
 			this.bias[i] = bias;
 	}
 	
+	/**
+	 * Performs the entire simulatio
+	 */
 	public void evaluation() {
 		this.getDistance();
-		this.getInitialSINR();
+		this.getBiasedSINR();
 		this.getCoverageMatrix();
 		this.getBSLoad();
 		this.getResourceBlockAllocation();
@@ -99,21 +102,12 @@ public class Scenario implements Serializable{
 				this.network[i][j] = n; 
 			}
 		}
-
-		System.out.println("UES: "+this.ue.size());
-		System.out.println("BSs: "+this.allBS.size());
-		System.out.println("NE: ["+this.network.length+"]["+this.network[0].length+"]");
-
-		System.out.println("Distance");
-		Util.printD(this.network);
-		System.out.println();
-
 	}
 
 	/**
 	 * Calculates the downlink SINR from all BSs to all users
 	 */
-	private void getInitialSINR() {
+	private void getBiasedSINR() {
 
 		double bw = this.env.getBandwidth() * Math.pow(10.0, 6.0); 		
 		double sigma2 = Math.pow(10.0,-3.0) * Math.pow(10.0, this.env.getNoisePower()/10.0);
@@ -147,30 +141,19 @@ public class Scenario implements Serializable{
 				this.network[i][j].setSinr(sinr);
 			}			
 		}
-
-		System.out.println("SINR");
-		Util.printS(this.network);
-		System.out.println();
 	}
 
 	/**
 	 * Calculates the coverege matrix
 	 */
 	private void getCoverageMatrix() {
-
 		for (int i=0; i<this.network.length; i++) {
 			NetworkElement[] nea = this.network[i];
 			List<NetworkElement> nel = Arrays.asList(nea);
 			NetworkElement max = Collections.max(nel);
 			int indexMax = nel.indexOf(max);
 			this.network[i][indexMax].setCoverageStatus(true);
-			double sinr = this.network[i][indexMax].getSinr();
-			this.ue.get(i).setBitsPerOFDMSymbol( MCS.getEfficiency(sinr) );
 		}
-
-		System.out.println("Coverage");
-		Util.printC(this.network);
-		System.out.println();
 	}
 
 	/**
@@ -185,22 +168,25 @@ public class Scenario implements Serializable{
 			}
 			this.allBS.get(j).setLoad(counter);
 		}
-
-		System.out.println("LOAD");
-		for (BS bs : allBS) {
-			System.out.print(bs.getLoad()+" ");
-			System.out.println();
-		}
-		System.out.println();
 	}
 
 	/**
 	 * Performs the Resource Block Allocation Process for all BSs
 	 */
 	private void getResourceBlockAllocation() {
+		
+		for (int i=0; i<this.network.length; i++) {
+			for (int j=0; j<this.network[0].length; j++) {
+				if (this.allBS.get(j).getType().equals(BSType.Small))
+					this.network[i][j].setSinr((this.network[i][j].getSinr() - this.bias[j]));
+				if (this.network[i][j].getCoverageStatus().equals(true)) {
+					double bitsPerOFDMSymbol = MCS.getEfficiency(this.network[i][j].getSinr());
+					this.ue.get(i).setBitsPerOFDMSymbol(bitsPerOFDMSymbol);
+				}
+			}
+		}
 
 		double nRBsPerUE = 0.0;
-
 		for (int j=0; j<this.network[0].length; j++) {
 			BS bs = this.allBS.get(j);
 			if (bs.getLoad() != 0 ) {
@@ -211,13 +197,6 @@ public class Scenario implements Serializable{
 				}
 			}
 		}
-		
-		System.out.println("RB Allocation");
-		for (UE u: this.ue) {
-			System.out.println( u.getnRB() );
-		}
-		System.out.println();
-		
 	}
 
 	/**
@@ -232,20 +211,6 @@ public class Scenario implements Serializable{
 			double bitsPerOFDMSymbol = this.ue.get(i).getBitsPerOFDMSymbol();
 			this.ue.get(i).setBitrate((nRB * bitrate * bitsPerOFDMSymbol)/1000000.0);
 		}
-		
-		System.out.println("bits per OFDM Symbol");
-		for (UE u: this.ue) {
-			System.out.println( u.getBitsPerOFDMSymbol() );
-		}
-		System.out.println();
-		
-		
-		System.out.println("Bitrate");
-		for (UE u: this.ue) {
-			System.out.println( u.getBitrate() );
-		}
-		System.out.println();
-		System.exit(0);
 	}
 
 	/**

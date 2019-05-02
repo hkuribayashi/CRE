@@ -116,6 +116,7 @@ public class GA{
 			this.evaluate();
 			if (bestEvaluation < this.getPopulation().get(0).getEvaluation()) {
 				this.setBestSolution(this.getPopulation().get(0).getEvaluation());
+				this.setBestIndividual(this.getPopulation().get(0));
 				bestEvaluation = this.getBestSolution();
 				System.out.println("Genaration: "+currentGeneration);
 				System.out.println(this.getBestSolution());
