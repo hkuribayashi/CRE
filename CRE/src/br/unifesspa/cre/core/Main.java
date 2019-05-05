@@ -1,19 +1,25 @@
 package br.unifesspa.cre.core;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.config.Param;
+import br.unifesspa.cre.data.DAO;
+import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.model.Result;
+import br.unifesspa.cre.util.Util;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
+		int simulations = 1000;
+		
 		String path = "/Users/hugo/Desktop/CRE/";
 		if (args.length != 0)
 			path = args[0];
-		
-		//Setting alpha and beta values
-		Double[] alphas = {100.0, 10.0, 2.0, 1.0, 1.0, 1.0, 1.0 };
-		Double[] betas = {1.0, 1.0, 1.0, 1.0, 2.0, 10.0, 100.0};
 		
 		CREEnv env = new CREEnv();
 		
@@ -35,7 +41,6 @@ public class Main {
 		env.set(Param.totalBias, 15);
 		env.set(Param.biasStep, 5.0);
 		env.set(Param.initialBias, 0.0);
-		env.set(Param.numberOfSimulations, 100.0);
 		
 		//Setting parameters to Pahse 2: GA
 		env.set(Param.initialCrossoverProbability, 0.9);
@@ -44,17 +49,38 @@ public class Main {
 		env.set(Param.finalMutationProbability, 0.8);
 		env.set(Param.populationSize, (env.getLambdaSmall()*env.getArea()));
 		env.set(Param.generationSize, 100);
-		env.set(Param.kElitism, 5);
-		env.set(Param.workingDirectory, path);
+		env.set(Param.kElitism, 2);
 		
-	
-		for (int i=0; i<alphas.length; i++) {
-			double alpha = alphas[i];
-			double beta = betas[i];
-			Engine e = new Engine(alpha, beta, env);
-			e.run();	
-		}		
+		DAO<List<Result>> dao = new DAO<List<Result>>();
 		
-		//Results
+		String fileE1 = path + "experiment1.data";
+		List<Result> re1;
+		if (!dao.verifyPath(fileE1)) {
+			re1 = Experiments.getExperiment01(env, simulations);
+			dao.save(re1, fileE1);
+		}else re1 = dao.restore(fileE1);
+		
+		Util.print(re1);
+		
+		String fileE2 = path + "experiment2.data";
+		List<Result> re2;
+		if (!dao.verifyPath(fileE2)) {
+			re2 = Experiments.getExperiment02(env, simulations);
+			dao.save(re2, fileE2);
+		}else re2 = dao.restore(fileE2);
+		
+		Util.print(re2);
+		
+		HashMap<String, Double> map = Util.getChromossomeRange(re2);
+		env.set(Param.initialGeneRange, map.get("minBias"));
+		env.set(Param.finalGeneRange, map.get("maxBias"));
+		
+		Scenario scenario = Collections.max(re2).getScenario();
+		scenario.setEnv(env);
+		HashMap<String, List<Result>> results = Experiments.getExperiment03(scenario);
+		
+		Util.print( results.get("NoBias") );
+		Util.print( results.get("StaticBias") );
+		Util.print( results.get("GA") );
 	}
 }

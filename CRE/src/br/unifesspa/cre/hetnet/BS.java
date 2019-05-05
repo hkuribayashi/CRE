@@ -1,8 +1,6 @@
 package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BS implements Serializable{
 
@@ -21,8 +19,6 @@ public class BS implements Serializable{
 	private BSType type;
 	
 	private Double nRBs;
-	
-	private List<UE> servedUsers;
 
 	public BS(BSType type, Point point, Double power, Double txGain, Double rxGain) {
 		super();
@@ -31,7 +27,6 @@ public class BS implements Serializable{
 		this.power = power;
 		this.txGain = txGain;
 		this.rxGain = rxGain;
-		this.servedUsers = new ArrayList<UE>();
 		this.nRBs = 100.0;
 	}
 
@@ -73,14 +68,6 @@ public class BS implements Serializable{
 
 	public void setLoad(Double load) {
 		this.load = load;
-	}
-
-	public List<UE> getServedUsers() {
-		return servedUsers;
-	}
-
-	public void setServedUsers(List<UE> servedUsers) {
-		this.servedUsers = servedUsers;
 	}
 
 	public BSType getType() {

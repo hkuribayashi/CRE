@@ -1,6 +1,10 @@
 package br.unifesspa.cre.ga;
 
-public class NetworkElement implements Comparable<NetworkElement>{
+import java.io.Serializable;
+
+public class NetworkElement implements Comparable<NetworkElement>,Serializable{
+
+	private static final long serialVersionUID = -670526476345447198L;
 
 	private Double distance;
 	

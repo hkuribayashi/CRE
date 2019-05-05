@@ -16,12 +16,12 @@ public enum Param {
 	
 	nSubcarriers, nOFDMSymbols, subframeDuration,
 	
-	/* Phase 1 Parameters */
-	
-	totalBias, biasStep, numberOfSimulations, initialBias,
-	
-	
 	/* Phase 2 Parameters */
+	
+	totalBias, biasStep, initialBias,
+	
+	
+	/* Phase 4 Parameters */
 	
 	initialCrossoverProbability, finalCrossoverProbability,
 	

@@ -6,9 +6,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JFrame;
+
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.util.Util;
+import br.unifesspa.cre.view.Topology;
 
 public class Scenario implements Serializable{
 
@@ -25,8 +28,15 @@ public class Scenario implements Serializable{
 	private Double[] bias;
 
 	private Double sumRate;
+	
+	private Double requiredRate;
 
 	private Double medianRate;
+	
+	private Double uesServed;
+	
+	private Double servingBSs;
+	
 
 	/**
 	 * Default Constructor
@@ -63,6 +73,9 @@ public class Scenario implements Serializable{
 
 		this.sumRate = 0.0;
 		this.medianRate = 0.0;
+		this.requiredRate = 0.0;
+		this.uesServed = 0.0;
+		this.servingBSs = 0.0;
 		this.network = new NetworkElement[this.ue.size()][this.allBS.size()];
 	}
 
@@ -226,6 +239,31 @@ public class Scenario implements Serializable{
 		this.sumRate = sumRate;
 		Collections.sort(bitrate);
 		this.medianRate = Util.getMedian(bitrate);
+		
+		this.requiredRate = 0.0;
+		this.uesServed = 0.0;
+		for (UE ue: this.ue) {
+			ApplicationProfile profile = ue.getProfile();;
+			double rRate = profile.getBandwidth() * profile.getCompressionFactor();
+			this.requiredRate += rRate;
+			if (ue.getBitrate() >= rRate)
+				this.uesServed++;
+		}
+		
+		double counter = 0.0;
+		for(BS bs: this.allBS) {
+			if (bs.getLoad() != 0)
+				counter++;
+		}
+		this.servingBSs = counter;
+	}
+	
+	public void paitTopology() {
+		JFrame window = new JFrame();
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setBounds(30, 30, 1000, 1000);
+		window.getContentPane().add(new Topology(this));
+		window.setVisible(true);
 	}
 
 	public CREEnv getEnv() {
@@ -288,9 +326,34 @@ public class Scenario implements Serializable{
 		return serialVersionUID;
 	}
 
+	public Double getRequiredRate() {
+		return requiredRate;
+	}
+
+	public void setRequiredRate(Double requiredRate) {
+		this.requiredRate = requiredRate;
+	}
+
+	public Double getUesServed() {
+		return uesServed;
+	}
+
+	public void setUesServed(Double uesServed) {
+		this.uesServed = uesServed;
+	}
+
+	public Double getServingBSs() {
+		return servingBSs;
+	}
+
+	public void setServingBSs(Double servingBSs) {
+		this.servingBSs = servingBSs;
+	}
+
 	@Override
 	public String toString() {
 		return "Scenario [env=" + env + ", allBS=" + allBS + ", ue=" + ue + ", network=" + Arrays.toString(network)
-				+ ", bias=" + Arrays.toString(bias) + ", sumRate=" + sumRate + ", medianRate=" + medianRate + "]";
+				+ ", bias=" + Arrays.toString(bias) + ", sumRate=" + sumRate + ", requiredRate=" + requiredRate
+				+ ", medianRate=" + medianRate + ", uesServed=" + uesServed + ", servingBSs=" + servingBSs + "]";
 	}
 }

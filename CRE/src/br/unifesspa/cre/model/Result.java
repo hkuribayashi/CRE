@@ -2,6 +2,8 @@ package br.unifesspa.cre.model;
 
 import java.io.Serializable;
 
+import br.unifesspa.cre.hetnet.Scenario;
+
 public class Result extends Entity implements Serializable, Comparable<Result>{
 
 	private static final long serialVersionUID = -8876078984426952757L;
@@ -17,6 +19,14 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	private Double beta;
 	
 	private Double evaluation;
+	
+	private Double requiredRate;
+	
+	private Double uesServed;
+	
+	private Double servingBSs;
+	
+	private Scenario scenario;
 
 	public Result() {
 		super();
@@ -33,6 +43,9 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		this.medianRate = medianRate;
 		this.alpha = alpha;
 		this.beta = beta;
+		this.requiredRate = 0.0;
+		this.uesServed = 0.0;
+		this.scenario = null;
 	}
 
 	public Double getSumRate() {
@@ -83,14 +96,47 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		this.evaluation = evaluation;
 	}
 
+	public Double getRequiredRate() {
+		return requiredRate;
+	}
+
+	public void setRequiredRate(Double requiredRate) {
+		this.requiredRate = requiredRate;
+	}
+
+	public Double getUesServed() {
+		return uesServed;
+	}
+
+	public void setUesServed(Double uesServed) {
+		this.uesServed = uesServed;
+	}
+
+	public Double getServingBSs() {
+		return servingBSs;
+	}
+
+	public void setServingBSs(Double servingBSs) {
+		this.servingBSs = servingBSs;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
+	public Scenario getScenario() {
+		return scenario;
+	}
+
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
+	}
+
 	@Override
 	public String toString() {
-		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", alpha=" + alpha
-				+ ", beta=" + beta + ", evaluation=" + evaluation + "]";
+		return "Result [bias=" + bias + ", alpha=" + alpha + ", beta=" + beta + ", uesServed=" + uesServed
+				+ ", servingBSs=" + servingBSs + ", evaluation=" + evaluation + ", sumRate=" + sumRate
+				+ ", requiredRate=" + requiredRate + ", medianRate=" + medianRate + "]";
 	}
 
 	@Override

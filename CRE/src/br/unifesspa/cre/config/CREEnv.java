@@ -7,10 +7,12 @@ import java.io.Serializable;
  *
  */
 public class CREEnv implements Serializable{
+	
+	public static Double[] alphas = {10.0, 2.0, 1.0, 1.0, 1.0,};
+	
+	public static Double[] betas = {1.0, 1.0, 1.0, 2.0, 10.0};
 
 	private static final long serialVersionUID = 6824819508443271546L;
-	
-	private String workingDirectory = "/Users/hugo/Desktop/CRE/";
 
 	private Double lambdaUser = 10.0;
 
@@ -40,8 +42,6 @@ public class CREEnv implements Serializable{
 	
 	private Double biasStep = 5.0;
 	
-	private Double numberOfSimulations = 1000.0;
-	
 	private Double gainMacro = 15.0;
 	
 	private Double gainSmall = 5.0;
@@ -69,18 +69,6 @@ public class CREEnv implements Serializable{
 	private Integer kElitism = 2;
 	
 	private Integer generationSize = 1000;
-	
-	
-	public void set(Param param, String value) {
-		
-		switch(param) {
-		
-		case workingDirectory: this.workingDirectory = value; break;
-		
-		default: break;
-		
-		}
-	}
 	
 	public void set(Param param, Integer value) {
 
@@ -142,8 +130,6 @@ public class CREEnv implements Serializable{
 		case finalMutationProbability: this.finalMutationProbability = value; break;
 		
 		case biasStep: this.biasStep = value; break;
-		
-		case numberOfSimulations: this.numberOfSimulations = value; break;
 		
 		case gainMacro: this.gainMacro = value; break;
 		
@@ -314,22 +300,6 @@ public class CREEnv implements Serializable{
 		this.biasStep = biasStep;
 	}
 
-	public String getWorkingDirectory() {
-		return workingDirectory;
-	}
-
-	public void setWorkingDirectory(String workingDirectory) {
-		this.workingDirectory = workingDirectory;
-	}
-	
-	public Double getNumberOfSimulations() {
-		return numberOfSimulations;
-	}
-
-	public void setNumberOfSimulations(Double numberOfSimulations) {
-		this.numberOfSimulations = numberOfSimulations;
-	}
-
 	public Double getGainMacro() {
 		return gainMacro;
 	}
@@ -406,20 +376,34 @@ public class CREEnv implements Serializable{
 		this.subframeDuration = subframeDuration;
 	}
 
+	public static Double[] getAlphas() {
+		return alphas;
+	}
+
+	public static void setAlphas(Double[] alphas) {
+		CREEnv.alphas = alphas;
+	}
+
+	public static Double[] getBetas() {
+		return betas;
+	}
+
+	public static void setBetas(Double[] betas) {
+		CREEnv.betas = betas;
+	}
+
 	@Override
 	public String toString() {
-		return "CREEnv [workingDirectory=" + workingDirectory + ", lambdaUser=" + lambdaUser + ", lambdaMacro="
-				+ lambdaMacro + ", lambdaSmall=" + lambdaSmall + ", powerMacro=" + powerMacro + ", powerSmall="
-				+ powerSmall + ", bandwidth=" + bandwidth + ", area=" + area + ", noisePower=" + noisePower
-				+ ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall + ", heightUser=" + heightUser
-				+ ", totalBias=" + totalBias + ", initialBias=" + initialBias + ", biasStep=" + biasStep
-				+ ", numberOfSimulations=" + numberOfSimulations + ", gainMacro=" + gainMacro + ", gainSmall="
-				+ gainSmall + ", nSubcarriers=" + nSubcarriers + ", nOFDMSymbols=" + nOFDMSymbols
-				+ ", subframeDuration=" + subframeDuration + ", initialCrossoverProbability="
-				+ initialCrossoverProbability + ", finalCrossoverProbability=" + finalCrossoverProbability
-				+ ", initialMutationProbability=" + initialMutationProbability + ", finalMutationProbability="
-				+ finalMutationProbability + ", initialGeneRange=" + initialGeneRange + ", finalGeneRange="
-				+ finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism + ", generationSize="
-				+ generationSize + "]";
+		return "CREEnv [lambdaUser=" + lambdaUser + ", lambdaMacro=" + lambdaMacro + ", lambdaSmall=" + lambdaSmall
+				+ ", powerMacro=" + powerMacro + ", powerSmall=" + powerSmall + ", bandwidth=" + bandwidth + ", area="
+				+ area + ", noisePower=" + noisePower + ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall
+				+ ", heightUser=" + heightUser + ", totalBias=" + totalBias + ", initialBias=" + initialBias
+				+ ", biasStep=" + biasStep + ", gainMacro=" + gainMacro + ", gainSmall=" + gainSmall + ", nSubcarriers="
+				+ nSubcarriers + ", nOFDMSymbols=" + nOFDMSymbols + ", subframeDuration=" + subframeDuration
+				+ ", initialCrossoverProbability=" + initialCrossoverProbability + ", finalCrossoverProbability="
+				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
+				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
+				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
+				+ ", generationSize=" + generationSize + "]";
 	}
 }

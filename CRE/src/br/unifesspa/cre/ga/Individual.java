@@ -216,8 +216,11 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.result.setBeta(this.beta);
 		this.result.setSumRate(this.scenario.getSumRate());
 		this.result.setMedianRate(this.scenario.getMedianRate());
+		this.result.setRequiredRate(this.scenario.getRequiredRate());
+		this.result.setUesServed(this.scenario.getUesServed());
+		this.result.setServingBSs(this.scenario.getServingBSs());
 	
-		double evaluation = (this.alpha*this.scenario.getSumRate()) + (this.beta*this.scenario.getMedianRate());
+		double evaluation = (this.alpha*this.scenario.getUesServed()) + (this.beta*this.scenario.getServingBSs());
 		this.result.setEvaluation(evaluation);
 		
 		this.evaluation = evaluation;

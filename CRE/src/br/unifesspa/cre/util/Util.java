@@ -50,6 +50,17 @@ public class Util {
 		return Math.sqrt(term);
 
 	}
+	
+	/**
+	 * 
+	 * @param list
+	 */
+	public static void print(List<Result> list) {
+		for (Result result : list) {
+			System.out.println(result);
+		}
+		System.out.println();
+	}
 
 	/**
 	 * 
@@ -189,17 +200,17 @@ public class Util {
 	 */
 	public static ApplicationProfile getApplicationProfile() {
 		ApplicationProfile ap;
-		int sample = Util.getUniformIntegerDistribution(1, 8);
+		Integer sample = Util.getUniformIntegerDistribution(1, 8);
 		
 		switch (sample){
-		case 1: ap = ApplicationProfile.VirtualReality;
-		case 2: ap = ApplicationProfile.FactoryAutomation;
-		case 3: ap = ApplicationProfile.DataBackup;
-		case 4: ap = ApplicationProfile.SmartGrid;
-		case 5: ap = ApplicationProfile.SmartHome;
-		case 6: ap = ApplicationProfile.Medical;
-		case 7: ap = ApplicationProfile.EnvironmentalMonitoring;
-		default: ap = ApplicationProfile.TactileInternet;
+		case 1: ap = ApplicationProfile.VirtualReality; break;
+		case 2: ap = ApplicationProfile.FactoryAutomation; break;
+		case 3: ap = ApplicationProfile.DataBackup; break;
+		case 4: ap = ApplicationProfile.SmartGrid; break;
+		case 5: ap = ApplicationProfile.SmartHome; break;
+		case 6: ap = ApplicationProfile.Medical; break;
+		case 7: ap = ApplicationProfile.EnvironmentalMonitoring; break;
+		default: ap = ApplicationProfile.TactileInternet; break;
 		}
 		
 		return ap;

@@ -1,6 +1,10 @@
 package br.unifesspa.cre.hetnet;
 
-public class UE {
+import java.io.Serializable;
+
+public class UE implements Serializable{
+
+	private static final long serialVersionUID = -5657596059481333345L;
 
 	private Point point;
 	

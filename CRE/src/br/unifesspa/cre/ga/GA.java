@@ -105,6 +105,8 @@ public class GA{
 				System.out.println("Solution: "+this.getBestIndividual().getEvaluation());
 				System.out.println("Alpha: "+this.getBestIndividual().getResult().getAlpha());
 				System.out.println("Beta: "+this.getBestIndividual().getResult().getBeta());
+				System.out.println("UEs served: "+this.getBestIndividual().getResult().getUesServed());
+				System.out.println("Serving BSs: "+this.getBestIndividual().getResult().getServingBSs());
 				System.out.println("Sum Rate: "+this.getBestIndividual().getResult().getSumRate());
 				System.out.println("Median Rate: "+this.getBestIndividual().getResult().getMedianRate());
 				System.out.println();
