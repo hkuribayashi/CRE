@@ -46,7 +46,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 	public Individual crossover(Individual otherIndividual) {
 		Individual individual = null;
-		int index = Util.getUniformIntegerDistribution(0, CrossoverStrategy.values().length-1);
+		int index = Util.getUniformIntegerDistribution(1, CrossoverStrategy.values().length-1);
 		CrossoverStrategy strategy = CrossoverStrategy.values()[index];
 		switch(strategy) {
 		case OnePoint: individual = onePointCrossover(otherIndividual); break;

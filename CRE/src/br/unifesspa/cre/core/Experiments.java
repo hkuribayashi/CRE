@@ -76,7 +76,7 @@ public class Experiments {
 		for (int i=0; i<CREEnv.alphas.length; i++) {
 			Engine e = new Engine(CREEnv.alphas[i], CREEnv.betas[i], scenario);
 			rNoBias.add(e.execNoBias());
-			rStaticBias.addAll(e.execStaticBias());
+			rStaticBias.add(Collections.max(e.execStaticBias()));
 			rGA.add(e.getGA());
 		}
 		

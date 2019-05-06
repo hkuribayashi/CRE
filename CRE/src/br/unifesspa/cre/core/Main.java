@@ -26,7 +26,7 @@ public class Main {
 		//Setting general simulations parameters
 		env.set(Param.area, 1000000.0); 	   // 1 km^2
 		env.set(Param.lambdaFemto, 0.00002);   // 0.00002 Femto/m^2 = 20 Femtos  
-		env.set(Param.lambdaUser, 0.0001);     // 0.0001 Users/m^2 = 100 Users 
+		env.set(Param.lambdaUser, 0.0002);     // 0.0001 Users/m^2 = 100 Users 
 		env.set(Param.lambdaMacro, 0.000002);  // 0.000002 Macros/m^2 = 2 Macros
 		env.set(Param.powerMacro, 46.0);	   // dBm
 		env.set(Param.powerSmall, 30.0);	   // dBm
@@ -44,11 +44,11 @@ public class Main {
 		
 		//Setting parameters to Pahse 2: GA
 		env.set(Param.initialCrossoverProbability, 0.9);
-		env.set(Param.finalCrossoverProbability, 0.5);
-		env.set(Param.initialMutationProbability, 0.2);
-		env.set(Param.finalMutationProbability, 0.8);
+		env.set(Param.finalCrossoverProbability, 0.4);
+		env.set(Param.initialMutationProbability, 0.5);
+		env.set(Param.finalMutationProbability, 0.95);
 		env.set(Param.populationSize, (env.getLambdaSmall()*env.getArea()));
-		env.set(Param.generationSize, 100);
+		env.set(Param.generationSize, 200);
 		env.set(Param.kElitism, 2);
 		
 		DAO<List<Result>> dao = new DAO<List<Result>>();
@@ -72,8 +72,8 @@ public class Main {
 		Util.print(re2);
 		
 		HashMap<String, Double> map = Util.getChromossomeRange(re2);
-		env.set(Param.initialGeneRange, map.get("minBias"));
-		env.set(Param.finalGeneRange, map.get("maxBias"));
+		env.set(Param.initialGeneRange, -10.0);
+		env.set(Param.finalGeneRange, 50.0);
 		
 		Scenario scenario = Collections.max(re2).getScenario();
 		scenario.setEnv(env);
