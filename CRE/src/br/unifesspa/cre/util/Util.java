@@ -50,7 +50,7 @@ public class Util {
 		return Math.sqrt(term);
 
 	}
-	
+
 	/**
 	 * 
 	 * @param list
@@ -158,7 +158,7 @@ public class Util {
 
 		return hm;
 	}
-	
+
 	/**
 	 * Returns the mean value of an array
 	 * @param values
@@ -170,7 +170,7 @@ public class Util {
 			ds.addValue(v);
 		return ds.getMean();
 	}
-	
+
 	/**
 	 * Returns the median valeu of an array
 	 * @param values
@@ -182,7 +182,7 @@ public class Util {
 			ds.addValue(v);
 		return ds.getPercentile(50.0);
 	}
-	
+
 	/**
 	 * 
 	 * @param values
@@ -193,7 +193,7 @@ public class Util {
 		valuesArray = values.toArray(valuesArray);
 		return Util.getMedian(valuesArray);
 	}
-	
+
 	/**
 	 * Returns a random Application Profile
 	 * @return
@@ -201,7 +201,7 @@ public class Util {
 	public static ApplicationProfile getApplicationProfile() {
 		ApplicationProfile ap;
 		Integer sample = Util.getUniformIntegerDistribution(1, 8);
-		
+
 		switch (sample){
 		case 1: ap = ApplicationProfile.VirtualReality; break;
 		case 2: ap = ApplicationProfile.FactoryAutomation; break;
@@ -212,7 +212,15 @@ public class Util {
 		case 7: ap = ApplicationProfile.EnvironmentalMonitoring; break;
 		default: ap = ApplicationProfile.TactileInternet; break;
 		}
-		
+
 		return ap;
+	}
+
+	public static Double[] getPhi(int size, double constant) {
+		Double[] array = new Double[size];
+		for (int i = 0; i < array.length; i++)
+			array[i] = Math.random() * constant;
+
+		return array;
 	}
 }

@@ -9,7 +9,7 @@ public enum ApplicationProfile {
 	SmartHome(60.0,0.001,0.0), 
 	Medical(40.0,2.0,0.2), 
 	EnvironmentalMonitoring(1000.0,1.0,0.1), 
-	TactileInternet(1.0,200.0,0.8);
+	TactileInternet(1.0,120.0,0.8);
 
 	private Double latency;
 	

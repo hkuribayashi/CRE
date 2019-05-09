@@ -9,6 +9,7 @@ import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.data.DAO;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
+import br.unifesspa.cre.pso.PSO;
 import br.unifesspa.cre.util.Util;
 
 public class Main {
@@ -26,7 +27,7 @@ public class Main {
 		//Setting general simulations parameters
 		env.set(Param.area, 1000000.0); 	   // 1 km^2
 		env.set(Param.lambdaFemto, 0.00002);   // 0.00002 Femto/m^2 = 20 Femtos  
-		env.set(Param.lambdaUser, 0.0002);     // 0.0001 Users/m^2 = 100 Users 
+		env.set(Param.lambdaUser, 0.0003);     // 0.0003 Users/m^2 = 300 Users 
 		env.set(Param.lambdaMacro, 0.000002);  // 0.000002 Macros/m^2 = 2 Macros
 		env.set(Param.powerMacro, 46.0);	   // dBm
 		env.set(Param.powerSmall, 30.0);	   // dBm
@@ -71,16 +72,23 @@ public class Main {
 		
 		Util.print(re2);
 		
+		
 		HashMap<String, Double> map = Util.getChromossomeRange(re2);
-		env.set(Param.initialGeneRange, -10.0);
-		env.set(Param.finalGeneRange, 50.0);
+		env.set(Param.initialGeneRange, map.get("minBias"));
+		env.set(Param.finalGeneRange, map.get("maxBias"));
 		
 		Scenario scenario = Collections.max(re2).getScenario();
 		scenario.setEnv(env);
+		
+		
 		HashMap<String, List<Result>> results = Experiments.getExperiment03(scenario);
 		
 		Util.print( results.get("NoBias") );
 		Util.print( results.get("StaticBias") );
 		Util.print( results.get("GA") );
+		
+		
+		PSO p = new PSO(10.0, 1.0, scenario, 280.0, 400, 500);
+		p.search();
 	}
 }
