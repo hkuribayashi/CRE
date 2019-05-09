@@ -9,7 +9,6 @@ import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.data.DAO;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.pso.PSO;
 import br.unifesspa.cre.util.Util;
 
 public class Main {
@@ -43,14 +42,18 @@ public class Main {
 		env.set(Param.biasStep, 5.0);
 		env.set(Param.initialBias, 0.0);
 		
-		//Setting parameters to Pahse 2: GA
+		//Setting GA Parameters
 		env.set(Param.initialCrossoverProbability, 0.9);
-		env.set(Param.finalCrossoverProbability, 0.4);
+		env.set(Param.finalCrossoverProbability, 0.5);
 		env.set(Param.initialMutationProbability, 0.5);
-		env.set(Param.finalMutationProbability, 0.95);
+		env.set(Param.finalMutationProbability, 0.99);
 		env.set(Param.populationSize, (env.getLambdaSmall()*env.getArea()));
-		env.set(Param.generationSize, 200);
+		env.set(Param.generationSize, 100);
 		env.set(Param.kElitism, 2);
+		
+		//Setting PSO Parameters
+		env.set(Param.psoGroupSize, 100);
+		env.set(Param.psoSteps, 100);
 		
 		DAO<List<Result>> dao = new DAO<List<Result>>();
 		
@@ -80,15 +83,13 @@ public class Main {
 		Scenario scenario = Collections.max(re2).getScenario();
 		scenario.setEnv(env);
 		
-		
 		HashMap<String, List<Result>> results = Experiments.getExperiment03(scenario);
 		
 		Util.print( results.get("NoBias") );
 		Util.print( results.get("StaticBias") );
 		Util.print( results.get("GA") );
+		Util.print( results.get("PSO") );
 		
 		
-		PSO p = new PSO(10.0, 1.0, scenario, 280.0, 400, 500);
-		p.search();
 	}
 }

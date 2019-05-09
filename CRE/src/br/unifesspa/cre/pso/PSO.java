@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.model.Result;
 
 public class PSO {
 
@@ -43,10 +44,10 @@ public class PSO {
 		this.gBest = Collections.min(this.population);
 	}
 
-	public void search() {
+	public Result search() {
 
 		int counter = 0;
-		while (counter < 200) {
+		while (counter < this.steps) {
 
 			this.evaluate();
 			for (int i=0; i<this.population.size(); i++) 
@@ -56,6 +57,7 @@ public class PSO {
 
 			counter++;
 		}
-
+		
+		return this.gBest.getResult();
 	}
 }

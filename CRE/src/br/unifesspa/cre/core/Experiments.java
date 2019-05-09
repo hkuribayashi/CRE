@@ -72,19 +72,21 @@ public class Experiments {
 		List<Result> rNoBias = new ArrayList<Result>();
 		List<Result> rStaticBias = new ArrayList<Result>();
 		List<Result> rGA = new ArrayList<Result>();
+		List<Result> rPSO = new ArrayList<Result>();
 		
 		for (int i=0; i<CREEnv.alphas.length; i++) {
 			Engine e = new Engine(CREEnv.alphas[i], CREEnv.betas[i], scenario);
 			rNoBias.add(e.execNoBias());
 			rStaticBias.add(Collections.max(e.execStaticBias()));
 			rGA.add(e.getGA());
+			rPSO.add(e.getPSO());
 		}
 		
 		results.put("NoBias", rNoBias);
 		results.put("StaticBias", rStaticBias);
 		results.put("GA", rGA);
+		results.put("PSO", rPSO);
 		
 		return results;
 	}
-
 }

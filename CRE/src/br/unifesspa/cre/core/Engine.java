@@ -7,6 +7,7 @@ import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.ga.GA;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
+import br.unifesspa.cre.pso.PSO;
 
 
 /**
@@ -101,6 +102,12 @@ public class Engine {
 		GA ga = new GA(this.alpha, this.beta, this.scenario);
 		ga.evolve();
 		return ga.getBestIndividual().getResult();
+	}
+	
+	public Result getPSO() {		
+		double target = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
+		PSO pso = new PSO(this.alpha, this.beta, this.scenario, target, this.scenario.getEnv().getPsoGroupSize(), this.scenario.getEnv().getPsoSteps());		
+		return pso.search(); 
 	}
 
 	public Double getAlpha() {

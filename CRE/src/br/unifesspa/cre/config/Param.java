@@ -16,12 +16,12 @@ public enum Param {
 	
 	nSubcarriers, nOFDMSymbols, subframeDuration,
 	
-	/* Phase 2 Parameters */
+	/* Static Bias Parameters */
 	
 	totalBias, biasStep, initialBias,
 	
 	
-	/* Phase 4 Parameters */
+	/* GA Parameters */
 	
 	initialCrossoverProbability, finalCrossoverProbability,
 	
@@ -29,6 +29,11 @@ public enum Param {
 	
 	initialGeneRange, finalGeneRange,
 	
-	populationSize, generationSize, kElitism;
+	populationSize, generationSize, kElitism,
+	
+	
+	/* PSO Parameters */
+	
+	psoGroupSize, psoSteps;
 	
 }
