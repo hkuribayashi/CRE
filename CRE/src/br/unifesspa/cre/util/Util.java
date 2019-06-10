@@ -1,9 +1,6 @@
 package br.unifesspa.cre.util;
 
 import java.util.ArrayList;
-
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
@@ -85,6 +82,18 @@ public class Util {
 			System.out.println("Element ["+i+"]: "+array[i]);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param array
+	 */
+	public static void print(Double[] array) {
+		Double sum = 0.0;
+		for (int i=0; i<=array.length-1; i++) {
+			sum += array[i];
+			System.out.println("Element ["+i+"]: "+array[i]);
+		}
+	}
 
 	/**
 	 * 
@@ -138,44 +147,55 @@ public class Util {
 
 		return pathLoss;
 	}
-
-	/**
-	 * 
-	 * @param results
-	 * @return
-	 */
-	public static HashMap<String, Double> getChromossomeRange(List<Result> results) {
+	
+	public static Result getMean(List<Result> results) {
+		
+		Result result = new Result();
+		result.setScenario(results.get(0).getScenario());
+		
 		List<Double> biasValues = new ArrayList<Double>();
-		for (Result rs : results)
-			biasValues.add(rs.getBias());
-		Collections.sort(biasValues);
-		Double max = Collections.max(biasValues);
-		Double min = Collections.min(biasValues);
-
-		HashMap<String, Double> hm = new HashMap<String, Double>();
-		hm.put("maxBias", max);
-		hm.put("minBias", min);
-
-		return hm;
+		List<Double> evaluationValues = new ArrayList<Double>();
+		List<Double> sumRateValues = new ArrayList<Double>();
+		List<Double> medianRateValues = new ArrayList<Double>();
+		List<Double> uesServedValues = new ArrayList<Double>();
+		List<Double> servingBSValues = new ArrayList<Double>();
+		List<Double> requiredRateValues = new ArrayList<Double>();
+		
+		for (Result r: results) {
+			biasValues.add(r.getBias());
+			evaluationValues.add(r.getEvaluation());
+			sumRateValues.add(r.getSumRate());
+			medianRateValues.add(r.getMedianRate());
+			uesServedValues.add(r.getUesServed());
+			servingBSValues.add(r.getServingBSs());
+			requiredRateValues.add(r.getRequiredRate());	
+		}
+		
+		result.setBias( Util.getMeanValue( biasValues ) );
+		result.setEvaluation( Util.getMeanValue(evaluationValues) );
+		result.setSumRate( Util.getMeanValue(sumRateValues) );
+		result.setMedianRate( Util.getMeanValue( medianRateValues ));
+		result.setUesServed( Util.getMeanValue( uesServedValues ) );
+		result.setServingBSs( Util.getMeanValue( servingBSValues ) );
+		result.setRequiredRate( Util.getMeanValue( requiredRateValues ) );
+		
+		return result;
 	}
-
-	/**
-	 * Returns the mean value of an array
-	 * @param values
-	 * @return
-	 */
-	public static Double getMean(Double[] values) {
+	
+	public static Double getMeanValue(List<Double> values) {
+		
+		Double[] valuesArray = new Double[values.size()];
+		valuesArray = values.toArray(valuesArray);
+		
 		DescriptiveStatistics ds = new DescriptiveStatistics();
-		for (Double v : values)
+		for (Double v : valuesArray)
 			ds.addValue(v);
+	
 		return ds.getMean();
 	}
+	
+	
 
-	/**
-	 * Returns the median valeu of an array
-	 * @param values
-	 * @return
-	 */
 	public static Double getMedian(Double[] values) {
 		DescriptiveStatistics ds = new DescriptiveStatistics();
 		for (Double v : values)
@@ -183,21 +203,12 @@ public class Util {
 		return ds.getPercentile(50.0);
 	}
 
-	/**
-	 * 
-	 * @param values
-	 * @return
-	 */
 	public static Double getMedian(List<Double> values) {
 		Double[] valuesArray = new Double[values.size()];
 		valuesArray = values.toArray(valuesArray);
 		return Util.getMedian(valuesArray);
 	}
 
-	/**
-	 * Returns a random Application Profile
-	 * @return
-	 */
 	public static ApplicationProfile getApplicationProfile() {
 		ApplicationProfile ap;
 		Integer sample = Util.getUniformIntegerDistribution(1, 8);
@@ -214,13 +225,5 @@ public class Util {
 		}
 
 		return ap;
-	}
-
-	public static Double[] getPhi(int size, double constant) {
-		Double[] array = new Double[size];
-		for (int i = 0; i < array.length; i++)
-			array[i] = Math.random() * constant;
-
-		return array;
 	}
 }

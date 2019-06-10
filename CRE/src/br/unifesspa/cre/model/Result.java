@@ -4,21 +4,17 @@ import java.io.Serializable;
 
 import br.unifesspa.cre.hetnet.Scenario;
 
-public class Result extends Entity implements Serializable, Comparable<Result>{
+public class Result implements Serializable, Comparable<Result>{
 
 	private static final long serialVersionUID = -8876078984426952757L;
 
 	private Double bias;
+	
+	private Double sumRBs;
 
 	private Double sumRate;
 	
 	private Double medianRate;
-	
-	private Double alpha;
-	
-	private Double beta;
-	
-	private Double evaluation;
 	
 	private Double requiredRate;
 	
@@ -26,26 +22,12 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	
 	private Double servingBSs;
 	
+	private Double evaluation;
+	
 	private Scenario scenario;
 
 	public Result() {
 		super();
-	}
-
-	public Result(Integer id) {
-		super(id);
-	}
-
-	public Result(Integer id, Double bias, Double sumRate, Double medianRate, Double alpha, Double beta) {
-		super(id);
-		this.bias = bias;
-		this.sumRate = sumRate;
-		this.medianRate = medianRate;
-		this.alpha = alpha;
-		this.beta = beta;
-		this.requiredRate = 0.0;
-		this.uesServed = 0.0;
-		this.scenario = null;
 	}
 
 	public Double getSumRate() {
@@ -70,22 +52,6 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 
 	public void setBias(Double bias) {
 		this.bias = bias;
-	}
-
-	public Double getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(Double alpha) {
-		this.alpha = alpha;
-	}
-
-	public Double getBeta() {
-		return beta;
-	}
-
-	public void setBeta(Double beta) {
-		this.beta = beta;
 	}
 
 	public Double getEvaluation() {
@@ -132,11 +98,19 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		this.scenario = scenario;
 	}
 
+	public Double getSumRBs() {
+		return sumRBs;
+	}
+
+	public void setSumRBs(Double sumRBs) {
+		this.sumRBs = sumRBs;
+	}
+
 	@Override
 	public String toString() {
-		return "Result [bias=" + bias + ", alpha=" + alpha + ", beta=" + beta + ", uesServed=" + uesServed
-				+ ", servingBSs=" + servingBSs + ", evaluation=" + evaluation + ", sumRate=" + sumRate
-				+ ", requiredRate=" + requiredRate + ", medianRate=" + medianRate + "]";
+		return "Result [bias=" + bias + ", sumRBs=" + sumRBs + ", sumRate=" + sumRate + ", medianRate=" + medianRate
+				+ ", requiredRate=" + requiredRate + ", uesServed=" + uesServed + ", servingBSs=" + servingBSs
+				+ ", evaluation=" + evaluation + "]";
 	}
 
 	@Override

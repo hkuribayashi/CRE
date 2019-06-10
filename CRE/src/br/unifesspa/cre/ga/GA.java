@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.util.Util;
 
 public class GA{
 
@@ -24,22 +25,16 @@ public class GA{
 	private double[] crossoverProbability;
 	
 	private double[] mutationProbability;
-	
-	private Double alpha;
-	
-	private Double beta;
 
-	public GA(Double alpha, Double beta, Scenario scenario) {
+	public GA(Scenario scenario) {
 
 		this.scenario = scenario;
 		this.populationSize = this.scenario.getEnv().getPopulationSize();
 		this.generationsSize = this.scenario.getEnv().getGenerationSize();
-		this.alpha = alpha;
-		this.beta = beta;
 
 		this.population = new ArrayList<Individual>();
 		for (int i=0; i<populationSize; i++)
-			this.population.add(new Individual(this.alpha, this.beta, this.scenario));
+			this.population.add(new Individual(this.scenario));
 
 		this.bestSolution = 0.0;
 		this.bestIndividual = null;
@@ -103,12 +98,11 @@ public class GA{
 				
 				System.out.println("Generation: "+currentGeneration);
 				System.out.println("Solution: "+this.getBestIndividual().getEvaluation());
-				System.out.println("Alpha: "+this.getBestIndividual().getResult().getAlpha());
-				System.out.println("Beta: "+this.getBestIndividual().getResult().getBeta());
 				System.out.println("UEs served: "+this.getBestIndividual().getResult().getUesServed());
 				System.out.println("Serving BSs: "+this.getBestIndividual().getResult().getServingBSs());
 				System.out.println("Sum Rate: "+this.getBestIndividual().getResult().getSumRate());
 				System.out.println("Median Rate: "+this.getBestIndividual().getResult().getMedianRate());
+				Util.print(this.getBestIndividual().getChromossome());
 				System.out.println();
 				
 			}
@@ -223,21 +217,5 @@ public class GA{
 
 	public void setBestSolution(double bestSolution) {
 		this.bestSolution = bestSolution;
-	}
-
-	public Double getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(Double alpha) {
-		this.alpha = alpha;
-	}
-
-	public Double getBeta() {
-		return beta;
-	}
-
-	public void setBeta(Double beta) {
-		this.beta = beta;
 	}
 }

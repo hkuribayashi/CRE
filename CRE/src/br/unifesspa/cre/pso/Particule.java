@@ -16,29 +16,21 @@ public class Particule implements Comparable<Particule>{
 
 	private Scenario scenario;
 	
-	private Double alpha;
-	
-	private Double beta;
-	
 	private Result result;
 
-	public Particule(Double alpha, Double beta, Scenario scenario) {
+	public Particule(Scenario scenario) {
 		this.scenario = scenario;
 		this.currentPosition = Double.MAX_VALUE;
 		this.bestPosition = Double.MAX_VALUE;
-		this.alpha = alpha;
-		this.beta = beta;
 		this.bestConfiguration = null;
 		this.result = new Result();
-		this.result.setAlpha(this.alpha);
-		this.result.setBeta(this.beta);
 
 		Double qtdMacro = this.scenario.getEnv().getArea() * this.scenario.getEnv().getLambdaMacro();
 		int configurationSize = this.scenario.getAllBS().size()-(qtdMacro.intValue());
 		double lowerBound, upperBound;
 
-		lowerBound = this.scenario.getEnv().getInitialGeneRange();
-		upperBound = this.scenario.getEnv().getFinalGeneRange();
+		lowerBound = 10.0;
+		upperBound = 40.0;
 
 		this.currentConfiguration = new Double[configurationSize];
 
@@ -50,7 +42,7 @@ public class Particule implements Comparable<Particule>{
 		this.scenario.setBias(this.currentConfiguration);
 		this.scenario.evaluation();
 		
-		this.currentPosition = (this.scenario.getUesServed()*this.alpha) + (this.scenario.getServingBSs() * this.beta);
+		this.currentPosition = (this.scenario.getUesServed() + this.scenario.getSumRate());
 		this.currentPosition = Math.sqrt(Math.pow(this.currentPosition - targetSolution, 2.0));
 		
 		if (this.currentPosition < this.bestPosition) {
@@ -67,8 +59,8 @@ public class Particule implements Comparable<Particule>{
 	public void updateVelocity(Double[] gBestConfiguration) {
 		
 		for (int i=0; i<this.currentConfiguration.length; i++) {
-			double phi1 = Math.random() * 0.9;
-			double phi2 = Math.random() * 0.9;
+			double phi1 = Math.random() * 0.4;
+			double phi2 = Math.random() * 0.4;
 			Double newVelocity = (bestConfiguration[i] - this.currentConfiguration[i]) * phi1 +
 							(gBestConfiguration[i] - this.currentConfiguration[i]) * phi2;
 			this.currentConfiguration[i] = this.currentConfiguration[i] + newVelocity;
@@ -122,22 +114,6 @@ public class Particule implements Comparable<Particule>{
 
 	public void setScenario(Scenario scenario) {
 		this.scenario = scenario;
-	}
-
-	public Double getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(Double alpha) {
-		this.alpha = alpha;
-	}
-
-	public Double getBeta() {
-		return beta;
-	}
-
-	public void setBeta(Double beta) {
-		this.beta = beta;
 	}
 
 	public Result getResult() {

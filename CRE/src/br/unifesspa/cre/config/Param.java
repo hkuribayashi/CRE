@@ -12,9 +12,9 @@ public enum Param {
 	
 	heightMacro, heightSmall, heightUser, 
 	
-	gainMacro, gainSmall,
+	gainMacro, gainSmall, nSubcarriers, nOFDMSymbols, 
 	
-	nSubcarriers, nOFDMSymbols, subframeDuration,
+	subframeDuration, simulationNumber,
 	
 	/* Static Bias Parameters */
 	

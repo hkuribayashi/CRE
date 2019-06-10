@@ -13,7 +13,7 @@ import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.util.Util;
 import br.unifesspa.cre.view.Topology;
 
-public class Scenario implements Serializable{
+public class Scenario implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = -1736505791936110187L;
 
@@ -26,6 +26,8 @@ public class Scenario implements Serializable{
 	private NetworkElement[][] network;
 
 	private Double[] bias;
+	
+	private Double sumRBs;
 
 	private Double sumRate;
 	
@@ -76,6 +78,7 @@ public class Scenario implements Serializable{
 		this.requiredRate = 0.0;
 		this.uesServed = 0.0;
 		this.servingBSs = 0.0;
+		this.sumRBs = 0.0;
 		this.network = new NetworkElement[this.ue.size()][this.allBS.size()];
 	}
 
@@ -350,10 +353,29 @@ public class Scenario implements Serializable{
 		this.servingBSs = servingBSs;
 	}
 
+	public Double getSumRBs() {
+		return sumRBs;
+	}
+
+	public void setSumRBs(Double sumRBs) {
+		this.sumRBs = sumRBs;
+	}
+
+	@Override
+	protected Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "Scenario [env=" + env + ", allBS=" + allBS + ", ue=" + ue + ", network=" + Arrays.toString(network)
-				+ ", bias=" + Arrays.toString(bias) + ", sumRate=" + sumRate + ", requiredRate=" + requiredRate
-				+ ", medianRate=" + medianRate + ", uesServed=" + uesServed + ", servingBSs=" + servingBSs + "]";
+				+ ", bias=" + Arrays.toString(bias) + ", sumRBs=" + sumRBs + ", sumRate=" + sumRate + ", requiredRate="
+				+ requiredRate + ", medianRate=" + medianRate + ", uesServed=" + uesServed + ", servingBSs="
+				+ servingBSs + "]";
 	}
 }

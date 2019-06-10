@@ -2,7 +2,6 @@ package br.unifesspa.cre.ga;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import br.unifesspa.cre.hetnet.Scenario;
@@ -18,25 +17,19 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	private Scenario scenario;
 
 	private Result result;
-	
-	private Double alpha;
-	
-	private Double beta;
 
-	public Individual(Double alpha, Double beta, Scenario scenario) {
+	public Individual(Scenario scenario) {
 
 		this.scenario = scenario;
 		this.evaluation = 0.0;
 		this.result = null;
-		this.alpha = alpha;
-		this.beta = beta;
 
 		Double qtdMacro = this.scenario.getEnv().getArea() * this.scenario.getEnv().getLambdaMacro();
 		int chromossomeSize = this.scenario.getAllBS().size()-(qtdMacro.intValue());
 		double lowerBound, upperBound;
 
-		lowerBound = this.scenario.getEnv().getInitialGeneRange();
-		upperBound = this.scenario.getEnv().getFinalGeneRange();	
+		lowerBound = 25.0;
+		upperBound = 60.0;	
 
 		this.chromossome = new Double[chromossomeSize];
 
@@ -169,8 +162,8 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 	private void randomMutation(double probability) {
 
-		double lower = Collections.min(Arrays.asList(this.chromossome));
-		double upper = Collections.max(Arrays.asList(this.chromossome));
+		double lower = 25.0;
+		double upper = 60.0;
 
 		for (int i=0; i<this.chromossome.length; i++)
 			if (Math.random() < probability)
@@ -182,8 +175,9 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		double aux = 0.0;
 		int i=0;
 		int generationsSize = this.scenario.getEnv().getGenerationSize();
-		double lowerBound = this.scenario.getEnv().getInitialGeneRange();
-		double upperBound = this.scenario.getEnv().getFinalGeneRange();
+		
+		double lowerBound = 25.0;
+		double upperBound = 60.0;
 
 		while (i<this.chromossome.length) {
 
@@ -212,15 +206,13 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.scenario.evaluation();
 		
 		this.result = new Result();
-		this.result.setAlpha(this.alpha);
-		this.result.setBeta(this.beta);
 		this.result.setSumRate(this.scenario.getSumRate());
 		this.result.setMedianRate(this.scenario.getMedianRate());
 		this.result.setRequiredRate(this.scenario.getRequiredRate());
 		this.result.setUesServed(this.scenario.getUesServed());
 		this.result.setServingBSs(this.scenario.getServingBSs());
 	
-		double evaluation = (this.alpha*this.scenario.getUesServed()) + (this.beta*this.scenario.getServingBSs());
+		double evaluation = (this.scenario.getUesServed() + this.scenario.getServingBSs());
 		this.result.setEvaluation(evaluation);
 		
 		this.evaluation = evaluation;
