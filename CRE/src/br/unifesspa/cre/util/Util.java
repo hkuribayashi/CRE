@@ -1,6 +1,9 @@
 package br.unifesspa.cre.util;
 
 import java.util.ArrayList;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
@@ -82,18 +85,6 @@ public class Util {
 			System.out.println("Element ["+i+"]: "+array[i]);
 		}
 	}
-	
-	/**
-	 * 
-	 * @param array
-	 */
-	public static void print(Double[] array) {
-		Double sum = 0.0;
-		for (int i=0; i<=array.length-1; i++) {
-			sum += array[i];
-			System.out.println("Element ["+i+"]: "+array[i]);
-		}
-	}
 
 	/**
 	 * 
@@ -147,10 +138,97 @@ public class Util {
 
 		return pathLoss;
 	}
+
+	/**
+	 * 
+	 * @param results
+	 * @return
+	 */
+	public static HashMap<String, Double> getChromossomeRange(List<Result> results) {
+		List<Double> biasValues = new ArrayList<Double>();
+		for (Result rs : results)
+			biasValues.add(rs.getBias());
+		Collections.sort(biasValues);
+		Double max = Collections.max(biasValues);
+		Double min = Collections.min(biasValues);
+
+		HashMap<String, Double> hm = new HashMap<String, Double>();
+		hm.put("maxBias", max);
+		hm.put("minBias", min);
+
+		return hm;
+	}
+
+	/**
+	 * Returns the mean value of an array
+	 * @param values
+	 * @return
+	 */
+	public static Double getMean(Double[] values) {
+		DescriptiveStatistics ds = new DescriptiveStatistics();
+		for (Double v : values)
+			ds.addValue(v);
+		return ds.getMean();
+	}
+
+	/**
+	 * Returns the median valeu of an array
+	 * @param values
+	 * @return
+	 */
+	public static Double getMedian(Double[] values) {
+		DescriptiveStatistics ds = new DescriptiveStatistics();
+		for (Double v : values)
+			ds.addValue(v);
+		return ds.getPercentile(50.0);
+	}
+
+	/**
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static Double getMedian(List<Double> values) {
+		Double[] valuesArray = new Double[values.size()];
+		valuesArray = values.toArray(valuesArray);
+		return Util.getMedian(valuesArray);
+	}
+
+	/**
+	 * Returns a random Application Profile
+	 * @return
+	 */
+	public static ApplicationProfile getApplicationProfile() {
+		ApplicationProfile ap;
+		Integer sample = Util.getUniformIntegerDistribution(1, 8);
+
+		switch (sample){
+		case 1: ap = ApplicationProfile.VirtualReality; break;
+		case 2: ap = ApplicationProfile.FactoryAutomation; break;
+		case 3: ap = ApplicationProfile.DataBackup; break;
+		case 4: ap = ApplicationProfile.SmartGrid; break;
+		case 5: ap = ApplicationProfile.SmartHome; break;
+		case 6: ap = ApplicationProfile.Medical; break;
+		case 7: ap = ApplicationProfile.EnvironmentalMonitoring; break;
+		default: ap = ApplicationProfile.TactileInternet; break;
+		}
+
+		return ap;
+	}
+
+	public static Double[] getPhi(int size, double constant) {
+		Double[] array = new Double[size];
+		for (int i = 0; i < array.length; i++)
+			array[i] = Math.random() * constant;
+
+		return array;
+	}
 	
 	public static Result getMean(List<Result> results) {
 		
 		Result result = new Result();
+		result.setAlpha(results.get(0).getAlpha());
+		result.setBeta(results.get(0).getBeta());
 		result.setScenario(results.get(0).getScenario());
 		
 		List<Double> biasValues = new ArrayList<Double>();
@@ -192,38 +270,5 @@ public class Util {
 			ds.addValue(v);
 	
 		return ds.getMean();
-	}
-	
-	
-
-	public static Double getMedian(Double[] values) {
-		DescriptiveStatistics ds = new DescriptiveStatistics();
-		for (Double v : values)
-			ds.addValue(v);
-		return ds.getPercentile(50.0);
-	}
-
-	public static Double getMedian(List<Double> values) {
-		Double[] valuesArray = new Double[values.size()];
-		valuesArray = values.toArray(valuesArray);
-		return Util.getMedian(valuesArray);
-	}
-
-	public static ApplicationProfile getApplicationProfile() {
-		ApplicationProfile ap;
-		Integer sample = Util.getUniformIntegerDistribution(1, 8);
-
-		switch (sample){
-		case 1: ap = ApplicationProfile.VirtualReality; break;
-		case 2: ap = ApplicationProfile.FactoryAutomation; break;
-		case 3: ap = ApplicationProfile.DataBackup; break;
-		case 4: ap = ApplicationProfile.SmartGrid; break;
-		case 5: ap = ApplicationProfile.SmartHome; break;
-		case 6: ap = ApplicationProfile.Medical; break;
-		case 7: ap = ApplicationProfile.EnvironmentalMonitoring; break;
-		default: ap = ApplicationProfile.TactileInternet; break;
-		}
-
-		return ap;
 	}
 }

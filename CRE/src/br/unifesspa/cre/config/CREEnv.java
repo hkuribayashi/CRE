@@ -7,6 +7,10 @@ import java.io.Serializable;
  *
  */
 public class CREEnv implements Serializable{
+	
+	public static Double[] alphas = {10.0, 2.0, 1.0, 1.0, 1.0,};
+	
+	public static Double[] betas = {1.0, 1.0, 1.0, 2.0, 10.0};
 
 	private static final long serialVersionUID = 6824819508443271546L;
 
@@ -56,21 +60,19 @@ public class CREEnv implements Serializable{
 	
 	private Double finalMutationProbability = 0.8;
 	
-	private Double initialGeneRange = 10.0;
+	private Double initialGeneRange = -3.0;
 	
-	private Double finalGeneRange = 40.0;
+	private Double finalGeneRange = 3.0;
 	
 	private Integer populationSize = 20;
 	
 	private Integer kElitism = 2;
 	
-	private Integer generationSize = 100;
+	private Integer generationSize = 1000;
 	
 	private Integer psoGroupSize = 100;
 	
 	private Integer psoSteps = 100;
-	
-	private Integer simulationNumber = 10;
 	
 	public void set(Param param, Integer value) {
 
@@ -91,8 +93,6 @@ public class CREEnv implements Serializable{
 		case psoGroupSize: this.psoGroupSize = value; break;
 		
 		case psoSteps: this.psoSteps = value; break;
-		
-		case simulationNumber: this.simulationNumber = value; break;
 		
 		default: break;
 		
@@ -384,6 +384,22 @@ public class CREEnv implements Serializable{
 		this.subframeDuration = subframeDuration;
 	}
 
+	public static Double[] getAlphas() {
+		return alphas;
+	}
+
+	public static void setAlphas(Double[] alphas) {
+		CREEnv.alphas = alphas;
+	}
+
+	public static Double[] getBetas() {
+		return betas;
+	}
+
+	public static void setBetas(Double[] betas) {
+		CREEnv.betas = betas;
+	}
+
 	public Integer getPsoGroupSize() {
 		return psoGroupSize;
 	}
@@ -399,14 +415,6 @@ public class CREEnv implements Serializable{
 	public void setPsoSteps(Integer psoSteps) {
 		this.psoSteps = psoSteps;
 	}
-	
-	public Integer getSimulationNumber() {
-		return simulationNumber;
-	}
-
-	public void setSimulationNumber(Integer simulationNumber) {
-		this.simulationNumber = simulationNumber;
-	}
 
 	@Override
 	public String toString() {
@@ -421,6 +429,6 @@ public class CREEnv implements Serializable{
 				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
 				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
 				+ ", generationSize=" + generationSize + ", psoGroupSize=" + psoGroupSize + ", psoSteps=" + psoSteps
-				+ ", simulationNumber=" + simulationNumber + "]";
+				+ "]";
 	}
 }

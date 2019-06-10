@@ -17,17 +17,23 @@ public class PSO {
 
 	private Particule gBest;
 
+	private Double alpha;
+
+	private Double beta;
+
 	private Double targetSolution;
 
-	public PSO(Scenario scenario, Double targetSolution, Integer groupSize, Integer steps) {
+	public PSO(Double alpha, Double beta, Scenario scenario, Double targetSolution, Integer groupSize, Integer steps) {
 
 		this.scenario = scenario;
 		this.steps = steps;
+		this.alpha = alpha;
+		this.beta = beta;
 		this.targetSolution = targetSolution;
 
 		this.population = new ArrayList<Particule>();
 		for (int i=0; i<groupSize; i++)
-			this.population.add(new Particule(this.scenario));
+			this.population.add(new Particule(this.alpha, this.beta, this.scenario));
 
 		this.gBest = null;
 	}
@@ -47,13 +53,7 @@ public class PSO {
 			for (int i=0; i<this.population.size(); i++) 
 				this.population.get(i).updateVelocity(this.gBest.getBestConfiguration());
 			
-			System.out.println("Step: "+counter);
-			System.out.println("Solution: "+this.gBest.getBestPosition());
-			System.out.println("UEs served: "+this.gBest.getResult().getUesServed());
-			System.out.println("Serving BSs: "+this.gBest.getResult().getServingBSs());
-			System.out.println("Sum Rate: "+this.gBest.getResult().getSumRate());
-			System.out.println("Median Rate: "+this.gBest.getResult().getMedianRate());
-			System.out.println();
+			//System.out.println(this.gBest.getBestPosition());
 
 			counter++;
 		}
