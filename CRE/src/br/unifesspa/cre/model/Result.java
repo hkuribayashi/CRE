@@ -1,6 +1,7 @@
 package br.unifesspa.cre.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import br.unifesspa.cre.hetnet.Scenario;
 
@@ -27,6 +28,8 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	private Double servingBSs;
 	
 	private Scenario scenario;
+	
+	private Double[] solution;
 
 	public Result() {
 		super();
@@ -132,11 +135,20 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		this.scenario = scenario;
 	}
 
+	public Double[] getSolution() {
+		return solution;
+	}
+
+	public void setSolution(Double[] solution) {
+		this.solution = solution;
+	}
+
 	@Override
 	public String toString() {
-		return "Result [bias=" + bias + ", alpha=" + alpha + ", beta=" + beta + ", uesServed=" + uesServed
-				+ ", servingBSs=" + servingBSs + ", evaluation=" + evaluation + ", sumRate=" + sumRate
-				+ ", requiredRate=" + requiredRate + ", medianRate=" + medianRate + "]";
+		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", alpha=" + alpha
+				+ ", beta=" + beta + ", evaluation=" + evaluation + ", requiredRate=" + requiredRate + ", uesServed="
+				+ uesServed + ", servingBSs=" + servingBSs + ", scenario=" + scenario + ", solution="
+				+ Arrays.toString(solution) + "]";
 	}
 
 	@Override

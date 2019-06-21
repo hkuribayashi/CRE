@@ -7,12 +7,14 @@ import java.io.Serializable;
  *
  */
 public class CREEnv implements Serializable{
-	
-	public static Double[] alphas = {10.0, 2.0, 1.0, 1.0, 1.0,};
-	
-	public static Double[] betas = {1.0, 1.0, 1.0, 2.0, 10.0};
 
 	private static final long serialVersionUID = 6824819508443271546L;
+
+	public static Double[] alphas = {10.0, 2.0, 1.0, 1.0, 1.0,};
+
+	public static Double[] betas = {1.0, 1.0, 1.0, 2.0, 10.0};
+
+	public String workingDirectory = "/Users/hugo/Desktop/CRE/";
 
 	private Double lambdaUser = 10.0;
 
@@ -29,73 +31,84 @@ public class CREEnv implements Serializable{
 	private Double area = 100.0;
 
 	private Double noisePower = -176.0;
-	
-	private Double heightMacro = 25.0;
-	
-	private Double heightSmall = 10.0;
-	
-	private Double heightUser = 2.0;
-	
-	private Integer totalBias = 200;
-	
-	private Double initialBias = 10.0;
-	
-	private Double biasStep = 5.0;
-	
-	private Double gainMacro = 15.0;
-	
-	private Double gainSmall = 5.0;
-	
-	private Integer nSubcarriers = 12;
-	
-	private Integer nOFDMSymbols = 14;
-	
-	private Double subframeDuration = 1.0;
-	
-	private Double initialCrossoverProbability = 0.9;
-	
-	private Double finalCrossoverProbability = 0.6;
-	
-	private Double initialMutationProbability = 0.2;
-	
-	private Double finalMutationProbability = 0.8;
-	
-	private Double initialGeneRange = -3.0;
-	
-	private Double finalGeneRange = 3.0;
-	
-	private Integer populationSize = 20;
-	
-	private Integer kElitism = 2;
-	
-	private Integer generationSize = 1000;
-	
-	private Integer psoGroupSize = 100;
-	
-	private Integer psoSteps = 100;
-	
-	public void set(Param param, Integer value) {
 
-		switch (param) {
-			
-		case populationSize: this.populationSize = value; break;
-		
-		case kElitism: this.kElitism = value; break;
-		
-		case generationSize: this.generationSize = value; break;
-		
-		case totalBias: this.totalBias = value; break;
-		
-		case nSubcarriers: this.nSubcarriers = value;  break;
-		
-		case nOFDMSymbols: this.nOFDMSymbols = value; break;
-		
-		case psoGroupSize: this.psoGroupSize = value; break;
-		
-		case psoSteps: this.psoSteps = value; break;
+	private Double heightMacro = 25.0;
+
+	private Double heightSmall = 10.0;
+
+	private Double heightUser = 2.0;
+
+	private Integer totalBias = 200;
+
+	private Double initialBias = 10.0;
+
+	private Double biasStep = 5.0;
+
+	private Double gainMacro = 15.0;
+
+	private Double gainSmall = 5.0;
+
+	private Integer nSubcarriers = 12;
+
+	private Integer nOFDMSymbols = 14;
+
+	private Double subframeDuration = 1.0;
+
+	private Double initialCrossoverProbability = 0.9;
+
+	private Double finalCrossoverProbability = 0.6;
+
+	private Double initialMutationProbability = 0.2;
+
+	private Double finalMutationProbability = 0.8;
+
+	private Double initialGeneRange = -3.0;
+
+	private Double finalGeneRange = 3.0;
+
+	private Integer populationSize = 20;
+
+	private Integer kElitism = 2;
+
+	private Integer generationSize = 1000;
+
+	private Integer psoGroupSize = 100;
+
+	private Integer psoSteps = 100;
+
+
+	public void set(Param param, String value) {
+		switch(param) {
+
+		case workingDirectory: this.workingDirectory = value; break;
 		
 		default: break;
 		
+		}
+	}
+
+	public void set(Param param, Integer value) {
+
+		switch (param) {
+
+		case populationSize: this.populationSize = value; break;
+
+		case kElitism: this.kElitism = value; break;
+
+		case generationSize: this.generationSize = value; break;
+
+		case totalBias: this.totalBias = value; break;
+
+		case nSubcarriers: this.nSubcarriers = value;  break;
+
+		case nOFDMSymbols: this.nOFDMSymbols = value; break;
+
+		case psoGroupSize: this.psoGroupSize = value; break;
+
+		case psoSteps: this.psoSteps = value; break;
+
+		default: break;
+
 		}
 	}
 
@@ -108,43 +121,43 @@ public class CREEnv implements Serializable{
 		case lambdaFemto: this.lambdaSmall = value; break;
 
 		case lambdaUser: this.lambdaUser = value; break;
-		
+
 		case powerMacro: this.powerMacro = value; break;
-		
+
 		case powerSmall: this.powerSmall = value; break;
-		
+
 		case bandwith: this.bandwidth = value; break;
-		
+
 		case area: this.area = value; break;
-		
+
 		case noisePower: this.noisePower = value; break;
-		
+
 		case heightMacro: this.heightMacro = value; break;
-		
+
 		case heightSmall: this.heightSmall = value; break;
-		
+
 		case heightUser: this.heightUser = value; break;
-		
+
 		case initialCrossoverProbability: this.initialCrossoverProbability = value; break;
-		
+
 		case finalCrossoverProbability: this.finalCrossoverProbability = value; break;
-		
+
 		case initialGeneRange: this.initialGeneRange = value; break;
-		
+
 		case finalGeneRange: this.finalGeneRange = value; break;
-		
+
 		case initialMutationProbability: this.initialMutationProbability = value; break;
-		
+
 		case finalMutationProbability: this.finalMutationProbability = value; break;
-		
+
 		case biasStep: this.biasStep = value; break;
-		
+
 		case gainMacro: this.gainMacro = value; break;
-		
+
 		case gainSmall: this.gainSmall = value; break;
-		
+
 		case subframeDuration: this.subframeDuration = value; break;
-		
+
 		case initialBias: this.initialBias = value; break;
 
 		default: break;
@@ -416,14 +429,23 @@ public class CREEnv implements Serializable{
 		this.psoSteps = psoSteps;
 	}
 
+	public String getWorkingDirectory() {
+		return workingDirectory;
+	}
+
+	public void setWorkingDirectory(String workingDirectory) {
+		this.workingDirectory = workingDirectory;
+	}
+
 	@Override
 	public String toString() {
-		return "CREEnv [lambdaUser=" + lambdaUser + ", lambdaMacro=" + lambdaMacro + ", lambdaSmall=" + lambdaSmall
-				+ ", powerMacro=" + powerMacro + ", powerSmall=" + powerSmall + ", bandwidth=" + bandwidth + ", area="
-				+ area + ", noisePower=" + noisePower + ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall
-				+ ", heightUser=" + heightUser + ", totalBias=" + totalBias + ", initialBias=" + initialBias
-				+ ", biasStep=" + biasStep + ", gainMacro=" + gainMacro + ", gainSmall=" + gainSmall + ", nSubcarriers="
-				+ nSubcarriers + ", nOFDMSymbols=" + nOFDMSymbols + ", subframeDuration=" + subframeDuration
+		return "CREEnv [workingDirectory=" + workingDirectory + ", lambdaUser=" + lambdaUser + ", lambdaMacro="
+				+ lambdaMacro + ", lambdaSmall=" + lambdaSmall + ", powerMacro=" + powerMacro + ", powerSmall="
+				+ powerSmall + ", bandwidth=" + bandwidth + ", area=" + area + ", noisePower=" + noisePower
+				+ ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall + ", heightUser=" + heightUser
+				+ ", totalBias=" + totalBias + ", initialBias=" + initialBias + ", biasStep=" + biasStep
+				+ ", gainMacro=" + gainMacro + ", gainSmall=" + gainSmall + ", nSubcarriers=" + nSubcarriers
+				+ ", nOFDMSymbols=" + nOFDMSymbols + ", subframeDuration=" + subframeDuration
 				+ ", initialCrossoverProbability=" + initialCrossoverProbability + ", finalCrossoverProbability="
 				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
 				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange

@@ -1,11 +1,13 @@
 package br.unifesspa.cre.pso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
+import br.unifesspa.cre.util.Util;
 
 public class PSO {
 
@@ -41,23 +43,32 @@ public class PSO {
 	public void evaluate() {
 		for (int i=0; i<this.population.size(); i++)
 			this.population.get(i).evaluate(this.targetSolution);
-		this.gBest = Collections.min(this.population);
+		this.gBest = Collections.max(this.population);
 	}
 
 	public Result search() {
+		
+		int counter = 0, counter2 = 0;
+		Double temp = 0.0;
 
-		int counter = 0;
 		while (counter < this.steps) {
-
 			this.evaluate();
 			for (int i=0; i<this.population.size(); i++) 
 				this.population.get(i).updateVelocity(this.gBest.getBestConfiguration());
-			
-			//System.out.println(this.gBest.getBestPosition());
 
+			
+			if ( temp != this.gBest.getBestPosition() ) {
+				temp = this.gBest.getBestPosition();
+				System.out.println("Step: "+counter);
+				System.out.println("Value: "+temp);
+			}else counter2++;
+			
+			if (counter2++ >=20)
+				break;
+			
 			counter++;
 		}
-		
+
 		return this.gBest.getResult();
 	}
 }

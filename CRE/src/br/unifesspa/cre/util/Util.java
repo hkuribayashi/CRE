@@ -1,14 +1,16 @@
 package br.unifesspa.cre.util;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import com.opencsv.CSVWriter;
 
 import br.unifesspa.cre.hetnet.ApplicationProfile;
 import br.unifesspa.cre.hetnet.BSType;
@@ -85,6 +87,14 @@ public class Util {
 			System.out.println("Element ["+i+"]: "+array[i]);
 		}
 	}
+	
+	public static void print(Double[] array) {
+		Double sum = 0.0;
+		for (int i=0; i<=array.length-1; i++) {
+			sum += array[i];
+			System.out.println("Element ["+i+"]: "+array[i]);
+		}
+	}
 
 	/**
 	 * 
@@ -137,26 +147,6 @@ public class Util {
 		}else pathLoss = 140.7 + 36.7 * Math.log10( (Math.max(distance,10.0)/1000.0) ) - txGain;
 
 		return pathLoss;
-	}
-
-	/**
-	 * 
-	 * @param results
-	 * @return
-	 */
-	public static HashMap<String, Double> getChromossomeRange(List<Result> results) {
-		List<Double> biasValues = new ArrayList<Double>();
-		for (Result rs : results)
-			biasValues.add(rs.getBias());
-		Collections.sort(biasValues);
-		Double max = Collections.max(biasValues);
-		Double min = Collections.min(biasValues);
-
-		HashMap<String, Double> hm = new HashMap<String, Double>();
-		hm.put("maxBias", max);
-		hm.put("minBias", min);
-
-		return hm;
 	}
 
 	/**
@@ -223,14 +213,27 @@ public class Util {
 
 		return array;
 	}
-	
+
+	public static Double[] getBoxPlotData(List<Result> results) {
+
+		List<Double> evaluationValues = new ArrayList<Double>();
+
+		for (Result r: results)
+			evaluationValues.add(r.getEvaluation());
+
+		Double[] valuesArray = new Double[evaluationValues.size()];
+		valuesArray = evaluationValues.toArray(valuesArray);
+
+		return valuesArray;
+	}
+
 	public static Result getMean(List<Result> results) {
-		
+
 		Result result = new Result();
 		result.setAlpha(results.get(0).getAlpha());
 		result.setBeta(results.get(0).getBeta());
 		result.setScenario(results.get(0).getScenario());
-		
+
 		List<Double> biasValues = new ArrayList<Double>();
 		List<Double> evaluationValues = new ArrayList<Double>();
 		List<Double> sumRateValues = new ArrayList<Double>();
@@ -238,7 +241,7 @@ public class Util {
 		List<Double> uesServedValues = new ArrayList<Double>();
 		List<Double> servingBSValues = new ArrayList<Double>();
 		List<Double> requiredRateValues = new ArrayList<Double>();
-		
+
 		for (Result r: results) {
 			biasValues.add(r.getBias());
 			evaluationValues.add(r.getEvaluation());
@@ -248,7 +251,7 @@ public class Util {
 			servingBSValues.add(r.getServingBSs());
 			requiredRateValues.add(r.getRequiredRate());	
 		}
-		
+
 		result.setBias( Util.getMeanValue( biasValues ) );
 		result.setEvaluation( Util.getMeanValue(evaluationValues) );
 		result.setSumRate( Util.getMeanValue(sumRateValues) );
@@ -256,19 +259,38 @@ public class Util {
 		result.setUesServed( Util.getMeanValue( uesServedValues ) );
 		result.setServingBSs( Util.getMeanValue( servingBSValues ) );
 		result.setRequiredRate( Util.getMeanValue( requiredRateValues ) );
-		
+
 		return result;
 	}
-	
+
 	public static Double getMeanValue(List<Double> values) {
-		
+
 		Double[] valuesArray = new Double[values.size()];
 		valuesArray = values.toArray(valuesArray);
-		
+
 		DescriptiveStatistics ds = new DescriptiveStatistics();
 		for (Double v : valuesArray)
 			ds.addValue(v);
-	
+
 		return ds.getMean();
+	}
+
+	public static void writeToCSV(String filePath, Double[] boxplotValues, String header){ 
+		File file = new File(filePath); 
+
+		try {  
+			FileWriter outputfile = new FileWriter(file);  
+			CSVWriter writer = new CSVWriter(outputfile);  
+			List<String[]> data = new ArrayList<String[]>(); 
+			data.add( new String[] {"Bias "+header} );
+
+			for (int i=0; i<boxplotValues.length; i++)
+				data.add(new String[] {String.valueOf(boxplotValues[i])});
+
+			writer.writeAll(data); 
+			writer.close(); 
+		}catch (IOException e) { 
+			e.printStackTrace(); 
+		} 
 	}
 }

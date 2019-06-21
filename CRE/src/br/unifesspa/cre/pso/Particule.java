@@ -13,6 +13,8 @@ public class Particule implements Comparable<Particule>{
 	private Double[] currentConfiguration;
 	
 	private Double[] bestConfiguration;
+	
+	private Double[] inertiaWeight;
 
 	private Scenario scenario;
 	
@@ -24,8 +26,8 @@ public class Particule implements Comparable<Particule>{
 
 	public Particule(Double alpha, Double beta, Scenario scenario) {
 		this.scenario = scenario;
-		this.currentPosition = Double.MAX_VALUE;
-		this.bestPosition = Double.MAX_VALUE;
+		this.currentPosition = 0.0;
+		this.bestPosition = 0.0;
 		this.alpha = alpha;
 		this.beta = beta;
 		this.bestConfiguration = null;
@@ -35,25 +37,29 @@ public class Particule implements Comparable<Particule>{
 
 		Double qtdMacro = this.scenario.getEnv().getArea() * this.scenario.getEnv().getLambdaMacro();
 		int configurationSize = this.scenario.getAllBS().size()-(qtdMacro.intValue());
-		double lowerBound, upperBound;
 
-		lowerBound = this.scenario.getEnv().getInitialGeneRange();
-		upperBound = this.scenario.getEnv().getFinalGeneRange();
+		double lowerBound = this.scenario.getEnv().getInitialGeneRange();
+		double upperBound = this.scenario.getEnv().getFinalGeneRange();
 
 		this.currentConfiguration = new Double[configurationSize];
+		this.inertiaWeight = new Double[configurationSize];
+		
+		double bW = 0.9;
+		double aW = (0.6 - bW)/50.0;		
 
-		for (int i=0; i<configurationSize; i++)
+		for (int i=0; i<configurationSize; i++) {
 			this.currentConfiguration[i] = Util.getUniformRealDistribution(lowerBound, upperBound);
+			inertiaWeight[i] = (aW*i)+bW;
+		}
 	}
 	
 	public void evaluate(Double targetSolution) {
 		this.scenario.setBias(this.currentConfiguration);
 		this.scenario.evaluation();
 		
-		this.currentPosition = (this.scenario.getUesServed()*this.alpha) + (this.scenario.getServingBSs() * this.beta);
-		this.currentPosition = Math.sqrt(Math.pow(this.currentPosition - targetSolution, 2.0));
+		this.currentPosition = (this.scenario.getUesServed() * this.alpha) + (this.scenario.getServingBSs() * this.beta);
 		
-		if (this.currentPosition < this.bestPosition) {
+		if (this.currentPosition >= this.bestPosition) {
 			this.bestPosition = this.currentPosition;
 			this.bestConfiguration = this.currentConfiguration;
 			this.result.setEvaluation(this.bestPosition);
@@ -61,17 +67,18 @@ public class Particule implements Comparable<Particule>{
 			this.result.setSumRate(this.scenario.getSumRate());
 			this.result.setUesServed(this.scenario.getUesServed());
 			this.result.setServingBSs(this.scenario.getServingBSs());
+			this.result.setRequiredRate(this.scenario.getRequiredRate());
+			this.result.setSolution(this.bestConfiguration);
 		}
 	}
 	
 	public void updateVelocity(Double[] gBestConfiguration) {
-		
 		for (int i=0; i<this.currentConfiguration.length; i++) {
-			double phi1 = Math.random() * 0.9;
-			double phi2 = Math.random() * 0.9;
+			double phi1 = Math.random() * 0.3;
+			double phi2 = Math.random() * 1.3;
 			Double newVelocity = (bestConfiguration[i] - this.currentConfiguration[i]) * phi1 +
 							(gBestConfiguration[i] - this.currentConfiguration[i]) * phi2;
-			this.currentConfiguration[i] = this.currentConfiguration[i] + newVelocity;
+			this.currentConfiguration[i] = (this.inertiaWeight[i]) * this.currentConfiguration[i] + newVelocity;
 		}
 	}
 

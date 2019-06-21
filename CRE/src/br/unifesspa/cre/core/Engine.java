@@ -1,8 +1,5 @@
 package br.unifesspa.cre.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.ga.GA;
 import br.unifesspa.cre.hetnet.Scenario;
@@ -49,7 +46,9 @@ public class Engine {
 
 		this.scenario.setBias(this.biasOffset);
 		this.scenario.evaluation();
+		
 		Result r = new Result();
+		
 		r.setBias(0.0);
 		r.setAlpha(this.alpha);
 		r.setBeta(this.beta);
@@ -64,39 +63,30 @@ public class Engine {
 		return r;
 	}
 
-	public List<Result> execStaticBias() {
+	public Result execUnifiedBias(Double bias) {
 
-		double biasStep = this.env.getBiasStep();
-		int totalBias = this.env.getTotalBias();
-
-		Double initialBias = 10.0;
-		this.biasOffset = new Double[totalBias];
+		this.biasOffset = new Double[20];
 		for (int i=0; i<this.biasOffset.length; i++)
-			this.biasOffset[i] = initialBias + (biasStep * i);
+			this.biasOffset[i] = bias;
 
-		List<Result> results = new ArrayList<Result>();
-
-		for (int i=0; i<this.biasOffset.length; i++) {
-			
-			this.scenario.initBias(biasOffset[i]);
-			this.scenario.evaluation();
-			
-			Result r = new Result();
-			r.setBias(biasOffset[i]);
-			r.setAlpha(this.alpha);
-			r.setBeta(this.beta);
-			r.setSumRate( this.scenario.getSumRate() );
-			r.setMedianRate( this.scenario.getMedianRate() );
-			r.setRequiredRate( this.scenario.getRequiredRate() );
-			r.setUesServed( this.scenario.getUesServed() );
-			r.setServingBSs( this.scenario.getServingBSs() );
-			r.setEvaluation( this.alpha * r.getUesServed() + this.beta * r.getServingBSs() );
-			r.setScenario(this.scenario);
-			results.add(r);
-		}
+		this.scenario.setBias(this.biasOffset);
+		this.scenario.evaluation();
 		
-		return results;
-	}
+		Result r = new Result();
+		
+		r.setBias(bias);
+		r.setAlpha(this.alpha);
+		r.setBeta(this.beta);
+		r.setSumRate(this.scenario.getSumRate());
+		r.setMedianRate(this.scenario.getMedianRate());
+		r.setRequiredRate(this.scenario.getRequiredRate());
+		r.setUesServed(this.scenario.getUesServed());
+		r.setServingBSs( this.scenario.getServingBSs() );
+		r.setEvaluation( this.alpha * r.getUesServed() + this.beta * r.getServingBSs() );
+		r.setScenario(this.scenario);
+		
+		return r;
+	}	
 
 	public Result getGA() {
 		GA ga = new GA(this.alpha, this.beta, this.scenario);
@@ -104,8 +94,12 @@ public class Engine {
 		return ga.getBestIndividual().getResult();
 	}
 	
-	public Result getPSO() {		
+	public Result getPSO() {
+		System.out.println("PSO Target Solution: "+ (this.alpha * this.scenario.getUe().size() + this.beta * this.scenario.getAllBS().size()) );
+		System.out.println();
+		
 		double target = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
+
 		PSO pso = new PSO(this.alpha, this.beta, this.scenario, target, this.scenario.getEnv().getPsoGroupSize(), this.scenario.getEnv().getPsoSteps());		
 		return pso.search(); 
 	}
