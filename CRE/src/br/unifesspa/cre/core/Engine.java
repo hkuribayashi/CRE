@@ -87,6 +87,31 @@ public class Engine {
 		
 		return r;
 	}	
+	
+	public Result execUnifiedBiasEvolved(Double bias) {
+
+		this.biasOffset = new Double[20];
+		for (int i=0; i<this.biasOffset.length; i++)
+			this.biasOffset[i] = bias;
+
+		this.scenario.setBias(this.biasOffset);
+		this.scenario.evaluationEvolved();
+		
+		Result r = new Result();
+		
+		r.setBias(bias);
+		r.setAlpha(this.alpha);
+		r.setBeta(this.beta);
+		r.setSumRate(this.scenario.getSumRate());
+		r.setMedianRate(this.scenario.getMedianRate());
+		r.setRequiredRate(this.scenario.getRequiredRate());
+		r.setUesServed(this.scenario.getUesServed());
+		r.setServingBSs( this.scenario.getServingBSs() );
+		r.setEvaluation( this.alpha * r.getUesServed() + this.beta * r.getServingBSs() );
+		r.setScenario(this.scenario);
+		
+		return r;
+	}
 
 	public Result getGA() {
 		GA ga = new GA(this.alpha, this.beta, this.scenario);

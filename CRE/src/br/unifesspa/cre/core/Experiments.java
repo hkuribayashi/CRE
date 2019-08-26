@@ -64,7 +64,7 @@ public class Experiments {
 			}
 			
 			Double[] boxplotValues = Util.getBoxPlotData(temp);
-			String path = env.getWorkingDirectory() + "bias-"+i+"-alpha-"+alpha+"-beta-"+beta+".csv";
+			String path = env.getWorkingDirectory() + "e2-bias-"+i+"-alpha-"+alpha+"-beta-"+beta+".csv";
 			Util.writeToCSV(path, boxplotValues, ""+biasOffset[i]);
 			
 			meanResults.add( Util.getMean(temp) );
@@ -73,16 +73,57 @@ public class Experiments {
 		return meanResults;
 	}
 	
-	public static HashMap<String, Result> getExperiment03(Scenario scenario, double alpha, double beta) {
+	public static List<List<Result>> getExperiment03(CREEnv env, int simulations){
+		List<List<Result>> results = new ArrayList<List<Result>>();
+		for (int i=0; i<CREEnv.getAlphas().length; i++) {
+			results.add( Experiments.getExperiment03(env, simulations, CREEnv.alphas[i], CREEnv.betas[i]) );
+		}
+		return results;
+	}
+
+
+	private static List<Result> getExperiment03(CREEnv env, int simulations, double alpha, double beta) {
+
+		List<Result> meanResults = new ArrayList<Result>();
+		
+		Double initialBias = env.getInitialBias();
+		Double stepBias = env.getBiasStep();
+		double[] biasOffset = new double[env.getTotalBias()];
+		for (int i=0; i<biasOffset.length; i++) {
+			biasOffset[i] = initialBias + (stepBias * i);
+		}
+		
+		Util.print(biasOffset);
+
+		for (int i=0; i<biasOffset.length; i++) {
+			List<Result> temp = new ArrayList<Result>();
+			for (int j=0; j<simulations; j++) {
+				Scenario scenario = new Scenario(env);			
+				Engine e = new Engine(alpha, beta, scenario);
+				temp.add( e.execUnifiedBiasEvolved(biasOffset[i]) );
+			}
+			
+			Double[] boxplotValues = Util.getBoxPlotData(temp);
+			String path = env.getWorkingDirectory() + "e3-bias-"+i+"-alpha-"+alpha+"-beta-"+beta+".csv";
+			Util.writeToCSV(path, boxplotValues, ""+biasOffset[i]);
+			
+			meanResults.add( Util.getMean(temp) );
+		}
+		
+		return meanResults;
+	}
+	
+	public static HashMap<String, Result> getExperiment04(Scenario scenario, double alpha, double beta) {
 		List<Double> solutions = new ArrayList<Double>();
 		HashMap<String, Result> results = new HashMap<String, Result>();
 		
 		Engine e = new Engine(alpha, beta, scenario);
 		
 		results.put("UCB", e.execUnifiedBias(30.0));
+		results.put("UCB2", e.execUnifiedBiasEvolved(30.0));
 		
 		int i = 0;
-		while (i < 10) {
+		while (i < 50) {
 			Result r = e.getPSO();
 			Double[] solution = r.getSolution();
 			solutions.addAll(Arrays.asList(solution));

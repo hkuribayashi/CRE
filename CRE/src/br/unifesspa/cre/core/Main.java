@@ -16,7 +16,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		int simulations = 1000;
+		int simulations = 100;
 
 		String path = "/Users/hugo/Desktop/CRE/CREV1/";
 		if (args.length != 0)
@@ -56,7 +56,7 @@ public class Main {
 		env.set(Param.finalGeneRange, 80.0);
 
 		//Setting PSO Parameters
-		env.set(Param.psoGroupSize, 33);
+		env.set(Param.psoGroupSize, 150);
 		env.set(Param.psoSteps, 50);
 
 		//Experiment 01
@@ -83,9 +83,6 @@ public class Main {
 		if (!daoE1.verifyPath(fileE2)) {
 			re2 = Experiments.getExperiment02(env, simulations);
 			daoE2.save(re2, fileE2);
-			
-			
-			
 		}else {
 			re2 = daoE2.restore(fileE2);
 			System.out.println();
@@ -93,17 +90,43 @@ public class Main {
 		
 		for (List<Result> list : re2) {
 			
-			double alpha = list.get(0).getAlpha();
-			double beta = list.get(0).getBeta();
+			//double alpha = list.get(0).getAlpha();
+			//double beta = list.get(0).getBeta();
 			
-			Double[] boxplotValues = Util.getBoxPlotData(list);
-			String file = env.getWorkingDirectory() + "alpha-"+alpha+"-beta-"+beta+".csv";
-			Util.writeToCSV(file, boxplotValues, "");
+			//Double[] boxplotValues = Util.getBoxPlotData(list);
+			//String file = env.getWorkingDirectory() + "e2-alpha-"+alpha+"-beta-"+beta+".csv";
+			//Util.writeToCSV(file, boxplotValues, "");
 		}
 		
 		//Experiment 03
 
 		System.out.println("Experiment 03:");
+		
+		DAO<List<List<Result>>> daoE3 = new DAO<List<List<Result>>>();
+		String fileE3 = path + "experiment3.data";
+		List<List<Result>> re3;
+		if (!daoE1.verifyPath(fileE3)) {
+			re3 = Experiments.getExperiment03(env, simulations);
+			daoE3.save(re3, fileE3);
+		}else {
+			re3 = daoE3.restore(fileE3);
+			System.out.println();
+		}
+		
+		for (List<Result> list : re3) {
+			
+			//double alpha = list.get(0).getAlpha();
+			//double beta = list.get(0).getBeta();
+			
+			//Double[] boxplotValues = Util.getBoxPlotData(list);
+			//String file = env.getWorkingDirectory() + "e3-alpha-"+alpha+"-beta-"+beta+".csv";
+			//Util.writeToCSV(file, boxplotValues, "");
+		}
+		
+		
+		//Experiment 04
+		
+		System.out.println("Experiment 04:");
 		
 		for (List<Result> list : re2) {
 			
@@ -113,19 +136,23 @@ public class Main {
 			Scenario scenario = Collections.max(list).getScenario();
 			scenario.setEnv(env);
 
-			HashMap<String, Result> results = Experiments.getExperiment03(scenario, alpha, beta);
+			HashMap<String, Result> results = Experiments.getExperiment04(scenario, alpha, beta);
 			
 			System.out.println("Alpha="+alpha+" Beta="+beta);
 			
 			System.out.println("UCB");
 			System.out.println( results.get("UCB") );
+			System.out.println();
+			
+			System.out.println("UCB2");
+			System.out.println( results.get("UCB2") );
 			System.out.println(); 
 			
 			List<Result> r = new ArrayList<Result>();
 			
 			System.out.println("PSO");
 			int i = 0;
-			while (i < 10) {
+			while (i < 50) {
 				Result rx = results.get("PSO"+i);
 				rx.setBias(1.0);
 				r.add(rx);

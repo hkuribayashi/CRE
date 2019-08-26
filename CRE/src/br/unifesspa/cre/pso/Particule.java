@@ -37,7 +37,7 @@ public class Particule implements Comparable<Particule>{
 
 		Double qtdMacro = this.scenario.getEnv().getArea() * this.scenario.getEnv().getLambdaMacro();
 		int configurationSize = this.scenario.getAllBS().size()-(qtdMacro.intValue());
-
+		
 		double lowerBound = this.scenario.getEnv().getInitialGeneRange();
 		double upperBound = this.scenario.getEnv().getFinalGeneRange();
 
@@ -45,7 +45,7 @@ public class Particule implements Comparable<Particule>{
 		this.inertiaWeight = new Double[configurationSize];
 		
 		double bW = 0.9;
-		double aW = (0.6 - bW)/50.0;		
+		double aW = (0.2 - bW)/upperBound;		
 
 		for (int i=0; i<configurationSize; i++) {
 			this.currentConfiguration[i] = Util.getUniformRealDistribution(lowerBound, upperBound);
@@ -55,7 +55,7 @@ public class Particule implements Comparable<Particule>{
 	
 	public void evaluate(Double targetSolution) {
 		this.scenario.setBias(this.currentConfiguration);
-		this.scenario.evaluation();
+		this.scenario.evaluationEvolved();
 		
 		this.currentPosition = (this.scenario.getUesServed() * this.alpha) + (this.scenario.getServingBSs() * this.beta);
 		
@@ -75,10 +75,11 @@ public class Particule implements Comparable<Particule>{
 	public void updateVelocity(Double[] gBestConfiguration) {
 		for (int i=0; i<this.currentConfiguration.length; i++) {
 			double phi1 = Math.random() * 0.3;
-			double phi2 = Math.random() * 1.3;
+			double phi2 = Math.random() * 1.2;
 			Double newVelocity = (bestConfiguration[i] - this.currentConfiguration[i]) * phi1 +
 							(gBestConfiguration[i] - this.currentConfiguration[i]) * phi2;
-			this.currentConfiguration[i] = (this.inertiaWeight[i]) * this.currentConfiguration[i] + newVelocity;
+			//this.currentConfiguration[i] = (this.inertiaWeight[i]) * this.currentConfiguration[i] + newVelocity;
+			this.currentConfiguration[i] =  this.currentConfiguration[i] + newVelocity;
 		}
 	}
 

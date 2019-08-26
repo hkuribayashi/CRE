@@ -145,10 +145,9 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 
 	@Override
 	public String toString() {
-		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", alpha=" + alpha
-				+ ", beta=" + beta + ", evaluation=" + evaluation + ", requiredRate=" + requiredRate + ", uesServed="
-				+ uesServed + ", servingBSs=" + servingBSs + ", scenario=" + scenario + ", solution="
-				+ Arrays.toString(solution) + "]";
+		return "Result [bias=" + bias + ", alpha=" + alpha + ", beta=" + beta + ", uesServed=" + uesServed
+				+ ", servingBSs=" + servingBSs + ", evaluation=" + evaluation + ", sumRate=" + sumRate + ", medianRate="
+				+ medianRate + ", requiredRate=" + requiredRate + "]";
 	}
 
 	@Override

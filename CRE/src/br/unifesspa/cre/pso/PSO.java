@@ -1,13 +1,11 @@
 package br.unifesspa.cre.pso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.util.Util;
 
 public class PSO {
 

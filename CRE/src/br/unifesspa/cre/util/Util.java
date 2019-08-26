@@ -293,4 +293,9 @@ public class Util {
 			e.printStackTrace(); 
 		} 
 	}
+	
+	public static void init(Double[] array) {
+		for (int i=0; i<array.length; i++)
+			array[i] = 0.0;
+	}
 }
