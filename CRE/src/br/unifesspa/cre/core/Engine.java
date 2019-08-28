@@ -4,7 +4,7 @@ import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.ga.GA;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.pso.PSO;
+import br.unifesspa.cre.pso.StaticIWPSO;
 
 
 /**
@@ -119,17 +119,17 @@ public class Engine {
 		return ga.getBestIndividual().getResult();
 	}
 	
-	public Result getPSO() {
+	public Result getPSO(Integer swarmSize) {
 		double target = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
 		
 		System.out.println("PSO Target Solution: "+ target);
 		System.out.println();
 		
-		PSO pso = new PSO(this.alpha, this.beta, this.scenario, this.scenario.getEnv().getPsoSteps(), 20, target);
+		StaticIWPSO pso = new StaticIWPSO(this.alpha, this.beta, this.scenario, this.scenario.getEnv().getPsoSteps(), swarmSize, target);
 		
 		return pso.search(); 
 	}
-
+	
 	public Double getAlpha() {
 		return alpha;
 	}

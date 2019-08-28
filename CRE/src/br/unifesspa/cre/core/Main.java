@@ -86,21 +86,20 @@ public class Main {
 			re2 = daoE2.restore(fileE2);
 			System.out.println();
 		}
-		
+
 		for (List<Result> list : re2) {
-			
-			//double alpha = list.get(0).getAlpha();
-			//double beta = list.get(0).getBeta();
-			
-			//Double[] boxplotValues = Util.getBoxPlotData(list);
-			//String file = env.getWorkingDirectory() + "e2-alpha-"+alpha+"-beta-"+beta+".csv";
-			//Util.writeToCSV(file, boxplotValues, "");
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Double[] boxplotValues = Util.getBoxPlotData(list);
+			String file = env.getWorkingDirectory() + "e2-alpha-"+alpha+"-beta-"+beta+".csv";
+			Util.writeToCSV(file, boxplotValues, "");
 		}
-		
+
 		//Experiment 03
 
 		System.out.println("Experiment 03:");
-		
+
 		DAO<List<List<Result>>> daoE3 = new DAO<List<List<Result>>>();
 		String fileE3 = path + "experiment3.data";
 		List<List<Result>> re3;
@@ -111,24 +110,23 @@ public class Main {
 			re3 = daoE3.restore(fileE3);
 			System.out.println();
 		}
-		
+
 		for (List<Result> list : re3) {
-			
-			//double alpha = list.get(0).getAlpha();
-			//double beta = list.get(0).getBeta();
-			
-			//Double[] boxplotValues = Util.getBoxPlotData(list);
-			//String file = env.getWorkingDirectory() + "e3-alpha-"+alpha+"-beta-"+beta+".csv";
-			//Util.writeToCSV(file, boxplotValues, "");
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Double[] boxplotValues = Util.getBoxPlotData(list);
+			String file = env.getWorkingDirectory() + "e3-alpha-"+alpha+"-beta-"+beta+".csv";
+			Util.writeToCSV(file, boxplotValues, "");
 		}
-		
-		
+
+
 		//Experiment 04
-		
+
 		System.out.println("Experiment 04:");
-		
+
 		for (List<Result> list : re2) {
-			
+
 			double alpha = list.get(0).getAlpha();
 			double beta = list.get(0).getBeta();
 
@@ -136,33 +134,55 @@ public class Main {
 			scenario.setEnv(env);
 
 			HashMap<String, Result> results = Experiments.getExperiment04(scenario, alpha, beta);
-			
+
 			System.out.println("Alpha="+alpha+" Beta="+beta);
-			
+
 			System.out.println("UCB");
 			System.out.println( results.get("UCB") );
 			System.out.println();
-			
+
 			System.out.println("UCB2");
 			System.out.println( results.get("UCB2") );
 			System.out.println(); 
-			
+
+		}
+
+		//Experiment 05
+
+		System.out.println("Experiment 05:");
+
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Scenario scenario = Collections.max(list).getScenario();
+			scenario.setEnv(env);
+
+			HashMap<String, Result> results = Experiments.getExperiment04(scenario, alpha, beta);
+
+			System.out.println("Alpha="+alpha+" Beta="+beta);
+
 			List<Result> r = new ArrayList<Result>();
-			
+
 			System.out.println("PSO");
 			int i = 0;
-			while (i < 50) {
-				Result rx = results.get("PSO"+i);
-				rx.setBias(1.0);
-				r.add(rx);
-				System.out.println( rx );
-				i++;
+			int j = 0;
+			while(j < 3) {
+				while (i < 100) {
+					Result rx = results.get("PSO-"+j+"-"+i);
+					rx.setBias(1.0);
+					r.add(rx);
+					System.out.println( rx );
+					i++;
+				}
+
+				System.out.println();
+				System.out.println("Mean Result:");
+				System.out.println( Util.getMean(r) );
+				System.out.println();
+				j++;
 			}
-			
-			System.out.println();
-			System.out.println("Mean Result:");
-			System.out.println( Util.getMean(r) );
-			System.out.println();
 		}
 	}
 }

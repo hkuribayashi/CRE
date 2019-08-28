@@ -321,4 +321,12 @@ public class Util {
 		}
 		return c;
 	}
+	
+	public static Double[] sum(Double[] a, Double[] b, Double[] c) {
+		Double[] d = new Double[a.length];
+		for (int i=0; i<a.length; i++) {
+			d[i] = a[i] + b[i] + c[i];
+		}
+		return d;
+	}
 }

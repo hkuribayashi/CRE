@@ -114,28 +114,44 @@ public class Experiments {
 	}
 	
 	public static HashMap<String, Result> getExperiment04(Scenario scenario, double alpha, double beta) {
-		List<Double> solutions = new ArrayList<Double>();
+
 		HashMap<String, Result> results = new HashMap<String, Result>();
 		
 		Engine e = new Engine(alpha, beta, scenario);
 		
 		results.put("UCB", e.execUnifiedBias(30.0));
 		results.put("UCB2", e.execUnifiedBiasEvolved(30.0));
+
+		return results;
+	}
+	
+	public static HashMap<String, Result> getExperiment05(Scenario scenario, double alpha, double beta) {
+		List<Double> solutions = new ArrayList<Double>();
+		HashMap<String, Result> results = new HashMap<String, Result>();
+		
+		Engine e = new Engine(alpha, beta, scenario);
+		
+		Integer[] swarmSize = {20, 40, 60};
 		
 		int i = 0;
-		while (i < 50) {
-			Result r = e.getPSO();
-			Double[] solution = r.getSolution();
-			solutions.addAll(Arrays.asList(solution));
-			results.put("PSO"+i, r);
-			i++;
+		int j = 0;
+		while (j < 3) { 
+			while (i < 100) {
+				Result r = e.getPSO(swarmSize[j]);
+				Double[] solution = r.getSolution();
+				solutions.addAll(Arrays.asList(solution));
+				results.put("PSO-"+j+"-"+i, r);
+				i++;
+			}
+			
+			Double[] finalSolution = new Double[solutions.size()];
+			finalSolution = solutions.toArray(finalSolution);
+			
+			String file = scenario.getEnv().getWorkingDirectory() + "pso-"+j+"solution-alpha-"+alpha+"-beta-"+beta+".csv";
+			Util.writeToCSV(file, finalSolution, "pso-"+j+"solution-alpha-"+alpha+"-beta-"+beta);
+			
+			j++;
 		}
-		
-		Double[] finalSolution = new Double[solutions.size()];
-		finalSolution = solutions.toArray(finalSolution);
-		
-		String file = scenario.getEnv().getWorkingDirectory() + "solution-alpha-"+alpha+"-beta-"+beta+".csv";
-		Util.writeToCSV(file, finalSolution, "Solution-alpha-"+alpha+"-beta-"+beta);
 
 		return results;
 	}
