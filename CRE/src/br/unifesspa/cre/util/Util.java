@@ -298,4 +298,27 @@ public class Util {
 		for (int i=0; i<array.length; i++)
 			array[i] = 0.0;
 	}
+	
+	public static Double[] minus(Double[] a, Double[] b) {
+		Double[] c = new Double[a.length];
+		for (int i=0; i<c.length; i++) {
+			c[i] = a[i] - b[i];
+		}
+		return c;
+	}
+	
+	public static Double[] product(Double[] a, Double number) {
+		for (int i=0; i<a.length; i++) {
+			a[i] = a[i] * number * Math.random(); 
+		}
+		return a;
+	}
+	
+	public static Double[] sum(Double[] a, Double[] b) {
+		Double[] c = new Double[a.length];
+		for (int i=0; i<a.length; i++) {
+			c[i] = a[i] + b[i];
+		}
+		return c;
+	}
 }

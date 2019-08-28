@@ -48,7 +48,7 @@ public class Main {
 		env.set(Param.initialCrossoverProbability, 0.9);
 		env.set(Param.finalCrossoverProbability, 0.6);
 		env.set(Param.initialMutationProbability, 0.5);
-		env.set(Param.finalMutationProbability, 0.90);
+		env.set(Param.finalMutationProbability, 0.9);
 		env.set(Param.populationSize, (env.getLambdaSmall() * env.getArea()));
 		env.set(Param.generationSize, 100);
 		env.set(Param.kElitism, 1);
@@ -56,8 +56,7 @@ public class Main {
 		env.set(Param.finalGeneRange, 80.0);
 
 		//Setting PSO Parameters
-		env.set(Param.psoGroupSize, 150);
-		env.set(Param.psoSteps, 50);
+		env.set(Param.psoSteps, 100);
 
 		//Experiment 01
 

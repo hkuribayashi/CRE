@@ -120,12 +120,13 @@ public class Engine {
 	}
 	
 	public Result getPSO() {
-		System.out.println("PSO Target Solution: "+ (this.alpha * this.scenario.getUe().size() + this.beta * this.scenario.getAllBS().size()) );
+		double target = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
+		
+		System.out.println("PSO Target Solution: "+ target);
 		System.out.println();
 		
-		double target = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
-
-		PSO pso = new PSO(this.alpha, this.beta, this.scenario, target, this.scenario.getEnv().getPsoGroupSize(), this.scenario.getEnv().getPsoSteps());		
+		PSO pso = new PSO(this.alpha, this.beta, this.scenario, this.scenario.getEnv().getPsoSteps(), 20, target);
+		
 		return pso.search(); 
 	}
 

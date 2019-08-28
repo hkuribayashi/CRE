@@ -34,6 +34,6 @@ public enum Param {
 	
 	/* PSO Parameters */
 	
-	psoGroupSize, psoSteps;
+	psoSteps;
 	
 }

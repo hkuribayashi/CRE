@@ -72,9 +72,7 @@ public class CREEnv implements Serializable{
 
 	private Integer generationSize = 1000;
 
-	private Integer psoGroupSize = 100;
-
-	private Integer psoSteps = 100;
+	private Double psoSteps = 100.0;
 
 
 	public void set(Param param, String value) {
@@ -102,10 +100,6 @@ public class CREEnv implements Serializable{
 		case nSubcarriers: this.nSubcarriers = value;  break;
 
 		case nOFDMSymbols: this.nOFDMSymbols = value; break;
-
-		case psoGroupSize: this.psoGroupSize = value; break;
-
-		case psoSteps: this.psoSteps = value; break;
 
 		default: break;
 
@@ -159,6 +153,8 @@ public class CREEnv implements Serializable{
 		case subframeDuration: this.subframeDuration = value; break;
 
 		case initialBias: this.initialBias = value; break;
+		
+		case psoSteps: this.psoSteps = value; break;
 
 		default: break;
 
@@ -413,19 +409,11 @@ public class CREEnv implements Serializable{
 		CREEnv.betas = betas;
 	}
 
-	public Integer getPsoGroupSize() {
-		return psoGroupSize;
-	}
-
-	public void setPsoGroupSize(Integer psoGroupSize) {
-		this.psoGroupSize = psoGroupSize;
-	}
-
-	public Integer getPsoSteps() {
+	public Double getPsoSteps() {
 		return psoSteps;
 	}
 
-	public void setPsoSteps(Integer psoSteps) {
+	public void setPsoSteps(Double psoSteps) {
 		this.psoSteps = psoSteps;
 	}
 
@@ -450,7 +438,7 @@ public class CREEnv implements Serializable{
 				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
 				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
 				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
-				+ ", generationSize=" + generationSize + ", psoGroupSize=" + psoGroupSize + ", psoSteps=" + psoSteps
+				+ ", generationSize=" + generationSize + ", psoSteps=" + psoSteps
 				+ "]";
 	}
 }
