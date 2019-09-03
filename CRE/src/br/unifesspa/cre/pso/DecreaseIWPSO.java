@@ -49,10 +49,10 @@ public class DecreaseIWPSO extends StaticIWPSO {
 			}
 			counter++;
 
-			System.out.println("Step: "+counter);
-			System.out.println(this.gBest.getEvaluation());
-			System.out.println("Mean Evaluation: "+(meanEvaluation/this.swarm.size()));
-			System.out.println();
+			//System.out.println("Step: "+counter);
+			//System.out.println(this.gBest.getEvaluation());
+			//System.out.println("Mean Evaluation: "+(meanEvaluation/this.swarm.size()));
+			//System.out.println();
 			meanEvaluation = 0.0;
 		}
 

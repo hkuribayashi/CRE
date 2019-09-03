@@ -13,7 +13,7 @@ import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.util.Util;
 import br.unifesspa.cre.view.Topology;
 
-public class Scenario implements Serializable{
+public class Scenario implements Serializable, Cloneable, Runnable{
 
 	private static final long serialVersionUID = -1736505791936110187L;
 
@@ -91,7 +91,7 @@ public class Scenario implements Serializable{
 	/**
 	 * Performs the entire simulatio
 	 */
-	public void evaluation() {
+	public synchronized void evaluation() {
 		this.getDistance();
 		this.getBiasedSINR();
 		this.getCoverageMatrix();
@@ -99,6 +99,11 @@ public class Scenario implements Serializable{
 		this.getResourceBlockAllocation();
 		this.getBitRate();
 		this.getEvaluationMetrics();
+	}
+	
+	
+	public void run() {
+		this.evaluation();
 	}
 	
 	public void evaluationEvolved() {
@@ -362,6 +367,16 @@ public class Scenario implements Serializable{
 		window.setBounds(30, 30, 1000, 1000);
 		window.getContentPane().add(new Topology(this));
 		window.setVisible(true);
+	}
+	
+	public Scenario clone() {
+		try {
+			return (Scenario) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			System.exit(0);
+			return null;		
+		}	
 	}
 
 	public CREEnv getEnv() {

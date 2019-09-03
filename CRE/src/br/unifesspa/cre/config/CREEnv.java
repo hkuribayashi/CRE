@@ -1,6 +1,7 @@
 package br.unifesspa.cre.config;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author hugo
@@ -10,11 +11,13 @@ public class CREEnv implements Serializable{
 
 	private static final long serialVersionUID = 6824819508443271546L;
 
-	public static Double[] alphas = {10.0, 2.0, 1.0, 1.0, 1.0,};
+	public Double[] alphas = {10.0, 2.0, 1.0, 1.0, 1.0};
 
-	public static Double[] betas = {1.0, 1.0, 1.0, 2.0, 10.0};
+	public Double[] betas = {1.0, 1.0, 1.0, 2.0, 10.0};
 
 	public String workingDirectory = "/Users/hugo/Desktop/CRE/";
+	
+	private Integer simulations = 100;
 
 	private Double lambdaUser = 10.0;
 
@@ -73,12 +76,24 @@ public class CREEnv implements Serializable{
 	private Integer generationSize = 1000;
 
 	private Double psoSteps = 100.0;
+	
+	private Integer[] swarmSizeOptions = {20, 40, 60};
 
 
 	public void set(Param param, String value) {
 		switch(param) {
 
 		case workingDirectory: this.workingDirectory = value; break;
+		
+		default: break;
+		
+		}
+	}
+	
+	public void set(Param param, Integer[] value) {
+		switch(param) {
+
+		case swarmSizeOptions: this.swarmSizeOptions = value; break;
 		
 		default: break;
 		
@@ -100,6 +115,8 @@ public class CREEnv implements Serializable{
 		case nSubcarriers: this.nSubcarriers = value;  break;
 
 		case nOFDMSymbols: this.nOFDMSymbols = value; break;
+		
+		case simulations: this.simulations = value; break;
 
 		default: break;
 
@@ -393,20 +410,20 @@ public class CREEnv implements Serializable{
 		this.subframeDuration = subframeDuration;
 	}
 
-	public static Double[] getAlphas() {
+	public Double[] getAlphas() {
 		return alphas;
 	}
 
-	public static void setAlphas(Double[] alphas) {
-		CREEnv.alphas = alphas;
+	public void setAlphas(Double[] alphas) {
+		this.alphas = alphas;
 	}
 
-	public static Double[] getBetas() {
+	public Double[] getBetas() {
 		return betas;
 	}
 
-	public static void setBetas(Double[] betas) {
-		CREEnv.betas = betas;
+	public void setBetas(Double[] betas) {
+		this.betas = betas;
 	}
 
 	public Double getPsoSteps() {
@@ -425,20 +442,36 @@ public class CREEnv implements Serializable{
 		this.workingDirectory = workingDirectory;
 	}
 
+	public Integer[] getSwarmSizeOptions() {
+		return swarmSizeOptions;
+	}
+
+	public void setSwarmSizeOptions(Integer[] swarmSizeOptions) {
+		this.swarmSizeOptions = swarmSizeOptions;
+	}
+
+	public Integer getSimulations() {
+		return simulations;
+	}
+
+	public void setSimulations(Integer simulations) {
+		this.simulations = simulations;
+	}
+
 	@Override
 	public String toString() {
-		return "CREEnv [workingDirectory=" + workingDirectory + ", lambdaUser=" + lambdaUser + ", lambdaMacro="
-				+ lambdaMacro + ", lambdaSmall=" + lambdaSmall + ", powerMacro=" + powerMacro + ", powerSmall="
-				+ powerSmall + ", bandwidth=" + bandwidth + ", area=" + area + ", noisePower=" + noisePower
-				+ ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall + ", heightUser=" + heightUser
-				+ ", totalBias=" + totalBias + ", initialBias=" + initialBias + ", biasStep=" + biasStep
-				+ ", gainMacro=" + gainMacro + ", gainSmall=" + gainSmall + ", nSubcarriers=" + nSubcarriers
-				+ ", nOFDMSymbols=" + nOFDMSymbols + ", subframeDuration=" + subframeDuration
+		return "CREEnv [workingDirectory=" + workingDirectory + ", simulations=" + simulations + ", lambdaUser="
+				+ lambdaUser + ", lambdaMacro=" + lambdaMacro + ", lambdaSmall=" + lambdaSmall + ", powerMacro="
+				+ powerMacro + ", powerSmall=" + powerSmall + ", bandwidth=" + bandwidth + ", area=" + area
+				+ ", noisePower=" + noisePower + ", heightMacro=" + heightMacro + ", heightSmall=" + heightSmall
+				+ ", heightUser=" + heightUser + ", totalBias=" + totalBias + ", initialBias=" + initialBias
+				+ ", biasStep=" + biasStep + ", gainMacro=" + gainMacro + ", gainSmall=" + gainSmall + ", nSubcarriers="
+				+ nSubcarriers + ", nOFDMSymbols=" + nOFDMSymbols + ", subframeDuration=" + subframeDuration
 				+ ", initialCrossoverProbability=" + initialCrossoverProbability + ", finalCrossoverProbability="
 				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
 				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
 				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
-				+ ", generationSize=" + generationSize + ", psoSteps=" + psoSteps
-				+ "]";
+				+ ", generationSize=" + generationSize + ", psoSteps=" + psoSteps + ", swarmSizeOptions="
+				+ Arrays.toString(swarmSizeOptions) + "]";
 	}
 }

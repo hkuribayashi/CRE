@@ -14,25 +14,25 @@ import br.unifesspa.cre.util.Util;
  * @author hugo
  *
  */
-public class PSO {
+public class PSO{
 
 	protected Scenario scenario;
 
 	protected List<Particle> swarm;
 
-	protected Double steps;
+	protected double steps;
 
 	protected Particle gBest;
 
-	protected Double alpha;
+	protected double alpha;
 
-	protected Double beta;
+	protected double beta;
 	
 	private static Double cognitiveCoeffcient = 2.0;
 	
 	private static Double socialCoeffcient = 2.0;
 
-	public PSO(Double alpha, Double beta, Scenario scenario, Double steps, Integer swarmSize, Double targetSolution) {
+	public PSO(double alpha, double beta, Scenario scenario, double steps, int swarmSize, double targetSolution) {
 		this.alpha = alpha;
 		this.beta = beta;
 		this.scenario = scenario;
@@ -71,7 +71,7 @@ public class PSO {
 		}
 	}
 	
-	public Result search() {
+	public synchronized Result search() {
 		int counter = 0;
 		Double meanEvaluation = 0.0;
 		
@@ -84,10 +84,10 @@ public class PSO {
 			}
 			counter++;
 			
-			System.out.println("Step: "+counter);
-			System.out.println(this.gBest.getEvaluation());
-			System.out.println("Mean Evaluation: "+(meanEvaluation/this.swarm.size()));
-			System.out.println();
+			//System.out.println("Step: "+counter);
+			//System.out.println(this.gBest.getEvaluation());
+			//System.out.println("Mean Evaluation: "+(meanEvaluation/this.swarm.size()));
+			//System.out.println();
 			meanEvaluation = 0.0;
 		}
 		

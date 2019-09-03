@@ -14,7 +14,7 @@ public enum Param {
 	
 	gainMacro, gainSmall,
 	
-	nSubcarriers, nOFDMSymbols, subframeDuration,
+	nSubcarriers, nOFDMSymbols, subframeDuration, simulations,
 	
 	/* Static Bias Parameters */
 	
@@ -34,6 +34,6 @@ public enum Param {
 	
 	/* PSO Parameters */
 	
-	psoSteps;
+	psoSteps, swarmSizeOptions;
 	
 }

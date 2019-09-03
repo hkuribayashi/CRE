@@ -1,7 +1,6 @@
 package br.unifesspa.cre.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,14 +14,14 @@ public class Experiments {
 	public static List<Result> getExperiment01(CREEnv env, int simulations) {
 
 		List<Result> abResults = new ArrayList<Result>();
-		for (int i=0; i<CREEnv.alphas.length; i++) {
+		for (int i=0; i<env.getAlphas().length; i++) {
 
 			List<Result> results = new ArrayList<Result>();
 
 			for (int j=0; j<simulations; j++) {
 
 				Scenario scenario = new Scenario(env);			
-				Engine e = new Engine(CREEnv.alphas[i], CREEnv.betas[i], scenario);
+				Engine e = new Engine(env.getAlphas()[i], env.getBetas()[i], scenario);
 				results.add(e.execNoBias());
 
 			}
@@ -35,8 +34,8 @@ public class Experiments {
 	
 	public static List<List<Result>> getExperiment02(CREEnv env, int simulations){
 		List<List<Result>> results = new ArrayList<List<Result>>();
-		for (int i=0; i<CREEnv.getAlphas().length; i++) {
-			results.add( Experiments.getExperiment02(env, simulations, CREEnv.alphas[i], CREEnv.betas[i]) );
+		for (int i=0; i<env.getAlphas().length; i++) {
+			results.add( Experiments.getExperiment02(env, simulations, env.getAlphas()[i], env.getBetas()[i]) );
 		}
 		return results;
 	}
@@ -75,8 +74,8 @@ public class Experiments {
 	
 	public static List<List<Result>> getExperiment03(CREEnv env, int simulations){
 		List<List<Result>> results = new ArrayList<List<Result>>();
-		for (int i=0; i<CREEnv.getAlphas().length; i++) {
-			results.add( Experiments.getExperiment03(env, simulations, CREEnv.alphas[i], CREEnv.betas[i]) );
+		for (int i=0; i<env.getAlphas().length; i++) {
+			results.add( Experiments.getExperiment03(env, simulations, env.getAlphas()[i], env.getBetas()[i]) );
 		}
 		return results;
 	}
@@ -125,35 +124,28 @@ public class Experiments {
 		return results;
 	}
 	
-	public static HashMap<String, Result> getExperiment05(Scenario scenario, double alpha, double beta) {
-		List<Double> solutions = new ArrayList<Double>();
+	public HashMap<String, Result> getExperiment05(Scenario scenario, double alpha, double beta) {
+		
 		HashMap<String, Result> results = new HashMap<String, Result>();
 		
-		Engine e = new Engine(alpha, beta, scenario);
+		CoPSOEngine pso  = new CoPSOEngine(alpha, beta, scenario, 20);
+		pso.run();
 		
-		Integer[] swarmSize = {20, 40, 60};
+		results.put("CoPSO-20-max", pso.getMax());
+		results.put("CoPSO-20-mean", pso.getMean());
 		
-		int i = 0;
-		int j = 0;
-		while (j < 3) { 
-			while (i < 100) {
-				Result r = e.getPSO(swarmSize[j]);
-				Double[] solution = r.getSolution();
-				solutions.addAll(Arrays.asList(solution));
-				results.put("PSO-"+j+"-"+i, r);
-				i++;
-			}
-			
-			Double[] finalSolution = new Double[solutions.size()];
-			finalSolution = solutions.toArray(finalSolution);
-			
-			String file = scenario.getEnv().getWorkingDirectory() + "pso-"+j+"solution-alpha-"+alpha+"-beta-"+beta+".csv";
-			Util.writeToCSV(file, finalSolution, "pso-"+j+"solution-alpha-"+alpha+"-beta-"+beta);
-			
-			j++;
-		}
-
+		pso  = new CoPSOEngine(alpha, beta, scenario, 40);
+		pso.run();
+		
+		results.put("CoPSO-40-max", pso.getMax());
+		results.put("CoPSO-40-mean", pso.getMean());
+		
+		pso  = new CoPSOEngine(alpha, beta, scenario, 60);
+		pso.run();
+		
+		results.put("CoPSO-60-max", pso.getMax());
+		results.put("CoPSO-60-mean", pso.getMean());
+		
 		return results;
 	}
-	
 }

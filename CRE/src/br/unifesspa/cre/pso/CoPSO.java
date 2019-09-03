@@ -13,13 +13,11 @@ public class CoPSO extends PSO{
 	
 	public CoPSO(Double alpha, Double beta, Scenario scenario, Double steps, Integer swarmSize, Double targetSolution) {
 		
-		super(alpha, beta, scenario, steps, swarmSize, targetSolution);
+		super(alpha, beta, scenario, steps, 20, targetSolution);
 		
 		Double c = CoPSO.cognitiveCoeffcient + CoPSO.socialCoeffcient;
 		
 		this.constricionFactor = 2.0/(Math.abs(2.0 - c - Math.sqrt( Math.pow(c, 2) - (4*c) )));
-		
-		System.out.println("Constriction Factor: "+this.constricionFactor);
 	}
 	
 	@Override
