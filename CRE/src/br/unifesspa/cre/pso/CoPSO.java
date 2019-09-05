@@ -3,7 +3,7 @@ package br.unifesspa.cre.pso;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.util.Util;
 
-public class CoPSO extends PSO{
+public class CoPSO extends PSO implements Runnable{
 
 	private static Double cognitiveCoeffcient = 2.05;
 	
@@ -13,7 +13,7 @@ public class CoPSO extends PSO{
 	
 	public CoPSO(Double alpha, Double beta, Scenario scenario, Double steps, Integer swarmSize, Double targetSolution) {
 		
-		super(alpha, beta, scenario, steps, 20, targetSolution);
+		super(alpha, beta, scenario, steps, swarmSize, targetSolution);
 		
 		Double c = CoPSO.cognitiveCoeffcient + CoPSO.socialCoeffcient;
 		
@@ -29,5 +29,10 @@ public class CoPSO extends PSO{
 		Double[] socialComponent = Util.product(temp2, StaticIWPSO.socialCoeffcient);
 		
 		p.setVelocity( Util.product( Util.sum(p.getVelocity(), cognitiveComponent, socialComponent), this.constricionFactor ) );
+	}
+
+	@Override
+	public void run() {
+		this.search();	
 	}
 }

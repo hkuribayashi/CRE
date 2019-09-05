@@ -2,7 +2,7 @@ package br.unifesspa.cre.ga;
 
 import java.io.Serializable;
 
-public class NetworkElement implements Comparable<NetworkElement>,Serializable{
+public class NetworkElement implements Comparable<NetworkElement>,Serializable,Cloneable{
 
 	private static final long serialVersionUID = -670526476345447198L;
 
@@ -54,6 +54,16 @@ public class NetworkElement implements Comparable<NetworkElement>,Serializable{
 
 	public void setDelay(Double delay) {
 		this.delay = delay;
+	}
+	
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return this;
+		}
 	}
 
 	@Override

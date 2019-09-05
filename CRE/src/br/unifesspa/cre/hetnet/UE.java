@@ -2,7 +2,7 @@ package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
 
-public class UE implements Serializable{
+public class UE implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = -5657596059481333345L;
 
@@ -67,5 +67,18 @@ public class UE implements Serializable{
 
 	public void setBitsPerOFDMSymbol(Double bitsPerOFDMSymbol) {
 		this.bitsPerOFDMSymbol = bitsPerOFDMSymbol;
+	}
+	
+	
+	@Override
+	public Object clone() {
+		try {
+			UE test = (UE) super.clone();
+			test.setPoint(new Point(this.point.getX(), this.point.getY(), this.point.getZ()));
+			return test;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return this;
+		}
 	}
 }

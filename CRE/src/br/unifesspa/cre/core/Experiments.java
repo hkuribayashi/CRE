@@ -125,7 +125,7 @@ public class Experiments {
 	}
 	
 	public HashMap<String, Result> getExperiment05(Scenario scenario, double alpha, double beta) {
-		
+		/*
 		HashMap<String, Result> results = new HashMap<String, Result>();
 		
 		CoPSOEngine pso  = new CoPSOEngine(alpha, beta, scenario, 20);
@@ -146,6 +146,10 @@ public class Experiments {
 		results.put("CoPSO-60-max", pso.getMax());
 		results.put("CoPSO-60-mean", pso.getMean());
 		
-		return results;
+		*/
+		
+		
+		
+		return null;
 	}
 }

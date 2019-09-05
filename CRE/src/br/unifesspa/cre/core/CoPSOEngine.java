@@ -47,6 +47,7 @@ public class CoPSOEngine extends Engine implements Runnable{
 			this.pso = new CoPSO(this.alpha, this.beta, this.scenario, 100.0, this.swarmSize, targetSolution);
 			results.add(this.pso.search());
 			counter++;
+			System.out.println(counter);
 		}
 		this.setMax( Collections.max(results) );
 		this.setMean( Util.getMean(results) );

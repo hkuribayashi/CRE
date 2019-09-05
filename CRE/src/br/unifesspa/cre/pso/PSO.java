@@ -71,7 +71,7 @@ public class PSO{
 		}
 	}
 	
-	public synchronized Result search() {
+	public Result search() {
 		int counter = 0;
 		Double meanEvaluation = 0.0;
 		

@@ -2,7 +2,7 @@ package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
 
-public class BS implements Serializable{
+public class BS implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = -4238233917654767955L;
 
@@ -88,6 +88,18 @@ public class BS implements Serializable{
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+	@Override
+	public Object clone() {
+		try {
+			BS test = (BS) super.clone();
+			test.setPoint(new Point(this.point.getX(), this.point.getY(), this.point.getZ()));
+			return test;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return this;
+		}
 	}
 	
 }

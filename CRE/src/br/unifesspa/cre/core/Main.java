@@ -9,6 +9,7 @@ import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.data.DAO;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
+import br.unifesspa.cre.pso.CoPSO;
 import br.unifesspa.cre.util.Util;
 
 public class Main {
@@ -55,7 +56,38 @@ public class Main {
 
 		//Setting PSO Parameters
 		env.set(Param.psoSteps, 100);
+		
+		Scenario s1 = new Scenario(env);
+		
+		int simulations = 50;
+		
+		CoPSO[] pso = new CoPSO[simulations];
+		for (int i=0; i<pso.length; i++) {
+			pso[i] = new CoPSO(10.0, 1.0, s1.clone(), 100.0, 20, 3022.0);
+		}
+		
+		Thread[] psoThreads = new Thread[simulations];
+		for (int i=0; i<psoThreads.length; i++) {
+			psoThreads[i] = new Thread(pso[i]);
+			psoThreads[i].setName("Thread-"+i);
+		}
+		
+		for (int i=0; i<psoThreads.length; i++) {
+			psoThreads[i].start();
+			System.out.println("Starting: "+psoThreads[i].getName());
+		}
+		
+			try {
+				for (int i=0; i<psoThreads.length; i++) {
+					psoThreads[i].join();
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 
+		/*
 		//Experiment 01
 
 		System.out.println("Experiment 01:");
@@ -93,6 +125,8 @@ public class Main {
 		}else re2 = daoE2.restore(fileE2);
 		
 		System.out.println();
+		
+		*/
 
 		//Experiment 03
 
@@ -119,11 +153,11 @@ public class Main {
 		
 		*/
 		
-		System.out.println();
+		//System.out.println();
 		
 		//Experiment 04
 		
-		System.out.println("Experiment 04:");
+		//System.out.println("Experiment 04:");
 
 		/*
 		for (List<Result> list : re2) {
@@ -151,6 +185,8 @@ public class Main {
 
 		//Experiment 05
 
+		/*
+		
 		System.out.println("Experiment 05: CoPSO");
 		
 		for (List<Result> list : re2) {
@@ -182,6 +218,8 @@ public class Main {
 			System.out.println( results.get("CoPSO-60-mean") );
 			System.out.println();
 		}
-
+		
+		*/
+	
 	}
 }

@@ -91,7 +91,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 	/**
 	 * Performs the entire simulatio
 	 */
-	public synchronized void evaluation() {
+	public void evaluation() {
 		this.getDistance();
 		this.getBiasedSINR();
 		this.getCoverageMatrix();
@@ -370,13 +370,54 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 	}
 	
 	public Scenario clone() {
+		Scenario result;
 		try {
-			return (Scenario) super.clone();
+			result = (Scenario) super.clone();
+		
+		
+		/*
+		
+		List<BS> test1 = new ArrayList<BS>();
+		for (BS bs : this.allBS) {
+			test1.add((BS)bs.clone());
+		}
+		
+		result.setAllBS(test1);
+		
+		result.setBias(this.bias.clone());
+		result.setMedianRate((double)this.medianRate);
+		
+		*/
+		
+		NetworkElement[][] ne = new NetworkElement[this.network.length][this.network[0].length];
+		for (int i=0; i<ne.length; i++) {
+			ne[i] = this.network[i].clone();
+		}
+		
+		result.setNetwork(ne);
+		
+		/*
+		
+		result.setRequiredRate((double)this.requiredRate);
+		result.setServingBSs((double)this.servingBSs);
+		result.setSumRate((double)this.sumRate);
+		
+		List<UE> test2 = new ArrayList<UE>();
+		for (UE ue : this.ue) {
+			test2.add((UE) ue.clone());
+		}
+		
+		result.setUe(test2);
+		result.setUesServed((double)this.uesServed);
+		
+		*/
+		
+		return result;
+		
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
-			System.exit(0);
-			return null;		
-		}	
+			return null;
+		}
 	}
 
 	public CREEnv getEnv() {

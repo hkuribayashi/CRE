@@ -7,7 +7,7 @@ import java.util.Arrays;
  * @author hugo
  *
  */
-public class CREEnv implements Serializable{
+public class CREEnv implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = 6824819508443271546L;
 
@@ -473,5 +473,15 @@ public class CREEnv implements Serializable{
 				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
 				+ ", generationSize=" + generationSize + ", psoSteps=" + psoSteps + ", swarmSizeOptions="
 				+ Arrays.toString(swarmSizeOptions) + "]";
+	}
+	
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return this;
+		}
 	}
 }
