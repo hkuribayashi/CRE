@@ -14,7 +14,7 @@ import br.unifesspa.cre.util.Util;
  * @author hugo
  *
  */
-public class PSO{
+public abstract class PSO implements Runnable{
 
 	protected Scenario scenario;
 
@@ -27,6 +27,8 @@ public class PSO{
 	protected double alpha;
 
 	protected double beta;
+	
+	protected Result result;
 	
 	private static Double cognitiveCoeffcient = 2.0;
 	
@@ -71,7 +73,7 @@ public class PSO{
 		}
 	}
 	
-	public Result search() {
+	public void search() {
 		int counter = 0;
 		Double meanEvaluation = 0.0;
 		
@@ -105,6 +107,14 @@ public class PSO{
 		r.setSumRate(this.scenario.getSumRate());
 		r.setSolution(this.gBest.getPosition());
 		
-		return r;
+		this.setResult(r);
+	}
+
+	public Result getResult() {
+		return result;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
 	}
 }

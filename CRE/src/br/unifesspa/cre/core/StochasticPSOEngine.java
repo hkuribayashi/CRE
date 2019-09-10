@@ -6,16 +6,15 @@ import java.util.List;
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.pso.CoPSO;
+import br.unifesspa.cre.pso.StochasticIWPSO;
 
-public class CoPSOEngine extends PSOEngine{
+public class StochasticPSOEngine extends PSOEngine {
 
-
-	public CoPSOEngine(Double alpha, Double beta, CREEnv env, Integer swarmSize) {
+	public StochasticPSOEngine(double alpha, double beta, CREEnv env, Integer swarmSize) {
 		super(alpha, beta, env, swarmSize);
 	}
-
-	public CoPSOEngine(Double alpha, Double beta, Scenario scenario, Integer swarmSize) {
+	
+	public StochasticPSOEngine(double alpha, double beta, Scenario scenario, Integer swarmSize) {
 		super(alpha, beta, scenario, swarmSize);
 	}
 
@@ -23,9 +22,9 @@ public class CoPSOEngine extends PSOEngine{
 	public void run() {
 		List<Result> results = new ArrayList<Result>();
 		double targetSolution = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
-		CoPSO[] pso = new CoPSO[this.env.getSimulations()];
+		StochasticIWPSO[] pso = new StochasticIWPSO[this.env.getSimulations()];
 		for (int i=0; i<pso.length; i++) {
-			pso[i] = new CoPSO(this.alpha, this.beta, this.scenario.clone(), this.env.getPsoSteps(), this.swarmSize, targetSolution);
+			pso[i] = new StochasticIWPSO(this.alpha, this.beta, this.scenario.clone(), this.env.getPsoSteps(), this.swarmSize, targetSolution);
 		}
 
 		Thread[] psoThreads = new Thread[this.env.getSimulations()];

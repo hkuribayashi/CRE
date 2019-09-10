@@ -9,7 +9,6 @@ import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.data.DAO;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.pso.CoPSO;
 import br.unifesspa.cre.util.Util;
 
 public class Main {
@@ -36,7 +35,7 @@ public class Main {
 		env.set(Param.nOFDMSymbols, 14);	   // 14 OFDM Symbols per subframe
 		env.set(Param.subframeDuration, 1.0);  // 1 ms
 		env.set(Param.workingDirectory, path); // Working Directory
-		env.set(Param.simulations, 100.0);	   // Number of Simulations
+		env.set(Param.simulations, 50.0);	   // Number of Simulations
 
 		//Setting Parameters to Phase 1: Static Bias		
 		env.set(Param.totalBias, 100);
@@ -56,38 +55,7 @@ public class Main {
 
 		//Setting PSO Parameters
 		env.set(Param.psoSteps, 100);
-		
-		Scenario s1 = new Scenario(env);
-		
-		int simulations = 50;
-		
-		CoPSO[] pso = new CoPSO[simulations];
-		for (int i=0; i<pso.length; i++) {
-			pso[i] = new CoPSO(10.0, 1.0, s1.clone(), 100.0, 20, 3022.0);
-		}
-		
-		Thread[] psoThreads = new Thread[simulations];
-		for (int i=0; i<psoThreads.length; i++) {
-			psoThreads[i] = new Thread(pso[i]);
-			psoThreads[i].setName("Thread-"+i);
-		}
-		
-		for (int i=0; i<psoThreads.length; i++) {
-			psoThreads[i].start();
-			System.out.println("Starting: "+psoThreads[i].getName());
-		}
-		
-			try {
-				for (int i=0; i<psoThreads.length; i++) {
-					psoThreads[i].join();
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
 
-		/*
 		//Experiment 01
 
 		System.out.println("Experiment 01:");
@@ -112,7 +80,7 @@ public class Main {
 		if (!daoE1.verifyPath(fileE2)) {
 			re2 = Experiments.getExperiment02(env, env.getSimulations());
 			daoE2.save(re2, fileE2);
-			
+
 			for (List<Result> list : re2) {
 				double alpha = list.get(0).getAlpha();
 				double beta = list.get(0).getBeta();
@@ -121,12 +89,10 @@ public class Main {
 				String file = env.getWorkingDirectory() + "e2-alpha-"+alpha+"-beta-"+beta+".csv";
 				Util.writeToCSV(file, boxplotValues, "");
 			}
-			
+
 		}else re2 = daoE2.restore(fileE2);
-		
+
 		System.out.println();
-		
-		*/
 
 		//Experiment 03
 
@@ -139,7 +105,7 @@ public class Main {
 		if (!daoE1.verifyPath(fileE3)) {
 			re3 = Experiments.getExperiment03(env, env.getSimulations());
 			daoE3.save(re3, fileE3);
-			
+
 			for (List<Result> list : re3) {
 				double alpha = list.get(0).getAlpha();
 				double beta = list.get(0).getBeta();
@@ -148,18 +114,17 @@ public class Main {
 				String file = env.getWorkingDirectory() + "e3-alpha-"+alpha+"-beta-"+beta+".csv";
 				Util.writeToCSV(file, boxplotValues, "");
 			}
-			
-		}else  re3 = daoE3.restore(fileE3);
-		
-		*/
-		
-		//System.out.println();
-		
-		//Experiment 04
-		
-		//System.out.println("Experiment 04:");
 
-		/*
+		}else  re3 = daoE3.restore(fileE3);
+
+		 */
+
+		System.out.println();
+
+		//Experiment 04
+
+		System.out.println("Experiment 04:");
+
 		for (List<Result> list : re2) {
 
 			double alpha = list.get(0).getAlpha();
@@ -181,45 +146,150 @@ public class Main {
 			System.out.println(); 
 
 		}
-		*/
+		 
 
 		//Experiment 05
 
-		/*
-		
 		System.out.println("Experiment 05: CoPSO");
-		
+
 		for (List<Result> list : re2) {
-			
-			Experiments ex = new Experiments();
-			
+
 			double alpha = list.get(0).getAlpha();
 			double beta = list.get(0).getBeta();
 
 			Scenario scenario = Collections.max(list).getScenario();
-			scenario.setEnv(env);
 
-			HashMap<String, Result> results = ex.getExperiment05(scenario, alpha, beta);
-			
-			System.out.println("Alpha="+alpha+" Beta="+beta);
-						
-			System.out.println("CoPSO-20");
-			System.out.println( results.get("CoPSO-20-max") );
-			System.out.println( results.get("CoPSO-20-mean") );
+			HashMap<String, List<Result>> re5 = Experiments.getExperiment05(scenario, alpha, beta);
+
+			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+			System.out.println(re5.get("CoPSO-20"));
 			System.out.println();
-			
-			System.out.println("CoPSO-40");
-			System.out.println( results.get("CoPSO-40-max") );
-			System.out.println( results.get("CoPSO-40-mean") );
+
+			System.out.println(re5.get("CoPSO-40"));
 			System.out.println();
-			
-			System.out.println("CoPSO-60");
-			System.out.println( results.get("CoPSO-60-max") );
-			System.out.println( results.get("CoPSO-60-mean") );
+
+			System.out.println(re5.get("CoPSO-60"));
 			System.out.println();
+
+			System.out.println(re5.get("CoPSO-80"));
+			System.out.println();	
 		}
-		
-		*/
-	
+		System.out.println();
+
+		//Experiment 06
+
+		System.out.println("Experiment 06: StochasticPSO");
+
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Scenario scenario = Collections.max(list).getScenario();
+
+			HashMap<String, List<Result>> re = Experiments.getExperiment06(scenario, alpha, beta);
+
+			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+			System.out.println(re.get("StochasticPSO-20"));
+			System.out.println();
+
+			System.out.println(re.get("StochasticPSO-40"));
+			System.out.println();
+
+			System.out.println(re.get("StochasticPSO-60"));
+			System.out.println();
+
+			System.out.println(re.get("StochasticPSO-80"));
+			System.out.println();	
+		}
+
+		System.out.println();
+
+		//Experiment 07
+
+		System.out.println("Experiment 07: DecreaseIWPSO");
+
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Scenario scenario = Collections.max(list).getScenario();
+
+			HashMap<String, List<Result>> re = Experiments.getExperiment07(scenario, alpha, beta);
+
+			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+			System.out.println(re.get("DecreaseIWPSO-20"));
+			System.out.println();
+
+			System.out.println(re.get("DecreaseIWPSO-40"));
+			System.out.println();
+
+			System.out.println(re.get("DecreaseIWPSO-60"));
+			System.out.println();
+
+			System.out.println(re.get("DecreaseIWPSO-80"));
+			System.out.println();	
+		}
+
+		System.out.println();
+
+		//Experiment 08
+
+		System.out.println("Experiment 08: IncreaseIWPSO");
+
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Scenario scenario = Collections.max(list).getScenario();
+
+			HashMap<String, List<Result>> re = Experiments.getExperiment08(scenario, alpha, beta);
+
+			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+			System.out.println(re.get("IncreaseIWPSO-20"));
+			System.out.println();
+
+			System.out.println(re.get("IncreaseIWPSO-40"));
+			System.out.println();
+
+			System.out.println(re.get("IncreaseIWPSO-60"));
+			System.out.println();
+
+			System.out.println(re.get("IncreaseIWPSO-80"));
+			System.out.println();	
+		}
+
+		System.out.println();
+
+		//Experiment 09
+
+		System.out.println("Experiment 09: StaticIWPSO");
+
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Scenario scenario = Collections.max(list).getScenario();
+
+			HashMap<String, List<Result>> re = Experiments.getExperiment09(scenario, alpha, beta);
+
+			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+			System.out.println(re.get("StaticIWPSO-20"));
+			System.out.println();
+
+			System.out.println(re.get("StaticIWPSO-40"));
+			System.out.println();
+
+			System.out.println(re.get("StaticIWPSO-60"));
+			System.out.println();
+
+			System.out.println(re.get("StaticIWPSO-80"));
+			System.out.println();	
+		}
+
+		System.out.println();
 	}
 }

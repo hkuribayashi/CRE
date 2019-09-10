@@ -3,7 +3,7 @@ package br.unifesspa.cre.pso;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.util.Util;
 
-public class CoPSO extends PSO implements Runnable{
+public class CoPSO extends PSO{
 
 	private static Double cognitiveCoeffcient = 2.05;
 	

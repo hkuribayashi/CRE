@@ -35,7 +35,7 @@ public class IncreaseIWPSO extends StaticIWPSO{
 	}
 
 	@Override
-	public Result search() {
+	public void search() {
 		int counter = 0;
 		Double meanEvaluation = 0.0;
 
@@ -69,6 +69,6 @@ public class IncreaseIWPSO extends StaticIWPSO{
 		r.setSumRate(this.scenario.getSumRate());
 		r.setSolution(this.gBest.getPosition());
 
-		return r;
+		this.setResult(r);
 	}
 }

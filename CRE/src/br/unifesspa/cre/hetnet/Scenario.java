@@ -28,15 +28,15 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 	private Double[] bias;
 
 	private Double sumRate;
-	
+
 	private Double requiredRate;
 
 	private Double medianRate;
-	
+
 	private Double uesServed;
-	
+
 	private Double servingBSs;
-	
+
 
 	/**
 	 * Default Constructor
@@ -87,7 +87,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		for (int i=0; i<this.bias.length; i++)
 			this.bias[i] = bias;
 	}
-	
+
 	/**
 	 * Performs the entire simulatio
 	 */
@@ -100,12 +100,12 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		this.getBitRate();
 		this.getEvaluationMetrics();
 	}
-	
-	
+
+
 	public void run() {
 		this.evaluation();
 	}
-	
+
 	public void evaluationEvolved() {
 		this.getDistance();
 		this.getBiasedSINR();
@@ -164,7 +164,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 				double bias = 0.0;
 				if (bs.getType().equals(BSType.Small))
 					bias = this.bias[j];
-				
+
 				double sinr = 10.0 * Math.log10(prLin/sum) + bias;
 				this.network[i][j].setSinr(sinr);
 			}			
@@ -202,7 +202,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 	 * Performs the Resource Block Allocation Process for all BSs
 	 */
 	private void getResourceBlockAllocation() {
-		
+
 		for (int i=0; i<this.network.length; i++) {
 			for (int j=0; j<this.network[0].length; j++) {
 				if (this.allBS.get(j).getType().equals(BSType.Small))
@@ -228,9 +228,9 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 			}
 		}
 	}
-	
+
 	private void getResourceBlockAllocation2(AllocationStrategy strategy) {
-		
+
 		for (int i=0; i<this.network.length; i++) {
 			for (int j=0; j<this.network[0].length; j++) {
 				if (this.allBS.get(j).getType().equals(BSType.Small))
@@ -241,7 +241,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 				}
 			}
 		}
-		
+
 		if (strategy.equals(AllocationStrategy.Uniform)) {
 			double nRBsPerUE = 0.0;
 			double test = 0.0;
@@ -265,7 +265,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}else {
 			Double[] counter = new Double[this.network[0].length];
 			Util.init(counter);
-			
+
 			double nRBsPerUE = 0.0;
 			for (int j=0; j<this.network[0].length; j++) {
 				BS bs = this.allBS.get(j);
@@ -279,38 +279,38 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 					}
 				}
 			}
-				
+
 			for (int j=0; j<this.network[0].length; j++) {
 				double test = 0.0;
-				
+
 				BS bs = this.allBS.get(j);
 				if (bs.getLoad() != 0 || ((bs.getnRBs() - counter[j]) > 0)) {
 					double availableRBs = bs.getnRBs() - counter[j];
-					
+
 					double requiredRate = 0.0;
-					
+
 					for (int i=0; i<this.network.length; i++) {
 						if (this.network[i][j].getCoverageStatus().equals(true)) {
 							double temp = this.ue.get(i).getProfile().getBandwidth() * this.ue.get(i).getProfile().getCompressionFactor();
 							requiredRate += temp;
 						}						
 					}
-					
+
 					for (int i=0; i<this.network.length; i++) {
 						if (this.network[i][j].getCoverageStatus().equals(true)) {
 							double ueRequiredRate = (this.ue.get(i).getProfile().getBandwidth() * this.ue.get(i).getProfile().getCompressionFactor());
 							this.ue.get(i).setnRB( this.ue.get(i).getnRB() + Math.floor(availableRBs * (ueRequiredRate/requiredRate)));
-							
+
 							test += this.ue.get(i).getnRB();
 						}
 					}
-					
+
 					if (test > 100.0)
 						System.out.println("BS "+j+" Overloaded: "+test+" RBs");
-					
+
 				}
 			}
-			
+
 		}
 
 	}
@@ -319,9 +319,9 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 	 * Calculates the UE birate in Mbps
 	 */
 	private void getBitRate() {
-		
+
 		double bitrate = (this.env.getnSubcarriers() * this.env.getnOFDMSymbols() * this.env.getSubframeDuration() * 1000.0);
-		
+
 		for (int i=0; i<this.ue.size(); i++) {
 			double nRB = this.ue.get(i).getnRB();
 			double bitsPerOFDMSymbol = this.ue.get(i).getBitsPerOFDMSymbol();
@@ -342,7 +342,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		this.sumRate = sumRate;
 		Collections.sort(bitrate);
 		this.medianRate = Util.getMedian(bitrate);
-		
+
 		this.requiredRate = 0.0;
 		this.uesServed = 0.0;
 		for (UE ue: this.ue) {
@@ -352,7 +352,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 			if (ue.getBitrate() >= rRate)
 				this.uesServed++;
 		}
-		
+
 		double counter = 0.0;
 		for(BS bs: this.allBS) {
 			if (bs.getLoad() != 0)
@@ -360,7 +360,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 		this.servingBSs = counter;
 	}
-	
+
 	public void paitTopology() {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -368,52 +368,17 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		window.getContentPane().add(new Topology(this));
 		window.setVisible(true);
 	}
-	
+
 	public Scenario clone() {
-		Scenario result;
 		try {
-			result = (Scenario) super.clone();
-		
-		
-		/*
-		
-		List<BS> test1 = new ArrayList<BS>();
-		for (BS bs : this.allBS) {
-			test1.add((BS)bs.clone());
-		}
-		
-		result.setAllBS(test1);
-		
-		result.setBias(this.bias.clone());
-		result.setMedianRate((double)this.medianRate);
-		
-		*/
-		
-		NetworkElement[][] ne = new NetworkElement[this.network.length][this.network[0].length];
-		for (int i=0; i<ne.length; i++) {
-			ne[i] = this.network[i].clone();
-		}
-		
-		result.setNetwork(ne);
-		
-		/*
-		
-		result.setRequiredRate((double)this.requiredRate);
-		result.setServingBSs((double)this.servingBSs);
-		result.setSumRate((double)this.sumRate);
-		
-		List<UE> test2 = new ArrayList<UE>();
-		for (UE ue : this.ue) {
-			test2.add((UE) ue.clone());
-		}
-		
-		result.setUe(test2);
-		result.setUesServed((double)this.uesServed);
-		
-		*/
-		
-		return result;
-		
+			Scenario result = (Scenario) super.clone();
+			NetworkElement[][] ne = new NetworkElement[this.network.length][this.network[0].length];
+			for (int i=0; i<ne.length; i++) {
+				ne[i] = this.network[i].clone();
+			}
+
+			result.setNetwork(ne);
+			return result;
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 			return null;
@@ -507,7 +472,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 	@Override
 	public String toString() {
 		return "Scenario [env=" + env + ", allBS=" + allBS + ", ue=" + ue + ", network=" + Arrays.toString(network)
-				+ ", bias=" + Arrays.toString(bias) + ", sumRate=" + sumRate + ", requiredRate=" + requiredRate
-				+ ", medianRate=" + medianRate + ", uesServed=" + uesServed + ", servingBSs=" + servingBSs + "]";
+		+ ", bias=" + Arrays.toString(bias) + ", sumRate=" + sumRate + ", requiredRate=" + requiredRate
+		+ ", medianRate=" + medianRate + ", uesServed=" + uesServed + ", servingBSs=" + servingBSs + "]";
 	}
 }
