@@ -288,5 +288,34 @@ public class Main {
 		}
 
 		System.out.println();
+		
+		//Experiment 10
+
+		System.out.println("Experiment 10: VsPSO");
+
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+
+			Scenario scenario = Collections.max(list).getScenario();
+
+			HashMap<String, List<Result>> re = Experiments.getExperiment10(scenario, alpha, beta);
+
+			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+			System.out.println(re.get("VsPSO-20"));
+			System.out.println();
+
+			System.out.println(re.get("VsPSO-40"));
+			System.out.println();
+
+			System.out.println(re.get("VsPSO-60"));
+			System.out.println();
+
+			System.out.println(re.get("VsPSO-80"));
+			System.out.println();	
+		}
+		
+		System.out.println();
 	}
 }

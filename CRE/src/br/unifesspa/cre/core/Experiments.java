@@ -394,4 +394,59 @@ public class Experiments {
 
 		return results;
 	}	
+	
+	
+	/**
+	 * StaticIWPSO
+	 * 
+	 * @param scenario
+	 * @param alpha
+	 * @param beta
+	 * @return
+	 */
+	public static HashMap<String, List<Result>> getExperiment10(Scenario scenario, double alpha, double beta) {
+		HashMap<String, List<Result>> results;
+		DAO<HashMap<String, List<Result>>> dao = new DAO<HashMap<String, List<Result>>>();
+		String path = scenario.getEnv().getWorkingDirectory()+"e10-alpha-"+alpha+"-beta-"+beta+".data";
+		if(!dao.verifyPath(path)) {
+
+			results = new HashMap<String, List<Result>>();
+
+			VsPSOEngine pso20  = new VsPSOEngine(alpha, beta, scenario.clone(), 20);
+			Thread t20 = new Thread(pso20);
+
+			VsPSOEngine pso40  = new VsPSOEngine(alpha, beta, scenario.clone(), 40);
+			Thread t40 = new Thread(pso40);
+
+			VsPSOEngine pso60  = new VsPSOEngine(alpha, beta, scenario.clone(), 60);
+			Thread t60 = new Thread(pso60);
+
+			VsPSOEngine pso80  = new VsPSOEngine(alpha, beta, scenario.clone(), 80);
+			Thread t80 = new Thread(pso80);
+
+			t20.start();
+			t40.start();
+			t60.start();
+			t80.start();
+
+			try {
+				t20.join();
+				t40.join();
+				t60.join();
+				t80.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			results.put("VsPSO-20", pso20.getResults());
+			results.put("VsPSO-40", pso40.getResults());
+			results.put("VsPSO-60", pso60.getResults());
+			results.put("VsPSO-80", pso80.getResults());
+
+			dao.save(results, path);
+
+		}else  results = dao.restore(path);
+
+		return results;
+	}
 }
