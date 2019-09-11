@@ -95,8 +95,7 @@ public class Main {
 		System.out.println();
 
 		//Experiment 03
-
-		/* 
+ 
 		System.out.println("Experiment 03:");
 
 		DAO<List<List<Result>>> daoE3 = new DAO<List<List<Result>>>();
@@ -116,8 +115,6 @@ public class Main {
 			}
 
 		}else  re3 = daoE3.restore(fileE3);
-
-		 */
 
 		System.out.println();
 

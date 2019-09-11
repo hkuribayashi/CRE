@@ -45,7 +45,7 @@ public abstract class PSO implements Runnable{
 		
 		this.swarm = new ArrayList<Particle>();
 		for (int i=0; i<swarmSize; i++)
-			this.swarm.add(new Particle(this.alpha, this.beta, this.scenario, particleDimension));
+			this.swarm.add(new Particle(this.alpha, this.beta, this.scenario.clone(), particleDimension));
 		
 		this.gBest = Collections.max(this.swarm);
 	}
