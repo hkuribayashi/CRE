@@ -87,7 +87,7 @@ public abstract class PSO implements Runnable{
 			counter++;
 			
 			//System.out.println("Step: "+counter);
-			//System.out.println(this.gBest.getEvaluation());
+			//System.out.println("gBest Evaluation: "+this.gBest.getEvaluation());
 			//System.out.println("Mean Evaluation: "+(meanEvaluation/this.swarm.size()));
 			//System.out.println();
 			meanEvaluation = 0.0;
@@ -101,10 +101,10 @@ public abstract class PSO implements Runnable{
 		r.setEvaluation(this.gBest.getEvaluation());
 		r.setMedianRate(this.gBest.getScenario().getMedianRate());
 		r.setScenario(this.gBest.getScenario());
-		r.setRequiredRate(this.scenario.getRequiredRate());
-		r.setServingBSs(this.scenario.getServingBSs());
-		r.setUesServed(this.scenario.getUesServed());
-		r.setSumRate(this.scenario.getSumRate());
+		r.setRequiredRate(this.gBest.getScenario().getRequiredRate());
+		r.setServingBSs(this.gBest.getScenario().getServingBSs());
+		r.setUesServed(this.gBest.getScenario().getUesServed());
+		r.setSumRate(this.gBest.getScenario().getSumRate());
 		r.setSolution(this.gBest.getPosition());
 		
 		this.setResult(r);

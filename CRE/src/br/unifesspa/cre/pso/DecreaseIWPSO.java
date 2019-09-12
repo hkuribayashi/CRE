@@ -6,25 +6,25 @@ import br.unifesspa.cre.util.Util;
 
 
 public class DecreaseIWPSO extends StaticIWPSO {
-	
+
 	public static Double initialInertialWeight = 0.9;
 
 	public static Double finalInertialWeight = 0.4;
-	
+
 	public Double[] inertiaWeight;
 
 	public DecreaseIWPSO(Double alpha, Double beta, Scenario scenario, Double steps, Integer swarmSize, Double targetSolution) {
-		
+
 		super(alpha, beta, scenario, steps, swarmSize, targetSolution);
-		
+
 		double b = DecreaseIWPSO.initialInertialWeight;
 		double a = (DecreaseIWPSO.finalInertialWeight - b)/this.steps;
-		
+
 		this.inertiaWeight = new Double[steps.intValue()];
 		for (int i=0; i<inertiaWeight.length; i++)
 			this.inertiaWeight[i] = (a * i) + b;
 	}
-	
+
 	public void updateVelocity(Particle p, Integer step) {
 		Double[] temp = Util.minus(p.getBestPosition(), p.getPosition());
 		Double[] cognitiveComponent = Util.product(temp, IncreaseIWPSO.cognitiveCoeffcient);
@@ -34,7 +34,7 @@ public class DecreaseIWPSO extends StaticIWPSO {
 
 		p.setVelocity( Util.product(Util.sum(p.getVelocity(), Util.sum(cognitiveComponent, socialComponent)), this.inertiaWeight[step]) );
 	}
-	
+
 	@Override
 	public void search() {
 		int counter = 0;
@@ -64,10 +64,10 @@ public class DecreaseIWPSO extends StaticIWPSO {
 		r.setEvaluation(this.gBest.getEvaluation());
 		r.setMedianRate(this.gBest.getScenario().getMedianRate());
 		r.setScenario(this.gBest.getScenario());
-		r.setRequiredRate(this.scenario.getRequiredRate());
-		r.setServingBSs(this.scenario.getServingBSs());
-		r.setUesServed(this.scenario.getUesServed());
-		r.setSumRate(this.scenario.getSumRate());
+		r.setRequiredRate(this.gBest.getScenario().getRequiredRate());
+		r.setServingBSs(this.gBest.getScenario().getServingBSs());
+		r.setUesServed(this.gBest.getScenario().getUesServed());
+		r.setSumRate(this.gBest.getScenario().getSumRate());
 		r.setSolution(this.gBest.getPosition());
 
 		this.setResult(r);

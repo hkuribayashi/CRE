@@ -15,7 +15,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		String path = "/Users/hugo/Desktop/CRE/CREV1/";
+		String path = "/Users/hugo/Desktop/CRE/CRE/";
 		if (args.length != 0)
 			path = args[0];
 
@@ -143,7 +143,6 @@ public class Main {
 			System.out.println(); 
 
 		}
-		 
 
 		//Experiment 05
 
@@ -159,17 +158,45 @@ public class Main {
 			HashMap<String, List<Result>> re5 = Experiments.getExperiment05(scenario, alpha, beta);
 
 			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
-			System.out.println(re5.get("CoPSO-20"));
+			System.out.println("CoPSO-20");
+			for (Result l : re5.get("CoPSO-20")) {
+				System.out.println(l);
+			}
+			
 			System.out.println();
-
-			System.out.println(re5.get("CoPSO-40"));
+			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-20")));
+			System.out.println("Max: "+Collections.max(re5.get("CoPSO-20")));
 			System.out.println();
+			
+			System.out.println("CoPSO-40");
+			for (Result l : re5.get("CoPSO-40")) {
+				System.out.println(l);
+			}
 
-			System.out.println(re5.get("CoPSO-60"));
 			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-40")));
+			System.out.println("Max: "+Collections.max(re5.get("CoPSO-40")));
+			System.out.println();
+			
+			System.out.println("CoPSO-60");
+			for (Result l : re5.get("CoPSO-60")) {
+				System.out.println(l);
+			}
 
-			System.out.println(re5.get("CoPSO-80"));
-			System.out.println();	
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-60")));
+			System.out.println("Max: "+Collections.max(re5.get("CoPSO-60")));
+			System.out.println();
+			
+			System.out.println("CoPSO-80");
+			for (Result l : re5.get("CoPSO-80")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-60")));
+			System.out.println("Max: "+Collections.max(re5.get("CoPSO-60")));
+			System.out.println();
 		}
 		System.out.println();
 

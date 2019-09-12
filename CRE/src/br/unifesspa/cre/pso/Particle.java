@@ -42,7 +42,7 @@ public class Particle implements Comparable<Particle>, Cloneable{
 	public void evaluation() {
 		this.scenario.setBias(this.position);
 		this.scenario.evaluation();
-		this.evaluation = (this.alpha * this.scenario.getUesServed() + this.beta * this.scenario.getServingBSs());
+		this.evaluation = (this.alpha * this.scenario.getUesServed()) + (this.beta * this.scenario.getServingBSs());
 	}
 
 	public void updateBestPosition() {
