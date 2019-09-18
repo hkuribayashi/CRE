@@ -23,16 +23,11 @@ public class CoPSO extends PSO{
 	@Override
 	public void updateVelocity(Particle p) {
 		Double[] temp = Util.minus(p.getBestPosition(), p.getPosition());
-		Double[] cognitiveComponent = Util.product(temp, StaticIWPSO.cognitiveCoeffcient);
+		Double[] cognitiveComponent = Util.product(temp, CoPSO.cognitiveCoeffcient);
 		
 		Double[] temp2 = Util.minus(gBest.getPosition(), p.getPosition());
-		Double[] socialComponent = Util.product(temp2, StaticIWPSO.socialCoeffcient);
+		Double[] socialComponent = Util.product(temp2, CoPSO.socialCoeffcient);
 		
 		p.setVelocity( Util.product( Util.sum(p.getVelocity(), cognitiveComponent, socialComponent), this.constricionFactor ) );
-	}
-
-	@Override
-	public void run() {
-		this.search();	
 	}
 }

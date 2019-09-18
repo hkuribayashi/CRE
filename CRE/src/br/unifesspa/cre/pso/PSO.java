@@ -14,7 +14,7 @@ import br.unifesspa.cre.util.Util;
  * @author hugo
  *
  */
-public abstract class PSO implements Runnable{
+public abstract class PSO {
 
 	protected Scenario scenario;
 
@@ -37,7 +37,7 @@ public abstract class PSO implements Runnable{
 	public PSO(double alpha, double beta, Scenario scenario, double steps, int swarmSize, double targetSolution) {
 		this.alpha = alpha;
 		this.beta = beta;
-		this.scenario = scenario;
+		this.scenario = scenario.clone();
 		this.steps = steps;
 		
 		Double qtdMacro = this.scenario.getEnv().getArea() * this.scenario.getEnv().getLambdaMacro();
@@ -60,20 +60,20 @@ public abstract class PSO implements Runnable{
 		p.setVelocity( Util.sum(p.getVelocity(), Util.sum(cognitiveComponent, socialComponent)) );
 	}
 	
-	public void updatePosition(Particle p) {
+	public synchronized void updatePosition(Particle p) {
 		p.setPosition( Util.sum(p.getPosition(), p.getVelocity()) );
 		p.evaluation();
 		p.updateBestPosition();
 	}
 	
-	public void updateGlobalBestPosition() {
+	public synchronized void updateGlobalBestPosition() {
 		Particle gBestCandidate = Collections.max(this.swarm);
 		if (gBestCandidate.getEvaluation() > this.gBest.getEvaluation()) {
 			this.gBest = (Particle) gBestCandidate.clone(); 
 		}
 	}
 	
-	public void search() {
+	public synchronized void search() {
 		int counter = 0;
 		Double meanEvaluation = 0.0;
 		
@@ -88,6 +88,8 @@ public abstract class PSO implements Runnable{
 			
 			//System.out.println("Step: "+counter);
 			//System.out.println("gBest Evaluation: "+this.gBest.getEvaluation());
+			//System.out.println("gBest UEs Served: "+this.gBest.getScenario().getUesServed());
+			//System.out.println("gBest Serving BSs: "+this.gBest.getScenario().getServingBSs());
 			//System.out.println("Mean Evaluation: "+(meanEvaluation/this.swarm.size()));
 			//System.out.println();
 			meanEvaluation = 0.0;
@@ -106,6 +108,8 @@ public abstract class PSO implements Runnable{
 		r.setUesServed(this.gBest.getScenario().getUesServed());
 		r.setSumRate(this.gBest.getScenario().getSumRate());
 		r.setSolution(this.gBest.getPosition());
+		
+		System.out.println(r);
 		
 		this.setResult(r);
 	}

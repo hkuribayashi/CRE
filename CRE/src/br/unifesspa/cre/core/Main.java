@@ -15,9 +15,12 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		String psoOption = "Default";
 		String path = "/Users/hugo/Desktop/CRE/CRE/";
-		if (args.length != 0)
+		if (args.length != 0) {
 			path = args[0];
+			psoOption = args[1];
+		}
 
 		CREEnv env = new CREEnv();
 
@@ -94,57 +97,15 @@ public class Main {
 
 		System.out.println();
 
-		//Experiment 03
- 
-		System.out.println("Experiment 03:");
-
-		DAO<List<List<Result>>> daoE3 = new DAO<List<List<Result>>>();
-		String fileE3 = path + "experiment3.data";
-		List<List<Result>> re3;
-		if (!daoE1.verifyPath(fileE3)) {
-			re3 = Experiments.getExperiment03(env, env.getSimulations());
-			daoE3.save(re3, fileE3);
-
-			for (List<Result> list : re3) {
-				double alpha = list.get(0).getAlpha();
-				double beta = list.get(0).getBeta();
-
-				Double[] boxplotValues = Util.getBoxPlotData(list);
-				String file = env.getWorkingDirectory() + "e3-alpha-"+alpha+"-beta-"+beta+".csv";
-				Util.writeToCSV(file, boxplotValues, "");
-			}
-
-		}else  re3 = daoE3.restore(fileE3);
-
-		System.out.println();
-
-		//Experiment 04
-
-		System.out.println("Experiment 04:");
-
-		for (List<Result> list : re2) {
-
-			double alpha = list.get(0).getAlpha();
-			double beta = list.get(0).getBeta();
-
-			Scenario scenario = Collections.max(list).getScenario();
-			scenario.setEnv(env);
-
-			HashMap<String, Result> results = Experiments.getExperiment04(scenario, alpha, beta);
-
-			System.out.println("Alpha="+alpha+" Beta="+beta);
-
-			System.out.println("UCB");
-			System.out.println( results.get("UCB") );
-			System.out.println();
-
-			System.out.println("UCB2");
-			System.out.println( results.get("UCB2") );
-			System.out.println(); 
-
+		switch(psoOption) {
+		case "CoPSO": Main.CoPSO(re2); break;
+		case "DecreasePSO": Main.DecreasePSO(re2); break;
+		case "VsPSO": Main.VsPSO(re2); break;
+		default: System.out.println("Usage: java -jar CRE.jar <path> <PSO-Option>"); break;
 		}
+	}
 
-		//Experiment 05
+	public static void CoPSO(List<List<Result>> re2) {
 
 		System.out.println("Experiment 05: CoPSO");
 
@@ -162,12 +123,12 @@ public class Main {
 			for (Result l : re5.get("CoPSO-20")) {
 				System.out.println(l);
 			}
-			
+
 			System.out.println();
 			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-20")));
 			System.out.println("Max: "+Collections.max(re5.get("CoPSO-20")));
 			System.out.println();
-			
+
 			System.out.println("CoPSO-40");
 			for (Result l : re5.get("CoPSO-40")) {
 				System.out.println(l);
@@ -177,7 +138,7 @@ public class Main {
 			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-40")));
 			System.out.println("Max: "+Collections.max(re5.get("CoPSO-40")));
 			System.out.println();
-			
+
 			System.out.println("CoPSO-60");
 			for (Result l : re5.get("CoPSO-60")) {
 				System.out.println(l);
@@ -187,23 +148,22 @@ public class Main {
 			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-60")));
 			System.out.println("Max: "+Collections.max(re5.get("CoPSO-60")));
 			System.out.println();
-			
+
 			System.out.println("CoPSO-80");
 			for (Result l : re5.get("CoPSO-80")) {
 				System.out.println(l);
 			}
 
 			System.out.println();
-			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-60")));
-			System.out.println("Max: "+Collections.max(re5.get("CoPSO-60")));
+			System.out.println("Mean: "+Util.getMean(re5.get("CoPSO-80")));
+			System.out.println("Max: "+Collections.max(re5.get("CoPSO-80")));
 			System.out.println();
 		}
-		System.out.println();
+		System.out.println();		
+	}
 
-		//Experiment 06
-
-		System.out.println("Experiment 06: StochasticPSO");
-
+	public static void DecreasePSO(List<List<Result>> re2) {
+		System.out.println("Experiment 06: DecreaseIWPSO");
 		for (List<Result> list : re2) {
 
 			double alpha = list.get(0).getAlpha();
@@ -211,28 +171,54 @@ public class Main {
 
 			Scenario scenario = Collections.max(list).getScenario();
 
-			HashMap<String, List<Result>> re = Experiments.getExperiment06(scenario, alpha, beta);
+			HashMap<String, List<Result>> re5 = Experiments.getExperiment06(scenario, alpha, beta);
 
 			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
-			System.out.println(re.get("StochasticPSO-20"));
+			System.out.println("DecreaseIWPSO-20");
+			for (Result l : re5.get("DecreaseIWPSO-20")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-20")));
+			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-20")));
 			System.out.println();
 
-			System.out.println(re.get("StochasticPSO-40"));
+			System.out.println("DecreaseIWPSO-40");
+			for (Result l : re5.get("DecreaseIWPSO-40")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-40")));
+			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-40")));
 			System.out.println();
 
-			System.out.println(re.get("StochasticPSO-60"));
+			System.out.println("DecreaseIWPSO-60");
+			for (Result l : re5.get("DecreaseIWPSO-60")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-60")));
+			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-60")));
 			System.out.println();
 
-			System.out.println(re.get("StochasticPSO-80"));
-			System.out.println();	
+			System.out.println("DecreaseIWPSO-80");
+			for (Result l : re5.get("DecreaseIWPSO-80")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-80")));
+			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-80")));
+			System.out.println();
 		}
-
 		System.out.println();
+	}
 
-		//Experiment 07
-
-		System.out.println("Experiment 07: DecreaseIWPSO");
-
+	public static void VsPSO(List<List<Result>> re2) {
+		System.out.println("Experiment 06: VsPSO");
 		for (List<Result> list : re2) {
 
 			double alpha = list.get(0).getAlpha();
@@ -240,109 +226,49 @@ public class Main {
 
 			Scenario scenario = Collections.max(list).getScenario();
 
-			HashMap<String, List<Result>> re = Experiments.getExperiment07(scenario, alpha, beta);
+			HashMap<String, List<Result>> re5 = Experiments.getExperiment07(scenario, alpha, beta);
 
 			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
-			System.out.println(re.get("DecreaseIWPSO-20"));
+			System.out.println("VsPSO-20");
+			for (Result l : re5.get("VsPSO-20")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("VsPSO-20")));
+			System.out.println("Max: "+Collections.max(re5.get("VsPSO-20")));
 			System.out.println();
 
-			System.out.println(re.get("DecreaseIWPSO-40"));
+			System.out.println("VsPSO-40");
+			for (Result l : re5.get("VsPSO-40")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("VsPSO-40")));
+			System.out.println("Max: "+Collections.max(re5.get("VsPSO-40")));
 			System.out.println();
 
-			System.out.println(re.get("DecreaseIWPSO-60"));
+			System.out.println("VsPSO-60");
+			for (Result l : re5.get("VsPSO-60")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("VsPSO-60")));
+			System.out.println("Max: "+Collections.max(re5.get("VsPSO-60")));
 			System.out.println();
 
-			System.out.println(re.get("DecreaseIWPSO-80"));
-			System.out.println();	
+			System.out.println("VsPSO-80");
+			for (Result l : re5.get("VsPSO-80")) {
+				System.out.println(l);
+			}
+
+			System.out.println();
+			System.out.println("Mean: "+Util.getMean(re5.get("VsPSO-80")));
+			System.out.println("Max: "+Collections.max(re5.get("VsPSO-80")));
+			System.out.println();
 		}
-
-		System.out.println();
-
-		//Experiment 08
-
-		System.out.println("Experiment 08: IncreaseIWPSO");
-
-		for (List<Result> list : re2) {
-
-			double alpha = list.get(0).getAlpha();
-			double beta = list.get(0).getBeta();
-
-			Scenario scenario = Collections.max(list).getScenario();
-
-			HashMap<String, List<Result>> re = Experiments.getExperiment08(scenario, alpha, beta);
-
-			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
-			System.out.println(re.get("IncreaseIWPSO-20"));
-			System.out.println();
-
-			System.out.println(re.get("IncreaseIWPSO-40"));
-			System.out.println();
-
-			System.out.println(re.get("IncreaseIWPSO-60"));
-			System.out.println();
-
-			System.out.println(re.get("IncreaseIWPSO-80"));
-			System.out.println();	
-		}
-
-		System.out.println();
-
-		//Experiment 09
-
-		System.out.println("Experiment 09: StaticIWPSO");
-
-		for (List<Result> list : re2) {
-
-			double alpha = list.get(0).getAlpha();
-			double beta = list.get(0).getBeta();
-
-			Scenario scenario = Collections.max(list).getScenario();
-
-			HashMap<String, List<Result>> re = Experiments.getExperiment09(scenario, alpha, beta);
-
-			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
-			System.out.println(re.get("StaticIWPSO-20"));
-			System.out.println();
-
-			System.out.println(re.get("StaticIWPSO-40"));
-			System.out.println();
-
-			System.out.println(re.get("StaticIWPSO-60"));
-			System.out.println();
-
-			System.out.println(re.get("StaticIWPSO-80"));
-			System.out.println();	
-		}
-
-		System.out.println();
-		
-		//Experiment 10
-
-		System.out.println("Experiment 10: VsPSO");
-
-		for (List<Result> list : re2) {
-
-			double alpha = list.get(0).getAlpha();
-			double beta = list.get(0).getBeta();
-
-			Scenario scenario = Collections.max(list).getScenario();
-
-			HashMap<String, List<Result>> re = Experiments.getExperiment10(scenario, alpha, beta);
-
-			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
-			System.out.println(re.get("VsPSO-20"));
-			System.out.println();
-
-			System.out.println(re.get("VsPSO-40"));
-			System.out.println();
-
-			System.out.println(re.get("VsPSO-60"));
-			System.out.println();
-
-			System.out.println(re.get("VsPSO-80"));
-			System.out.println();	
-		}
-		
-		System.out.println();
+		System.out.println();		
 	}
 }

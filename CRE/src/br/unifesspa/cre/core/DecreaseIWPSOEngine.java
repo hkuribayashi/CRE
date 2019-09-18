@@ -18,37 +18,16 @@ public class DecreaseIWPSOEngine extends PSOEngine{
 		super(alpha, beta, scenario, swarmSize);
 	}
 
-	@Override
 	public void run() {
 		List<Result> results = new ArrayList<Result>();
 		double targetSolution = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
-		DecreaseIWPSO[] pso = new DecreaseIWPSO[this.env.getSimulations()];
-		for (int i=0; i<pso.length; i++) {
-			pso[i] = new DecreaseIWPSO(this.alpha, this.beta, this.scenario.clone(), this.env.getPsoSteps(), this.swarmSize, targetSolution);
+
+		for (int i=0; i<this.env.getSimulations(); i++) {
+			DecreaseIWPSO pso = new DecreaseIWPSO(this.alpha, this.beta, this.scenario.clone(), this.env.getPsoSteps(), this.swarmSize, targetSolution);
+			pso.search();
+			results.add( pso.getResult() );
 		}
 
-		Thread[] psoThreads = new Thread[this.env.getSimulations()];
-		for (int i=0; i<psoThreads.length; i++) {
-			psoThreads[i] = new Thread(pso[i]);
-		}
-
-		for (int i=0; i<psoThreads.length; i++) {
-			psoThreads[i].start();
-		}
-
-		try {
-			for (int i=0; i<psoThreads.length; i++)
-				psoThreads[i].join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		for (int i=0; i<psoThreads.length; i++) {
-			results.add( pso[i].getResult() );
-			
-		}
 		this.setResults(results);
 	}
-
-
 }

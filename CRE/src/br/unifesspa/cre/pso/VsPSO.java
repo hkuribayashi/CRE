@@ -1,7 +1,5 @@
 package br.unifesspa.cre.pso;
 
-import br.unifesspa.cre.config.CREEnv;
-import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
 import br.unifesspa.cre.util.Util;
@@ -19,12 +17,15 @@ public class VsPSO extends PSO {
 	public Double[] inertiaWeight;
 
 	public VsPSO(double alpha, double beta, Scenario scenario, Double steps, int swarmSize, double targetSolution) {
-		super(alpha, beta, scenario, steps, swarmSize, targetSolution);
+		
+		super(alpha, beta, scenario, (steps * 2), swarmSize, targetSolution);
+		
+		Double localSteps = (this.steps * 2);
 		
 		double b = DecreaseIWPSO.initialInertialWeight;
-		double a = (DecreaseIWPSO.finalInertialWeight - b)/this.steps;
+		double a = (DecreaseIWPSO.finalInertialWeight - b)/localSteps;
 		
-		this.inertiaWeight = new Double[steps.intValue()];
+		this.inertiaWeight = new Double[localSteps.intValue()];
 		for (int i=0; i<inertiaWeight.length; i++)
 			this.inertiaWeight[i] = (a * i) + b;
 	}
@@ -57,18 +58,14 @@ public class VsPSO extends PSO {
 			
 			double dif = Math.abs((lastMeanEvaluation - currentMeanEvaluation)/this.swarm.size());
 			
-			System.out.println("Step: "+counter);
-			System.out.println("Mean Evaluation: "+(currentMeanEvaluation/this.swarm.size()));
-			System.out.println("Diference from last Evaluation: "+dif);
-			System.out.println("gBest Evaluation: "+this.gBest.getBestEvaluation());
-			for (Particle particle : swarm) {
-				System.out.println(particle.getEvaluation());
-			}
-			System.out.println();
+			//System.out.println("Step: "+counter);
+			//System.out.println("Mean Evaluation: "+(currentMeanEvaluation/this.swarm.size()));
+			//System.out.println("Diference from last Evaluation: "+dif);
+			//System.out.println("gBest Evaluation: "+this.gBest.getBestEvaluation());
 			
 			if (dif <= 0.5)
 				convergencyCounter++;
-			if (convergencyCounter > 9) {
+			if (convergencyCounter > 5) {
 				this.updateSwarm(currentMeanEvaluation);
 				convergencyCounter = -10.0;
 			}
@@ -91,6 +88,8 @@ public class VsPSO extends PSO {
 		r.setSumRate(this.gBest.getScenario().getSumRate());
 		r.setSolution(this.gBest.getPosition());
 		
+		System.out.println(r);
+		
 		this.setResult(r);
 	}
 	
@@ -106,60 +105,7 @@ public class VsPSO extends PSO {
 				this.swarm.set(i, new Particle(this.alpha, this.beta, this.scenario.clone(), particleDimension));
 				maxUpdates--;
 			}
-		}
-			
-	}
-
-	@Override
-	public void run() {
-		this.search();
+		}		
 	}
 	
-	public static void main(String[] args) {
-		String path = "/Users/hugo/Desktop/CRE/CREV1/";
-		if (args.length != 0)
-			path = args[0];
-
-		CREEnv env = new CREEnv();
-
-		//Setting general simulations parameters
-		env.set(Param.area, 1000000.0); 	   // 1 km^2
-		env.set(Param.lambdaFemto, 0.00002);   // 0.00002 Femto/m^2 = 20 Femtos  
-		env.set(Param.lambdaUser, 0.0003);     // 0.0003 Users/m^2 = 300 Users 
-		env.set(Param.lambdaMacro, 0.000002);  // 0.000002 Macros/m^2 = 2 Macros
-		env.set(Param.powerMacro, 46.0);	   // dBm
-		env.set(Param.powerSmall, 30.0);	   // dBm
-		env.set(Param.noisePower, -174.0);	   // dBm/Hz
-		env.set(Param.gainMacro, 15.0);		   // dBi
-		env.set(Param.gainSmall, 5.0);		   // dBi
-		env.set(Param.nSubcarriers, 12);	   // 12 Sub-carriers per Resource Block
-		env.set(Param.nOFDMSymbols, 14);	   // 14 OFDM Symbols per subframe
-		env.set(Param.subframeDuration, 1.0);  // 1 ms
-		env.set(Param.workingDirectory, path); // Working Directory
-		env.set(Param.simulations, 50.0);	   // Number of Simulations
-
-		//Setting Parameters to Phase 1: Static Bias		
-		env.set(Param.totalBias, 100);
-		env.set(Param.biasStep, 1.0);
-		env.set(Param.initialBias, -10.0);
-
-		//Setting GA Parameters
-		env.set(Param.initialCrossoverProbability, 0.9);
-		env.set(Param.finalCrossoverProbability, 0.6);
-		env.set(Param.initialMutationProbability, 0.5);
-		env.set(Param.finalMutationProbability, 0.9);
-		env.set(Param.populationSize, (env.getLambdaSmall() * env.getArea()));
-		env.set(Param.generationSize, 100);
-		env.set(Param.kElitism, 1);
-		env.set(Param.initialGeneRange, -10.0);
-		env.set(Param.finalGeneRange, 80.0);
-
-		//Setting PSO Parameters
-		env.set(Param.psoSteps, 1200);
-		
-		Scenario s = new Scenario(env);
-		
-		VsPSO pso = new VsPSO(1.0, 1.0, s, 150.0, 20, 322);
-		pso.search();
-	}
 }

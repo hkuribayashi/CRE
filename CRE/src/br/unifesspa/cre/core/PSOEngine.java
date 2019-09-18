@@ -6,7 +6,7 @@ import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
 
-public abstract class PSOEngine extends Engine implements Runnable{
+public abstract class PSOEngine extends Engine{
 	
 	protected Integer swarmSize;
 	

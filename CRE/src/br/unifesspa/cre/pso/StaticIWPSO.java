@@ -32,9 +32,4 @@ public class StaticIWPSO extends PSO {
 		
 		p.setVelocity( Util.product(Util.sum(p.getVelocity(), Util.sum(cognitiveComponent, socialComponent)), StaticIWPSO.InertialWeight) );
 	}
-	
-	@Override
-	public void run() {
-		this.search();	
-	}
 }

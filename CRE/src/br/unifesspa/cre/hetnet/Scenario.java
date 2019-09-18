@@ -6,12 +6,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.util.Util;
-import br.unifesspa.cre.view.Topology;
 
 public class Scenario implements Serializable, Cloneable, Runnable{
 
@@ -104,16 +101,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 
 	public void run() {
 		this.evaluation();
-	}
-
-	public void evaluationEvolved() {
-		this.getDistance();
-		this.getBiasedSINR();
-		this.getCoverageMatrix();
-		this.getBSLoad();
-		this.getResourceBlockAllocation2(AllocationStrategy.Proportional);
-		this.getBitRate();
-		this.getEvaluationMetrics();
 	}
 
 	/**
@@ -229,92 +216,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 	}
 
-	private void getResourceBlockAllocation2(AllocationStrategy strategy) {
-
-		for (int i=0; i<this.network.length; i++) {
-			for (int j=0; j<this.network[0].length; j++) {
-				if (this.allBS.get(j).getType().equals(BSType.Small))
-					this.network[i][j].setSinr((this.network[i][j].getSinr() - this.bias[j]));
-				if (this.network[i][j].getCoverageStatus().equals(true)) {
-					double bitsPerOFDMSymbol = MCS.getEfficiency(this.network[i][j].getSinr());
-					this.ue.get(i).setBitsPerOFDMSymbol(bitsPerOFDMSymbol);
-				}
-			}
-		}
-
-		if (strategy.equals(AllocationStrategy.Uniform)) {
-			double nRBsPerUE = 0.0;
-			double test = 0.0;
-			for (int j=0; j<this.network[0].length; j++) {
-				BS bs = this.allBS.get(j);
-				if (bs.getLoad() != 0 ) {
-					nRBsPerUE = Math.floor(bs.getnRBs()/bs.getLoad());
-					if (nRBsPerUE < 1.0)
-						nRBsPerUE = 1.0;
-					for (int i=0; i<this.network.length; i++) {
-						if (this.network[i][j].getCoverageStatus().equals(true)) {
-							this.ue.get(i).setnRB(nRBsPerUE);
-							test++;
-						}
-					}
-					if (test > 100.0) {
-						System.out.println("BS Overloaded "+j+": "+test);
-					}
-				}
-			}
-		}else {
-			Double[] counter = new Double[this.network[0].length];
-			Util.init(counter);
-
-			double nRBsPerUE = 0.0;
-			for (int j=0; j<this.network[0].length; j++) {
-				BS bs = this.allBS.get(j);
-				if (bs.getLoad() != 0 ) {
-					nRBsPerUE = 1.0;
-					for (int i=0; i<this.network.length; i++) {
-						if (this.network[i][j].getCoverageStatus().equals(true)) {
-							this.ue.get(i).setnRB(nRBsPerUE);
-							counter[j]++;
-						}
-					}
-				}
-			}
-
-			for (int j=0; j<this.network[0].length; j++) {
-				double test = 0.0;
-
-				BS bs = this.allBS.get(j);
-				if (bs.getLoad() != 0 || ((bs.getnRBs() - counter[j]) > 0)) {
-					double availableRBs = bs.getnRBs() - counter[j];
-
-					double requiredRate = 0.0;
-
-					for (int i=0; i<this.network.length; i++) {
-						if (this.network[i][j].getCoverageStatus().equals(true)) {
-							double temp = this.ue.get(i).getProfile().getBandwidth() * this.ue.get(i).getProfile().getCompressionFactor();
-							requiredRate += temp;
-						}						
-					}
-
-					for (int i=0; i<this.network.length; i++) {
-						if (this.network[i][j].getCoverageStatus().equals(true)) {
-							double ueRequiredRate = (this.ue.get(i).getProfile().getBandwidth() * this.ue.get(i).getProfile().getCompressionFactor());
-							this.ue.get(i).setnRB( this.ue.get(i).getnRB() + Math.floor(availableRBs * (ueRequiredRate/requiredRate)));
-
-							test += this.ue.get(i).getnRB();
-						}
-					}
-
-					if (test > 100.0)
-						System.out.println("BS "+j+" Overloaded: "+test+" RBs");
-
-				}
-			}
-
-		}
-
-	}
-
 	/**
 	 * Calculates the UE birate in Mbps
 	 */
@@ -359,14 +260,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 				counter++;
 		}
 		this.servingBSs = counter;
-	}
-
-	public void paitTopology() {
-		JFrame window = new JFrame();
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setBounds(30, 30, 1000, 1000);
-		window.getContentPane().add(new Topology(this));
-		window.setVisible(true);
 	}
 
 	public Scenario clone() {

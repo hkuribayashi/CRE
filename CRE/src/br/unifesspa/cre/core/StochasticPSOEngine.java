@@ -18,35 +18,16 @@ public class StochasticPSOEngine extends PSOEngine {
 		super(alpha, beta, scenario, swarmSize);
 	}
 
-	@Override
 	public void run() {
 		List<Result> results = new ArrayList<Result>();
 		double targetSolution = (this.alpha * this.scenario.getUe().size()) + (this.beta * this.scenario.getAllBS().size());
-		StochasticIWPSO[] pso = new StochasticIWPSO[this.env.getSimulations()];
-		for (int i=0; i<pso.length; i++) {
-			pso[i] = new StochasticIWPSO(this.alpha, this.beta, this.scenario.clone(), this.env.getPsoSteps(), this.swarmSize, targetSolution);
+
+		for (int i=0; i<this.env.getSimulations(); i++) {
+			StochasticIWPSO pso = new StochasticIWPSO(this.alpha, this.beta, this.scenario.clone(), this.env.getPsoSteps(), this.swarmSize, targetSolution);
+			pso.search();
+			results.add( pso.getResult() );
 		}
 
-		Thread[] psoThreads = new Thread[this.env.getSimulations()];
-		for (int i=0; i<psoThreads.length; i++) {
-			psoThreads[i] = new Thread(pso[i]);
-		}
-
-		for (int i=0; i<psoThreads.length; i++) {
-			psoThreads[i].start();
-		}
-
-		try {
-			for (int i=0; i<psoThreads.length; i++)
-				psoThreads[i].join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		for (int i=0; i<psoThreads.length; i++) {
-			results.add( pso[i].getResult() );
-			
-		}
 		this.setResults(results);
 	}
 }

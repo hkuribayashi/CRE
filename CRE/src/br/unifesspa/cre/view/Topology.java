@@ -1,29 +1,36 @@
 package br.unifesspa.cre.view;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JComponent;
+import javax.imageio.ImageIO;
 
+import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.hetnet.BS;
+import br.unifesspa.cre.hetnet.BSType;
 import br.unifesspa.cre.hetnet.Point;
 import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.hetnet.UE;
 
-public class Topology extends JComponent{
+public class Topology{
 
 	private static final long serialVersionUID = -7793503595451200749L;
-	
+
 	private Scenario scenario;
 	
-	public Topology(Scenario scenario) {
-		this.scenario = scenario;
+	private String filename;
+
+	public Topology(Scenario scenario, String prefix, Double alpha, Double beta) {
+		this.scenario = scenario.clone();
+		this.filename = prefix+"-alpha-"+alpha+"-beta-"+beta+".png";
 	}
-	
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -31,50 +38,70 @@ public class Topology extends JComponent{
 	public Scenario getScenario() {
 		return scenario;
 	}
-	
+
 	public void setScenario(Scenario scenario) {
 		this.scenario = scenario;
 	}
-	
-	public void paint(Graphics g) {
-		
+
+	public void paint() {
+
+		int width = 1010;
+		int height = 1010;
+
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
 		Rectangle2D rect;
-		Graphics2D g2 = (Graphics2D) g;	
-		Integer dimension = 5;
+		Graphics2D g2 = img.createGraphics();
 		
-		Insets insets = getInsets();
-	    int h = getHeight() - insets.top - insets.bottom;
-	    g2.scale(1.0, -1.0);
-	    g2.translate(0, -h - insets.top);
-	    
-	    g2.setColor(Color.BLACK);
-	    
-	    double aux = (this.scenario.getEnv().getArea()*this.scenario.getEnv().getLambdaMacro());
-	    List<Point> bsPoints = new ArrayList<Point>();
-	    for (BS bs : this.scenario.getAllBS())
-			bsPoints.add(bs.getPoint());
-	    
-	    for (int i=0; i<bsPoints.size()-aux; i++) {
-	    	Point p = bsPoints.get(i);
-	    	rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
+        g2.setColor(Color.white);
+        g2.fillRect(0, 0, width, height);
+		
+		Integer dimension = 5;
+
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+
+		g2.setColor(Color.BLACK);
+		for (UE ue: this.scenario.getUe()) {
+			rect = new Rectangle2D.Double(ue.getPoint().getX(), ue.getPoint().getY(), dimension, dimension);
 			g2.fill(rect);
-	    }
-	    
-	    g2.setColor(Color.RED);
-	    
-	    for (int i=(int)aux; i<bsPoints.size(); i++) {
-	    	Point p = bsPoints.get(i);
-	    	rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
+		}
+
+		for(BS bs: this.scenario.getAllBS()) {
+			if (bs.getType().equals(BSType.Macro)) {
+				dimension = 10;
+				g2.setColor(Color.RED);
+			}else {
+				dimension = 5;
+				g2.setColor(Color.BLUE);
+			}
+			Point p = bs.getPoint();
+			rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
 			g2.fill(rect);
-	    }
-	    
-	    g2.setColor(Color.BLUE);
-	    	    
-	    for (int i=0; i<this.scenario.getUe().size(); i++) {
-	    	Point p = this.scenario.getUe().get(i).getPoint();
-	    	rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
-			g2.fill(rect);
-	    }
-	    
+		}	
+
+		g2.setColor(Color.MAGENTA);
+
+		NetworkElement[][] network = this.scenario.getNetwork();
+		for (int j=0; j<network[0].length; j++) {
+			for (int i=0; i<network.length; i++) 
+				if (network[i][j].getCoverageStatus()) {
+					Point uePoint = this.scenario.getUe().get(i).getPoint();
+					Point bsPoint = this.scenario.getAllBS().get(j).getPoint();
+					Line2D lin = new Line2D.Double(uePoint.getX(), uePoint.getY(), bsPoint.getX(), bsPoint.getY());
+					g2.draw(lin);
+				}
+		}
+
+		g2.dispose();
+
+		String path = this.scenario.getEnv().getWorkingDirectory() + this.filename;
+		System.out.println(path);
+		File file = new File(path);
+		try {
+			ImageIO.write(img, "png", file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
