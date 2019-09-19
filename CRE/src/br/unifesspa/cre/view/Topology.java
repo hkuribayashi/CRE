@@ -95,7 +95,7 @@ public class Topology{
 
 		g2.dispose();
 
-		String path = this.scenario.getEnv().getWorkingDirectory() + this.filename;
+		String path = "/Users/hugo/Desktop/CRE/CRE/images/"+ this.filename;
 		System.out.println(path);
 		File file = new File(path);
 		try {

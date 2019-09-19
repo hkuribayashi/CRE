@@ -91,6 +91,7 @@ public class Main {
 				Double[] boxplotValues = Util.getBoxPlotData(list);
 				String file = env.getWorkingDirectory() + "e2-alpha-"+alpha+"-beta-"+beta+".csv";
 				Util.writeToCSV(file, boxplotValues, "");
+				
 			}
 
 		}else re2 = daoE2.restore(fileE2);
