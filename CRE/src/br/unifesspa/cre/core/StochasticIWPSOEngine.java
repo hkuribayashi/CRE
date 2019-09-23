@@ -8,13 +8,13 @@ import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
 import br.unifesspa.cre.pso.StochasticIWPSO;
 
-public class StochasticPSOEngine extends PSOEngine {
+public class StochasticIWPSOEngine extends PSOEngine {
 
-	public StochasticPSOEngine(double alpha, double beta, CREEnv env, Integer swarmSize) {
+	public StochasticIWPSOEngine(double alpha, double beta, CREEnv env, Integer swarmSize) {
 		super(alpha, beta, env, swarmSize);
 	}
 	
-	public StochasticPSOEngine(double alpha, double beta, Scenario scenario, Integer swarmSize) {
+	public StochasticIWPSOEngine(double alpha, double beta, Scenario scenario, Integer swarmSize) {
 		super(alpha, beta, scenario, swarmSize);
 	}
 

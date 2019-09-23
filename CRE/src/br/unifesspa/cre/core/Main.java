@@ -100,9 +100,28 @@ public class Main {
 
 		switch(psoOption) {
 		case "CoPSO": Main.CoPSO(re2); break;
-		case "DecreasePSO": Main.DecreasePSO(re2); break;
+		case "IncreasePSO": Main.IncreasePSO(re2); break;
 		case "VsPSO": Main.VsPSO(re2); break;
+		case "StochasticIWPSO": Main.StochasticIWPSO(re2); break;
+		case "UnifiedCRE": Main.getMaxUnifiedCRE(re2); break;
 		default: System.out.println("Usage: java -jar CRE.jar <path> <PSO-Option>"); break;
+		}
+	}
+	
+	public static void getMaxUnifiedCRE(List<List<Result>> re2) {
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+			
+			if (alpha == 1.0 && beta == 1.0) {
+
+				Scenario scenario = Collections.max(list).getScenario();
+				Util.print(scenario.getBias());
+				
+				System.out.println("Ues Served");
+				System.out.println(scenario.getUesServed());
+			}
 		}
 	}
 
@@ -163,59 +182,62 @@ public class Main {
 		System.out.println();		
 	}
 
-	public static void DecreasePSO(List<List<Result>> re2) {
-		System.out.println("Experiment 06: DecreaseIWPSO");
+	public static void IncreasePSO(List<List<Result>> re2) {
+		System.out.println("Experiment 06: IncreaseIWPSO");
 		for (List<Result> list : re2) {
 
 			double alpha = list.get(0).getAlpha();
 			double beta = list.get(0).getBeta();
+			
+			if (alpha == 1.0 && beta == 1.0) {
 
-			Scenario scenario = Collections.max(list).getScenario();
-
-			HashMap<String, List<Result>> re5 = Experiments.getExperiment06(scenario, alpha, beta);
-
-			System.out.println("ALPHA = "+alpha+" BETA = "+beta);
-			System.out.println("DecreaseIWPSO-20");
-			for (Result l : re5.get("DecreaseIWPSO-20")) {
-				System.out.println(l);
+				Scenario scenario = Collections.max(list).getScenario();
+	
+				HashMap<String, List<Result>> r = Experiments.getExperiment06(scenario, alpha, beta);
+	
+				System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+				System.out.println("IncreaseIWPSO-20");
+				for (Result l : r.get("IncreaseIWPSO-20")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("IncreaseIWPSO-20")));
+				System.out.println("Max: "+Collections.max(r.get("IncreaseIWPSO-20")));
+				System.out.println();
+	
+				System.out.println("IncreaseIWPSO-40");
+				for (Result l : r.get("IncreaseIWPSO-40")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("IncreaseIWPSO-40")));
+				System.out.println("Max: "+Collections.max(r.get("IncreaseIWPSO-40")));
+				System.out.println();
+	
+				System.out.println("IncreaseIWPSO-60");
+				for (Result l : r.get("IncreaseIWPSO-60")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("IncreaseIWPSO-60")));
+				System.out.println("Max: "+Collections.max(r.get("IncreaseIWPSO-60")));
+				System.out.println();
+	
+				System.out.println("IncreaseIWPSO-80");
+				for (Result l : r.get("IncreaseIWPSO-80")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("IncreaseIWPSO-80")));
+				System.out.println("Max: "+Collections.max(r.get("IncreaseIWPSO-80")));
+				System.out.println();
 			}
-
-			System.out.println();
-			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-20")));
-			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-20")));
-			System.out.println();
-
-			System.out.println("DecreaseIWPSO-40");
-			for (Result l : re5.get("DecreaseIWPSO-40")) {
-				System.out.println(l);
-			}
-
-			System.out.println();
-			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-40")));
-			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-40")));
-			System.out.println();
-
-			System.out.println("DecreaseIWPSO-60");
-			for (Result l : re5.get("DecreaseIWPSO-60")) {
-				System.out.println(l);
-			}
-
-			System.out.println();
-			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-60")));
-			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-60")));
-			System.out.println();
-
-			System.out.println("DecreaseIWPSO-80");
-			for (Result l : re5.get("DecreaseIWPSO-80")) {
-				System.out.println(l);
-			}
-
-			System.out.println();
-			System.out.println("Mean: "+Util.getMean(re5.get("DecreaseIWPSO-80")));
-			System.out.println("Max: "+Collections.max(re5.get("DecreaseIWPSO-80")));
 			System.out.println();
 		}
-		System.out.println();
 	}
 
 	public static void VsPSO(List<List<Result>> re2) {
@@ -272,4 +294,63 @@ public class Main {
 		}
 		System.out.println();		
 	}
+	
+	public static void StochasticIWPSO(List<List<Result>> re2) {
+		System.out.println("Experiment 08: StochasticIWPSO");
+		for (List<Result> list : re2) {
+
+			double alpha = list.get(0).getAlpha();
+			double beta = list.get(0).getBeta();
+			
+			if (alpha == 1.0 && beta == 1.0) {
+
+				Scenario scenario = Collections.max(list).getScenario();
+	
+				HashMap<String, List<Result>> r = Experiments.getExperiment08(scenario, alpha, beta);
+	
+				System.out.println("ALPHA = "+alpha+" BETA = "+beta);
+				System.out.println("StochasticIWPSO-20");
+				for (Result l : r.get("StochasticIWPSO-20")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("StochasticIWPSO-20")));
+				System.out.println("Max: "+Collections.max(r.get("StochasticIWPSO-20")));
+				System.out.println();
+	
+				System.out.println("StochasticIWPSO-40");
+				for (Result l : r.get("StochasticIWPSO-40")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("StochasticIWPSO-40")));
+				System.out.println("Max: "+Collections.max(r.get("StochasticIWPSO-40")));
+				System.out.println();
+	
+				System.out.println("StochasticIWPSO-60");
+				for (Result l : r.get("StochasticIWPSO-60")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("StochasticIWPSO-60")));
+				System.out.println("Max: "+Collections.max(r.get("StochasticIWPSO-60")));
+				System.out.println();
+	
+				System.out.println("StochasticIWPSO-80");
+				for (Result l : r.get("StochasticIWPSO-80")) {
+					System.out.println(l);
+				}
+	
+				System.out.println();
+				System.out.println("Mean: "+Util.getMean(r.get("StochasticIWPSO-80")));
+				System.out.println("Max: "+Collections.max(r.get("StochasticIWPSO-80")));
+				System.out.println();
+			}
+			System.out.println();
+		}
+	}
+	
 }

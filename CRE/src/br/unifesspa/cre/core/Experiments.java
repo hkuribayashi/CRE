@@ -118,27 +118,27 @@ public class Experiments {
 
 			results = new HashMap<String, List<Result>>();
 
-			DecreaseIWPSOEngine pso;
+			IncreaseIWPSOEngine pso;
 			
-			System.out.println("Alpha="+alpha+",Beta="+beta+",DecreaseIWPSO-20");
-			pso = new DecreaseIWPSOEngine(alpha, beta, scenario.clone(), 20);
+			System.out.println("Alpha="+alpha+",Beta="+beta+",IncreaseIWPSO-20");
+			pso = new IncreaseIWPSOEngine(alpha, beta, scenario.clone(), 20);
 			pso.run();
-		    results.put("DecreaseIWPSO-20", pso.getResults());
+		    results.put("IncreaseIWPSO-20", pso.getResults());
 
-		    System.out.println("Alpha="+alpha+",Beta="+beta+",DecreaseIWPSO-40");
-		    pso = new DecreaseIWPSOEngine(alpha, beta, scenario.clone(), 40);
+		    System.out.println("Alpha="+alpha+",Beta="+beta+",IncreaseIWPSO-40");
+		    pso = new IncreaseIWPSOEngine(alpha, beta, scenario.clone(), 40);
 			pso.run();
-		    results.put("DecreaseIWPSO-40", pso.getResults());
+		    results.put("IncreaseIWPSO-40", pso.getResults());
 		    
-		    System.out.println("Alpha="+alpha+",Beta="+beta+",DecreaseIWPSO-60");
-		    pso = new DecreaseIWPSOEngine(alpha, beta, scenario.clone(), 60);
+		    System.out.println("Alpha="+alpha+",Beta="+beta+",IncreaseIWPSO-60");
+		    pso = new IncreaseIWPSOEngine(alpha, beta, scenario.clone(), 60);
 			pso.run();
-		    results.put("DecreaseIWPSO-60", pso.getResults());
+		    results.put("IncreaseIWPSO-60", pso.getResults());
 		    
-		    System.out.println("Alpha="+alpha+",Beta="+beta+",DecreaseIWPSO-80");
-		    pso = new DecreaseIWPSOEngine(alpha, beta, scenario.clone(), 80);
+		    System.out.println("Alpha="+alpha+",Beta="+beta+",IncreaseIWPSO-80");
+		    pso = new IncreaseIWPSOEngine(alpha, beta, scenario.clone(), 80);
 			pso.run();
-		    results.put("DecreaseIWPSO-80", pso.getResults());
+		    results.put("IncreaseIWPSO-80", pso.getResults());
 
 			dao.save(results, path);
 
@@ -176,6 +176,43 @@ public class Experiments {
 		    pso = new VsPSOEngine(alpha, beta, scenario.clone(), 80);
 			pso.run();
 		    results.put("VsPSO-80", pso.getResults());
+
+			dao.save(results, path);
+
+		}else  results = dao.restore(path);
+
+		return results;
+	}
+	
+	public static HashMap<String, List<Result>> getExperiment08(Scenario scenario, double alpha, double beta) {
+		HashMap<String, List<Result>> results;
+		DAO<HashMap<String, List<Result>>> dao = new DAO<HashMap<String, List<Result>>>();
+		String path = scenario.getEnv().getWorkingDirectory()+"e8-alpha-"+alpha+"-beta-"+beta+".data";
+		if(!dao.verifyPath(path)) {
+
+			results = new HashMap<String, List<Result>>();
+
+			StochasticIWPSOEngine pso;
+			
+			System.out.println("Alpha="+alpha+",Beta="+beta+",StochasticIWPSO-20");
+			pso = new StochasticIWPSOEngine(alpha, beta, scenario.clone(), 20);
+			pso.run();
+		    results.put("StochasticIWPSO-20", pso.getResults());
+
+		    System.out.println("Alpha="+alpha+",Beta="+beta+",StochasticIWPSO-40");
+		    pso = new StochasticIWPSOEngine(alpha, beta, scenario.clone(), 40);
+			pso.run();
+		    results.put("StochasticIWPSO-40", pso.getResults());
+		    
+		    System.out.println("Alpha="+alpha+",Beta="+beta+",StochasticIWPSO-60");
+		    pso = new StochasticIWPSOEngine(alpha, beta, scenario.clone(), 60);
+			pso.run();
+		    results.put("StochasticIWPSO-60", pso.getResults());
+		    
+		    System.out.println("Alpha="+alpha+",Beta="+beta+",StochasticIWPSO-80");
+		    pso = new StochasticIWPSOEngine(alpha, beta, scenario.clone(), 80);
+			pso.run();
+		    results.put("StochasticIWPSO-80", pso.getResults());
 
 			dao.save(results, path);
 

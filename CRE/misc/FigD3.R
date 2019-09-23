@@ -10,7 +10,7 @@ colnames(data)=c("[10,1]","[2,1]","[1,1]","[1,2]","[1,10]")
 
 rownames(data)=c("UCB 30 dB","PCB")
 
-dev.off()
+#dev.off()
 
 layout(rbind(1,2), heights=c(7,1))  
 

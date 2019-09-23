@@ -70,6 +70,8 @@ public class StochasticIWPSO extends StaticIWPSO{
 		r.setUesServed(this.gBest.getScenario().getUesServed());
 		r.setSumRate(this.gBest.getScenario().getSumRate());
 		r.setSolution(this.gBest.getPosition());
+		
+		System.out.println(r);
 
 		this.setResult(r);
 	}
